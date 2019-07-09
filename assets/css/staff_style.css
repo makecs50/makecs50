@@ -1,0 +1,23 @@
+.myportfolio {
+    text-align: center;
+}
+.myportfolio li{
+    list-style: none;
+    display: inline-block;
+    
+    height: 198px;
+    width: 198px;
+    margin: 10px;
+}
+
+#photo1{
+    background-image: url(../img/speaker-1.png)
+}
+
+#photo2{
+    background-image: url(../img/speaker-1.png)
+}
+
+#photo3{
+    background-image: url(../img/speaker-1.png)
+}

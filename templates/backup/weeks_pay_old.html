@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.7/css/bootstrap.min.css') }}">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i" rel="stylesheet">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+    <style>
+        
+       body{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+}
+.cash_container{
+    border: 1px solid #d0d7d8;
+    border-radius: 0.6em;
+    overflow:hidden;
+}
+
+
+.cash_container .cash {
+    background: #3b3f41;
+    color: #fff;
+    border-radius: 0.4em 0.4em 0px 0px;
+    padding: 20px;
+    text-align: center;
+}
+.cash_container .cash span{
+    color: #8A9FA2;
+    font-size: 16px;
+}
+
+.cash_container .cash .amount{
+    color: #d0d7d8;
+    font-size: 40px;
+    font-family: 'HelveticaNeue-light'
+}
+
+.cash_container .payment {
+    padding: 0px 15px 15px 15px;
+    line-height: 1.3em;
+    
+}
+
+.cash_container .payment h3{
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.payment h3{
+    font-family: medium-content-sans-serif-font,"Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Arial,sans-serif;
+    text-align: center;
+}
+
+.payment ul li{
+    padding-bottom: 8px;
+}
+
+#description {
+    font-size: 14px;
+    font-weight: ;
+}
+
+#description span,
+.pay_how span{
+    font-family: medium-content-sans-serif-font,"Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Arial,sans-serif;
+    font-weight: 700;
+    margin-right: 0.5em;
+
+    
+}
+.payment{
+    color: #7b7f80;
+    text-align: justify;
+}
+
+.payment ul{
+    padding-left: 20px;
+}
+
+
+
+
+@media screen and (min-width: 860px){
+	.alert.alert-warning.alert-dismissible,
+	h2.week_header.col-xs-12,
+	ul.week_stuff.col-xs-12 {
+    max-width: 697px;
+	}
+	
+
+	
+    .cash_container{
+    -webkit-box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.39);
+    -moz-box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.39);
+    box-shadow: 0px 0px 12px 0px rgba(0,0,0,0.39);
+/*         margin-top:  80px; */
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;  
+        max-width: 697px;
+    }
+    .cash{
+        width: 35%;
+    }
+    .payment{
+
+        width: 65%;
+    }
+    .cash_inner{
+        margin-top: 80%
+    }
+    .cash_container .payment {
+    padding: 40px;
+    line-height: 1.3em;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    }
+    .cash_container .cash{
+        border-radius: 0.4em 0em 0em 0.4em;
+    }
+}        </style>
+
+        <title>Лекции</title>
+    </head>
+    <body>
+        <div class="se-pre-con"></div>
+
+        <div id="wrapper">
+            <div class="overlay"></div>
+
+            <!-- Sidebar -->
+            <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+                <ul class="nav sidebar-nav">
+                    <li class="sidebar-brand">
+                        <a href="/"><b>
+                            CS50</b>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/">Главная</a>
+                    </li>
+                    <li>
+                        <a href="/weeks/">Лекции</a>
+                    </li>
+<!--                     <li> <a target="_blank" href="http://discuss.makecs50.ru">Обсуждение</a> </li> -->
+                    <li> <a href="{{url_for('about')}}">О нас</a> </li>
+<li><a target="_blank" href="/apply/">Записаться</a></li>   
+           </ul>
+                
+                <div class="nav sidebar-nav1">
+           
+<!--            <a href="http://twitter.com/makecs50" target="_blank" class="icon-button twitter"><i class="icon-twitter"></i><span></span></a> -->
+           
+<!--
+<a href="http://facebook.com" class="icon-button facebook"><i class="icon-facebook"></i><span></span></a>
+<a href="http://plus.google.com" class="icon-button google-plus"><i class="icon-google-plus"></i><span></span></a>
+-->
+           
+       </div>
+	<div class="new">
+       {% if current_user.is_authenticated %}
+			
+				{% if current_user.pokemon %}
+						<a href='#'><img class="{{pokemonCSS}}" id="button" src="{{pokemon[1]}}"></a>
+					{% endif %}
+				{% if current_user.roles[0] and current_user.roles[0].name in ['admin', 'moderator']%}
+					<a  href="{{url_for('register_page')}}">Добавить пользователя</a>
+				{% endif %}
+				
+				<a  href="{{url_for('logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i> Выйти</a>
+			{% else %}
+				<a  href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i> Войти</a> 					
+				
+			{% endif %}  
+       </div>
+  				
+  				<div style="height: 30px; position: absolute; bottom: 0; width: 100%; background: rgba(0, 0, 0, 0.2); text-align: center; font-size: 24px; color: white; ">
+                <a target="_blank" href="https://www.instagram.com/makecs50/"><i style="margin-top: 3px; margin-left: 25%; float: left" class="fa fa-instagram" aria-hidden="true"> </i></a>
+                <a target="_blank" href="https://twitter.com/makecs50"><i style="margin-top:3px; margin-right: 25%;  float: right" class="fa fa-twitter" aria-hidden="true"></i></a>
+            </div>
+            
+            </nav>
+            <!-- /#sidebar-wrapper -->
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+                <button type="button" class="hamburger is-closed" data-toggle="offcanvas">
+                    <span class="hamb-top"></span>
+                    <span class="hamb-middle"></span>
+                    <span class="hamb-bottom"></span>
+                </button>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-9 col-lg-10 col-lg-offset-2">
+
+	                        
+	                        <div class="row">
+                               <div class="col-md-12">
+                                
+                                   <div class="container">
+                    <div class="row">
+                        <div class="col-md-9 col-lg-10 col-lg-offset-2">
+                           <div class="row">
+                        <div class="col-md-12">
+						{% with messages = get_flashed_messages() %}
+						  {% if messages %}
+						    {% for message in messages %}
+						    <div class="alert alert-warning alert-dismissible" role="alert">
+							    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						      <li>{{ message }}</li>
+						    </div>
+						    {% endfor %}
+						  {% endif %}
+						{% endwith %}
+                        </div>
+                        </div>
+                           
+                           <div class="row">
+                               <div class="col-md-12">
+                                <div class="cash_container">
+                                    <div class="cash">
+                                       <div class="cash_inner">
+                                        <span>Внесите оплату</span>
+                                        <div class="amount">
+                                            ₽{{2000 - current_user.money}}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="payment">
+                                        <h3 class="my_header">Платеж</h3>
+                                        <p id="description">
+                                            <span>Банк.</span>На данный момент оплата занятий может производиться только через Банк. Вам нужно будет заключить договор с ГГНТУ. От вас потребуется следующее:
+                                        </p>
+                                        <p>
+                                           <ul>
+                                            <li class="pay_how"><span>Копия Паспорта.</span>Если вам еще нет 18 лет, принесите копию паспорта одного из родителей.</li>
+                                            <li class="pay_how"><span>Подойти к Магазиевой Зареме.</span>Для составления договора. Кабинет 4-03, 4 этаж, Главный Корпус ГГНТУ.</li>
+                                            <li class="pay_how"><span>Произвести оплату.</span>В ближайшем банке (Россельхоз или Сбербанк).</li>
+                                            <li class="pay_how"><span>Выслать квитанцию об оплате.</span>Догадайтесь кому? (Фотографию по WhatsApp или Телеграм). Передать чек Зареме.</li>
+                                        </ul>
+                                        </p>
+                                    </div>
+
+                                </div>
+                                </div>
+                            </div>
+                           
+                           
+                           <div class="row">
+                               <div class="col-md-12">
+                                <h2 class="week_header col-xs-12">Неделя 1</h2>
+                                <ul class="week_stuff col-xs-12">
+	                                <li><a href="{{url_for('videolecture1')}}"><i  aria-hidden="true"></i>Видеолекция</a></li>
+                                    <li><a href="{{ TOPIC_DICT["Weeks"][0][1]}}"><i  aria-hidden="true"></i>{{ TOPIC_DICT["Weeks"][0][0].decode('utf-8') }}</a></li>
+                                    <li><a target="_blank" href="{{url_for('presentation1')}}"><i  aria-hidden="true"></i>Презентация</a></li>
+                                    <li class="unlocked_lesson"><i class=
+	                                    {% if current_user.stars[0].NP1%}
+	                                    	"{{ICONS.star}}"
+	                                    {% else %}
+	                                    	"{{ICONS.staro}}"
+	                                    {% endif %}
+	                                     aria-hidden="true"></i><a  href="/weeks/pset1/">Набор Проблем 1</a></li>
+                                </ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                               <div class="col-md-12">
+                                <h2 class="week_header col-xs-12">Неделя 0</h2>
+                                <ul class="week_stuff col-xs-12">
+                                    <li><a href="/weeks/notes0/">Материалы</a></li>
+                                    <li><a href="{{ url_for('static', filename='binary.html') }}" target="_blank">Бинарный код</a></li>
+                                    <li><a target="_blank" href="{{url_for('presentation0')}}">Презентация</a></li>
+                                    <li><i class=
+	                                    {% if current_user.stars[0].NP0 %}
+	                                    	"{{ICONS.star}}"
+	                                    {% else %}
+	                                    	"{{ICONS.staro}}"
+	                                    {% endif %} aria-hidden="true"></i><a href="/weeks/pset0/">Набор Проблем 0</a></li>
+                                </ul>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                                   
+                                </div>
+                            </div>
+	                        
+                          
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /#page-content-wrapper -->
+
+        </div>
+        <!-- /#wrapper --> 
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/myScript.js') }}"></script>
+		<script src="https://use.fontawesome.com/a98ab50559.js"></script>
+        <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter44263234 = new Ya.Metrika({
+                    id:44263234,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/44263234" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+    </body>
+</html>

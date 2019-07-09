@@ -1,0 +1,268 @@
+---
+layout: header
+title: hello
+permalink: /weeks/pset1/hello
+---
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthrough">Прохождение</a></li>
+<li><a href="#usage">Использование</a></li>
+<li><a href="#testing">Проверка</a>
+<ul class="sectlevel2">
+<li><a href="#code-check50-code"><code>check50</code></a></li>
+</ul>
+</li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#changelog">ИЗМЕНЕНИЯ</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Hello (Привет)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Создайте программу, которая будет просто приветствовать пользователя, как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./hello</span>
+Hello, world!</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Напишем вашу (возможно) первую программу? Внутри вашей <strong>nproblem1</strong> папки, создайте новый файл <strong>hello.c</strong>, а затем откройте этот файл в новой вкладке. (Помните как?) Не давайте файлу другое название. Оно обязательно должно состоять из строчных (маленьких) букв; названия файлов и папок в Linux'e "чувствительны к регистру." Вернемся к созданию программы - перепишите следующие строки кода в ваш файл:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;Hello, world!</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Заметьте, когда вы пишите, CS50 IDE добавляет "подсвечивание синтаксиса" (т.е. цвет). Хотя цвета CS50 IDE могут отличаться от тех, что показаны в наборах проблем. Эти цвета не сохраняются внутри самих файлов; они добавляются CS50 IDE, чтобы отличить определенный синтаксис. Если бы вы с самого начала не сохранили файл как <code>hello.c</code>, CS50 IDE не знала бы (из-за отсутствия расширения файла), что вы пишите код Cи. В этом случае цветов бы просто не было.</p>
+</div>
+<div class="paragraph">
+<p> Если вы неправильно напишите эту программу, вы познакомитеся со своим первым багом (ошибкой)! Написание слов с заглавных букв может повлиять на ваш код, так что избегайте случайных больших букв в записи кода (если вы, конечно, не находитесь между двумя кавычками). И не забывайте точку с запятой. У <strong>Cи</strong> придирчивый характер!</p>
+</div>
+<div class="paragraph">
+<p>Далее выберите <strong>File &gt; Save</strong> (можно сочетанием кнопок command-s или control-s). Только после этого исчезнет красная точка, на верхней вкладке. Нажмите на окно терминала, который находится под вашим кодом и проверьте находитесь ли вы внутри <code>~/workspace/nproblem1/</code>. (Помните как это сделать? Если нет, тогда напишите <code>cd</code> и нажмите Enter, потом введите <code>cd workspace/nproblem1/</code> затем  Enter.) В вашем окне должно быть:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">~/workspace/nproblem1/ $</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Давайте убедимся, что <code>hello.c</code> действительно находится в нужной нам папке. Напишите</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">ls</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>нажмите Enter - вы должны увидеть <code>hello.c</code>? Если нет, ничего страшного; какой-то шаг вы скорее всего пропустили. Лучше всего повторить последнюю пару шагов или попросить о помощи!</p>
+</div>
+<div class="paragraph">
+<p>Предположим, вы действительно видите<code>hello.c</code>, давайте попробуем его скомпилировать! Напишите</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">make hello</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>в окне терминала, затем Enter. Обратите внимание, мы пишем только <code>hello</code>, не <code>hello.c</code>. Если появился знак "$" и на экране не появилось много строчек непонятного текста, значит все прошло успешно! Ваш исходный код был преобразован в объектный код (0 и 1), который теперь можно запустить (ака выполнить). Напишите</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">./hello</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>в окне терминала, потом Enter и вы должны увидеть следующее:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">Hello, world!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>И если вы напишите</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">ls</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>затем нажмете Enter, вы увидите новый файл <code>hello</code> рядом с <code>hello.c</code>. Первый из этих файлов <code>hello</code> должен быть со звездочкой (asterisk) после его имени, это значит, что данный файл "исполняемый", т.е. эту программу вы можете включить (т.е. запустить).</p>
+</div>
+<div class="paragraph">
+<p>Если, конечно, запустив <code>make</code>, вы увидите ошибки, пришло время заняться отладкой(т.е. debugging/устранение ошибок/поиск багов)! (Если терминальное окно слишком маленькое, нажмите и потяните его верхнюю границу вверх, чтобы увеличить высоту окна.) Если вы увидите ошибку "expected declaration" или что-то такое же мистическое, скорее всего у вас ошибка в синтаксисе (т.е. опечатка). Проверьте, не пропустили ли вы какие-нибудь символы или написали что-то лишнее. Сравните ваш код с тем, что предоставлен выше.
+Такого рода ошибки очень легко допустить, если вы только начинаете изучать программирование, так что сравнивайте ваш код с нашим, каждую букву. Высока вероятность появления ошибок при обновлении вами своего кода. Главное не забывайте повторно сохранять файл, используя <strong>File &gt; Save</strong> ( command-s или control-s), потом нажмите на окошко терминала и опять введите</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">make hello</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>в данном окне, не стесняясь нажать Enter. (Главное в терминальном окне находится внутри <code>~/workspace/nproblem1/</code>, т.к. от этого будет зависеть, примут вашу команду или нет.)</p>
+</div>
+<div class="paragraph">
+<p>После того, как вы избавитесь от всех ошибок, попробуйте "выполнить" (т.е. запустить) вашу программу, написав</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">./hello</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>в окне терминала, затем Enter! Будем надеяться, вы увидите то, что вписали в <code>printf</code>.</p>
+</div>
+<div class="paragraph">
+<p>Если нет, тогда попросите помощи!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="link" href="#walkthrough">Прохождение</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="540" src="https://www.youtube.com/embed/LC-4pf4JsGA?rel=0" frameborder="0" allowfullscreen></iframe></div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Использование</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ваша программа должна проделывать тоже самое, что показано в примере ниже. Предположим, подчеркнутый текст - это то, что написал пользователь.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./hello</span>
+Hello, world!</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="code-check50-code"><a class="link" href="#code-check50-code"><code>check50</code></a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">check50 cs50/2017/x/hello</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вас потребуют ввести логин (<b>GitHub username</b>) и пароль (<b>GitHub password</b>) от вашей учетной записи на Github'е, которую вы можете завести, пройдя по данной ссылке <a href="https://github.com/join">https://github.com/join</a>.</p>
+</div>
+<div class="paragraph">
+<p>Зайдите на сайт <a href="https://cs50.me" target="_blank">cs50.me</a>, используя всё ту же учетную запись GitHub'а и нажмите на зеленую кнопку <b>authorize submit50</b> (Это действие производится только один раз).</p>
+</div>
+<div class="paragraph">
+<p>Если ваша программа написана правильно, вы увидите</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code><span class="green">:) hello.c exists</span>
+<span class="green">:) hello.c compiles</span>
+<span class="green">:) prints "Hello, world!\n"</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>где каждый зеленый смайлик означает прохождение подзадания (т.е. теста). Также, вы можете увидеть внизу кое-какую ссылку, облом...она не для вас =).</p>
+</div>
+<div class="paragraph">
+<p>Если же вы видите желтые или красные смайлики, это означает, что ваш код написан неправильно! Предположим, вы увидите</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code><span class="red">:( hello.c exists</span>
+  \ expected hello.c to exist (файл hello.c не существует)
+<span class="yellow">:| hello.c compiles</span>
+  \ can't check until a frown turns upside down (не могу выполнить данную проверку, т.к. до этого  не было зеленого смайлика )
+<span class="yellow">:| prints "Hello, world!\n"</span>
+  \ can't check until a frown turns upside down (не могу выполнить данную проверку, т.к. до этого  не было зеленого смайлика )</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Из-за того что <code>check50</code> не признает существование <code>hello.c</code>, как указывает красный смайлик (которому грустно). Высока вероятность того, что вы загрузили не тот файл или неправильно назвали его. Другие смайлики желтые, потому что их работа зависит от существования файла <code>hello.c</code> и именно поэтому они даже не начинали проверку.</p>
+</div>
+<div class="paragraph">
+<p>Предположим, вы увидите следующее.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code><span class="green">:) hello.c exists</span>
+<span class="green">:) hello.c compiles</span>
+<span class="red">:( prints "Hello, world!\n"</span>
+  \ expected output, but not "Hello, world!" (ожидали, а не "Hello, world!")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p> Высока вероятность, что в этом случае вы написали не то, что мы вас просили в <strong>описании</strong> к заданию, т.е. не <code>Hello, world!\n</code>, а <code>Hello, world!</code>, пропустив (<code>\n</code>).</p>
+</div>
+<div class="paragraph">
+<p><code>check50</code> проверяет ваше приложение вместо меня (Лом-Элы), чтобы вы мне отправили готовый код.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Перепишите код, который мы выше предоставили (вместо того, чтобы копировать и вставлять - не копипастить короче!). Неплохо было бы начать тренировать мышечную память прямо сейчас! (Навыки киберспортсмена не помогут.)</p>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">ИЗМЕНЕНИЯ</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>20-01-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+

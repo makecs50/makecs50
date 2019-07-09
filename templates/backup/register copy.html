@@ -1,0 +1,26 @@
+{% extends "header.html" %}
+
+{% block body %}
+
+
+	
+		<h4>Регистрация</h4>	
+		<br>
+		{% from "_formhelpers.html" import render_field %}
+		<form method="POST" action="{{url_for('register_page')}}">
+			<dl>
+				{{ form.csrf_token }}
+				{{render_field(form.username)}}
+				{{render_field(form.password)}}
+				{{render_field(form.confirm)}}
+			</dl>
+			<p><input class="btn btn-primary" type="submit" value="Подтвердить"></p>
+			
+		</form>
+		
+		{% if error %}
+			<p class="error"><strong>Ошибка:</strong>{{error}}
+		{% endif %}
+	
+
+{% endblock %}

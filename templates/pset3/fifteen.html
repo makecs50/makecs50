@@ -1,0 +1,295 @@
+---
+layout: header
+title: fifteen
+permalink: /weeks/pset3/fifteen
+---
+    <style>
+        .mjx-chtml {
+    display: inline-block;
+    line-height: 0;
+    text-indent: 0;
+    text-align: left;
+    text-transform: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    word-spacing: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 1px 0;
+}
+        
+        .MJXc-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+        .MathJax_Preview {
+    color: #888;
+}
+        div.stemblock div.content {
+    margin-bottom: 1.25em;
+}
+    </style>
+
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#background">Описание</a></li>
+<li><a href="#distribution">Развертывание</a>
+<ul class="sectlevel2">
+<li><a href="#downloading">Скачивание</a></li>
+<li><a href="#understanding">Понимание</a></li>
+<li><a href="#checking-for-understanding">Проверка на Понимание</a></li>
+</ul>
+</li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthrough">Прохождение</a></li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#testing">Проверка</a>
+<ul class="sectlevel2">
+<li><a href="#code-check50-code"><code>check50</code></a></li>
+</ul>
+</li>
+<li><a href="#changelog">Изменения</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Game of Fifteen (Пятнашки)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Создайте игру "Пятнашки" - такую, как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ ./fifteen 3
+WELCOME TO GAME OF FIFTEEN
+// Добро пожаловать в игру "Пятнашки"
+
+8  7  6
+
+5  4  3
+
+2  1  _
+
+Tile to move:
+// Выберите плитку для передвижения</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background"><a class="link" href="#background">Описание</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Пятнашки - это популярная головоломка, представляющая из себя двухмерную доску (квадрат) с пронумерованными передвигаемыми плитками. Задача в этой головоломке заключается в том, чтобы расставить плитки на доске по возрастанию, слева направо, сверху вниз с пустой плиткой в правом нижнем углу доски, как показано ниже.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="{{ site.url }}/assets/images/notes/fifteen.png" alt="Game of Fifteen" width="25%"></span></p>
+</div>
+<div class="paragraph">
+<p>Передвижение любой плитки, которая граничит с пустым пространством доски, в это пространство называется "move" (движение). Хотя вышеприведенная конфигурация и означает то, что в игре уже одержана победа, вы можете заметить, что плитка под номером 12 или плитка под номером 15 могут быть передвинуты на место пустого пространства. Плитки нельзя двигать по диагонали или вынимать из доски.</p>
+</div>
+<div class="paragraph">
+<p>Хотя возможны различные конфигурации, мы можем предположить, что игра будет начинаться с обратно-отсортированных плиток доски: от большего к меньшему, слева направо, сверху вниз; с пустым пространством в нижнем правом углу доски. <strong>Если доска содержит нечетное количество плиток (т.е. высота и ширина доски одинаковы), позиции плиток под номерами 1 и 2 должны быть поменяны местами, как показано ниже.</strong> Головоломку можно решить из этой конфигурации.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="{{ site.url }}/assets/images/notes/fifteen1.png" alt="solvable configuration" width="25%"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="distribution"><a class="link" href="#distribution">Развертывание</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="downloading"><a class="link" href="#downloading">Скачивание</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ wget <a href="https://github.com/makecs50/fifteen/archive/master.zip" class="bare">https://github.com/makecs50/fifteen/archive/master.zip</a>
+$ unzip master.zip
+$ rm master.zip
+$ mv fifteen-master fifteen
+$ cd fifteen
+$ ls
+Makefile    fifteen.c   questions.txt</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="understanding"><a class="link" href="#understanding">Понимание</a></h3>
+<div class="paragraph">
+<p>Посмотрите на <code>fifteen.c</code>. Внутри этого файла есть движок игры "Пятнашки". Следующая задача - закончить реализацию этой игры.</p>
+</div>
+<div class="paragraph">
+<p> Но сперва скомпилируйте данный движок. (Помните как?) И, хотя программа еще сырая и не завершенная, вы можете запустить игру. (Догадаетесь как?) Скорее всего вы захотите запустить данную программу в более крупном окне терминала - для этого нажмите на зеленый плюс (+), который находится сверху, над вашим кодом, и выберите <strong>New Terminal</strong>. Можно просто перевести окно терминала в полноэкранный режим, нажав на иконку <strong>Maximize</strong> в его правом верхнем углу.</p>
+</div>
+<div class="paragraph">
+<p>Как бы там не было, похоже, что игра хотя бы частично функционирует. Конечно, ей еще далеко до полноценной игры, поэтому здесь понадобитесь вы!</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="checking-for-understanding"><a class="link" href="#checking-for-understanding">Проверка на Понимание</a></h3>
+<div class="paragraph">
+<p>Просмотрите весь код и все комментарии, открыв файл <code>fifteen.c</code>, и ответьте на вопросы, приведенные снизу в <code>questions.txt</code> - текстовый файл (почти пустой), который мы включили для вас в развертываемую папку <code>fifteen</code>. Не надо переживать, если вам не до конца понятно, как работает <code>fprintf</code> или <code>fflush</code>; мы их добавили только для автоматизации кое-каких проверок.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="0">
+<li>
+<p>Кроме 4 × 4 (доска игры "Пятнашки"), какие еще размеры доски позволяет использовать наш движок?</p>
+</li>
+<li>
+<p>Какой структурой данных представлена игровая доска?</p>
+</li>
+<li>
+<p>Какая вызывается функция для приветствия игрока в начале игры?</p>
+</li>
+<li>
+<p>Какие функции вам скорее всего придется реализовать?</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Создайте игру "Пятнашки" в соответствии с комментариями, данными в <code>fifteen.c</code>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Реализуйте <code>init</code> (инициализация).</p>
+</li>
+<li>
+<p>Реализуйте <code>draw</code> (рисование).</p>
+</li>
+<li>
+<p>Реализуйте <code>move</code> (движение).</p>
+</li>
+<li>
+<p>Реализуйте <code>won</code> (победа).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="link" href="#walkthrough">Прохождение</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/7S1BaF1OaqU?rel=0" frameborder="0" allowfullscreen></iframe></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Помните - все делать "детскими шагами". Не пытайте написать весь код игры за раз. Лучше реализовывайте по одной функции и проверяйте, работает она или нет, а уже потом продвигайтесь дальше. Дизайн игры можете придумать любой (т.е., сколько пробелов вы захотите оставить между числами, когда будете выводить доску на экран).  Предположительно, доска при выводе на экран, должна выглядеть так, как указано ниже, но вы можете реализовать ее так, как пожелаете.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>15 14 13 12
+
+11 10  9  8
+
+ 7  6  5  4
+
+ 3  1  2  _</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Помните, что плитки с номерами 1 и 2 должны быть смещенными (точно также, как в примере 4 × 4, приведенном выше), если плиток нечетное количество (как в примере 4 × 4 выше). Если у доски четное количество плиток, плитки 1 и 2 не должны быть смещенными. В примере ниже это хорошо продемонстрировано (доска 3 × 3):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>8  7  6
+
+5  4  3
+
+2  1  _</code></pre>
+</div>
+</div>
+
+<div class="paragraph">
+<p>Вы можете создать свои собственные функции и даже менять прототипы функций, которые мы написали для вас. Но вам нельзя менять логику самого <code>main</code>'а, чтобы мы могли автоматизировать проверку вашего кода, когда вы вышлете его нам. В частности <code>main</code> должен вернуть только <code>0</code>, если и только когда пользователь действительно одержит победу в игре; значения не равные нулю должны возвращаться в случаях возникновения ошибок, как указано в нашем развертываемом коде.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Для проверки вашей реализации игры <code>пятнашки</code> вы конечно можете просто поиграться с ней. (Знайте, что вы можете заставить вашу программу завершить работу, нажав на клавиатуре ctrl-c). Удостоверьтесь, что вы (и мы) не вылетим из вашей программы, предоставив непонятное число плитке. И знайте, что точно также, как вы автоматизировали ввод данных в <code>find</code>, вы можете автоматизировать выполнение этой игры. На самом деле, в папке <code>~cs50/pset3</code> есть файлы <code>3x3.txt</code> и <code>4x4.txt</code> с выигрышными последовательностями движений для досок 3 × 3 и 4 × 4 соответственно. Чтобы проверить вашу программу с, предположим, первыми предоставляемыми данными, выполните следующее.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./fifteen 3 &lt; ~cs50/pset3/3x3.txt</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-check50-code"><a class="link" href="#code-check50-code"><code>check50</code></a></h3>
+<div class="paragraph">
+<p>Имейте ввиду, <code>check50</code> предполагает, что пустое место на вашей доске представлено в <code>board</code> (доске) как цифра <code>0</code>; Если вы выбрали какое-либо другое значение, лучше всего изменить его на <code>0</code> ради <code>check50</code>. Еще на заметку - <code>check50</code> предполагает, что вы индексируетесь в <code>board</code> (доске) таким образом <code>board[строка][столбик]</code>, а не таким <code>board[столбик][строка]</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>check50 cs50/2017/x/fifteen</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вас потребуют ввести логин (<b>GitHub username</b>) и пароль (<b>GitHub password</b>) от вашей учетной записи на Github'е, которую вы можете завести, пройдя по данной ссылке <a href="https://github.com/join">https://github.com/join</a>.</p>
+</div>
+<div class="paragraph">
+<p>Зайдите на сайт <a href="https://cs50.me" target="_blank">cs50.me</a>, используя всё ту же учетную запись GitHub'а и нажмите на зеленую кнопку <b>authorize submit50</b> (Это действие производится только один раз).</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">Изменения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>28-02-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>

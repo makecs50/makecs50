@@ -1,0 +1,25 @@
+{% extends "header.html" %}
+
+{% block body %}
+
+
+	
+		<h4>Авторизация</h4>	
+		<br>
+		{% from "_formhelpers.html" import render_field %}
+		<form method="POST" action="{{url_for('login_page')}}">
+			<dl>
+				{{ form.hidden_tag() }}
+				{{render_field(form.username)}}
+				{{render_field(form.password)}}
+			</dl>
+			<p><input class="btn btn-primary" type="submit" value="Подтвердить"></p>
+			
+		</form>
+		
+		{% if error %}
+			<p class="error"><strong>Ошибка: </strong>{{error.decode('utf-8')}}
+		{% endif %}
+	
+
+{% endblock %}

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.7/css/bootstrap.min.css') }}">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i" rel="stylesheet">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
+    
+
+        <title>Лекции</title>
+    </head>
+    <body>
+        <div class="se-pre-con"></div>
+
+        <div id="wrapper">
+            <div class="overlay"></div>
+
+            <!-- Sidebar -->
+            <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+                <ul class="nav sidebar-nav">
+                    <li class="sidebar-brand">
+                        <a href="/"><b>
+                            CS50</b>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/">Главная</a>
+                    </li>
+                    <li>
+                        <a href="/weeks/">Лекции</a>
+                    </li>
+<!--                     <li> <a target="_blank" href="http://discuss.makecs50.ru">Обсуждение</a> </li> -->
+                    <li> <a href="{{url_for('about')}}">О нас</a> </li>
+<li><a target="_blank" href="/apply/">Записаться</a></li>                </ul>
+                
+                <div class="nav sidebar-nav1">
+           
+<!--            <a href="http://twitter.com/makecs50" target="_blank" class="icon-button twitter"><i class="icon-twitter"></i><span></span></a> -->
+           
+<!--
+<a href="http://facebook.com" class="icon-button facebook"><i class="icon-facebook"></i><span></span></a>
+<a href="http://plus.google.com" class="icon-button google-plus"><i class="icon-google-plus"></i><span></span></a>
+-->
+           
+       </div>
+       {% if current_user.is_authenticated %}
+       
+       				{% if current_user.roles[0] and (
+	   					current_user.roles[0].name == 'admin'
+	   					or current_user.roles[0].name == 'moderator') %}
+	   					<a class="closing_button" id="new_user_button" href="{{url_for('register_page')}}">Добавить пользователя</a>
+       				{% endif %}
+       				
+	   				<a class="closing_button" href="{{url_for('logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i> Выйти</a>
+       			{% else %}
+ 					<a class="closing_button" href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i> Войти</a> 					
+  					
+  				{% endif %}
+  				
+  				<div style="height: 30px; position: absolute; bottom: 0; width: 100%; background: rgba(0, 0, 0, 0.2); text-align: center; font-size: 24px; color: white; ">
+                <a target="_blank" href="https://www.instagram.com/makecs50/"><i style="margin-top: 3px; margin-left: 25%; float: left" class="fa fa-instagram" aria-hidden="true"> </i></a>
+                <a target="_blank" href="https://twitter.com/makecs50"><i style="margin-top:3px; margin-right: 25%;  float: right" class="fa fa-twitter" aria-hidden="true"></i></a>
+            </div>
+            
+            </nav>
+            <!-- /#sidebar-wrapper -->
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+          <div id="bg">
+          <img src="{{ url_for('static', filename='images/backgrounds/1.jpg') }}" alt="">
+</div>
+           
+            <button type="button" class="hamburger is-closed" data-toggle="offcanvas"> <span class="hamb-top"></span> <span class="hamb-middle"></span> <span class="hamb-bottom"></span> </button>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9 col-lg-10 col-lg-offset-2">
+                        <!--CONTENT-->
+    <div class="row">
+                        <div class="col-md-12">
+						
+                       
+                       
+                       <div class="top-content">
+        	
+            <div class="inner-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 text col-sm-offset-1">
+                            <h1><b>Регистрация пользователей</b></h1>
+                            <div class="description">
+                            	<p>
+	                            	Не чудите тут:))                            	</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8 form-box col-sm-offset-1">
+                        	<div class="form-top">
+                        		<div class="form-top-left">
+                        			<h3>Пользовательские данные</h3>
+                            		<p>Создание логина и пароля:</p>
+                        		</div>
+                        		<div class="form-top-right">
+                        			<i class="fa fa-lock"></i>
+                        		</div>
+                            </div>
+                            <div class="form-bottom">
+	                            {% from "_formhelpers.html" import render_field %}
+			                    <form action="{{ url_for_security('register') }}" class="login-form" method="POST" name="register_user_form">
+				                    {{login_user_form.hidden_tag() }}
+			                    	<div class="form-group">
+			                    		<label class="sr-only" for="form-username">Username</label>
+			                    		{{render_field(register_user_form.email, class="form-control")}}
+			                        	{{render_field(register_user_form.email, class="form-username form-control", placeholder="Пользователь...", id="form-username")}}
+<!-- 		                        	<input type="text" name="form-username" placeholder="Username..." class="form-username form-control" id="form-username"> -->
+			                        </div>
+			                        <div class="form-group">
+			                        	<label class="sr-only" for="form-password">Password</label>
+			                        	{{render_field(register_user_form.password, class="form-password form-control", placeholder="Придумайте пароль...", id="form-password")}}
+			                        	
+			                        </div>
+			                        <div class="form-group">
+			                        	<label class="sr-only" for="form-password">Password</label>
+			                        	{% if register_user_form.password_confirm %}
+					{{render_field(register_user_form.password, class="form-password form-control", placeholder="Подтвердите пароль...", id="form-password")}}
+
+				{% endif %}
+			                        				                        	
+			                        </div>
+			                        <button type="submit" class="btn">Подтвердить</button>
+			                    </form>
+		                    </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+                       
+                       
+                        </div>
+                        </div>
+              
+      
+      
+      
+      
+      
+      
+      
+     <!--/CONTENT-->
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- /#page-content-wrapper -->
+
+        </div>
+        <!-- /#wrapper --> 
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/myScript.js') }}"></script>
+		<script src="https://use.fontawesome.com/a98ab50559.js"></script>
+                
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter44263234 = new Ya.Metrika({
+                    id:44263234,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/44263234" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+    </body>
+</html>

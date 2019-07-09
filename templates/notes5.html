@@ -1,0 +1,559 @@
+---
+layout: header
+title: Note5
+permalink: /weeks/notes5
+---
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#last-time">В Прошлый Раз</a></li>
+<li><a href="#linked-lists">Связные Списки</a></li>
+<li><a href="#stacks-and-queues">Стеки и Очереди</a></li>
+<li><a href="#trees">Деревья</a></li>
+<li><a href="#hash-tables-and-tries">Хэш-таблицы и Префиксные Деревья</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Неделя 5</h1>
+<div class="sect1">
+<h2 id="last-time"><a class="link" href="#last-time">В Прошлый Раз</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Мы успели поговорить об указателях - адреса участков памяти, где может храниться информация.</p>
+</li>
+<li>
+<p>В Си мы можем обращаться к этим участкам и по необходимости выделять большее количество памяти.</p>
+</li>
+<li>
+<p>Мы рассматривали данную диаграмму, которая показывала как память делится на различные области, каждая из которых имеет свое предназначение:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/1.png" width="400"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Стек состоит из стопок памяти, отвечающих за функции и их локальные переменные.</p>
+</li>
+<li>
+<p>Куче (heap) принадлежит динамически выделяемая память, т.е. она выделяется во время работы программы. Применяется в случаях когда мы заранее не знаем сколько памяти нам понадобится.</p>
+</li>
+<li>
+<p>Области данных хранят объявленные нами переменные, а текстовая область содержит сам код нашей программы (единицы и нули).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы также выяснили как можно поменять местами значения переменных, передавая указатели и меняя значения на которые показывают эти указатели:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">void</span> <span class="tok-nf">swap</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-o">*</span><span class="tok-n">a</span><span class="tok-p">,</span> <span class="tok-kt">int</span> <span class="tok-o">*</span><span class="tok-n">b</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">tmp</span> <span class="tok-o">=</span> <span class="tok-o">*</span><span class="tok-n">a</span><span class="tok-p">;</span>
+    <span class="tok-o">*</span><span class="tok-n">a</span> <span class="tok-o">=</span> <span class="tok-o">*</span><span class="tok-n">b</span><span class="tok-p">;</span>
+    <span class="tok-o">*</span><span class="tok-n">b</span> <span class="tok-o">=</span> <span class="tok-n">tmp</span><span class="tok-p">;</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>int *a</code> объявляет указатель, который указывает на переменную типа <code>int</code> с названием <code>a</code> и позже, используя <code>*a</code>, мы переходим к участку, на которое указывает <code>a</code> и уже там работаем со значением (таким образом мы разыменовываем указатель).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы также разобрали изображения, форматы файлов и создание собственных типов данных.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="linked-lists"><a class="link" href="#linked-lists">Связные Списки</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Массивы хранят данные одинакового типа в последовательно расположенном кусочке памяти, тем самым позволяя нам обратиться к любой части массива, просто зная индекс нужной нам части.</p>
+</li>
+<li>
+<p>Но, к сожалению, у массива есть свои ограничения. Его нельзя увеличить, у нас не получится добавить в его конец дополнительный элемент, так как память, идущая сразу после данного массива, может использоваться другими переменными.</p>
+</li>
+<li>
+<p>Мы могли бы выделить большее количество памяти, скопировав имеющуюся у нас память в новый участок, далее перенося туда элементы. Но такой процесс, с необходимостью копирования дополнительных элементов и ведущий к росту массива, будет требовать все больше и больше производительных ресурсов компьютеров.</p>
+</li>
+<li>
+<p>Но, имея возможность динамически выделять память и создавать наши собственные типы данных, мы можем сделать следующее:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/2.png" width="500"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Здесь, в структуре данных известной как связный список ("linked list"), у нас 5 отсортированных чисел. Каждый из этих прямоугольников, содержащие число и стрелку, мы будем называть "узлами". В данном случае стрелки всего лишь указывают на следующую структуру. С таким подходом нашим элементам более не требуется быть последовательно расположенными друг за другом в памяти и мы можем без труда создавать новые элементы, выделяя им дополнительную память.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы создадим узел (node) с помощью <code>struct</code> (структуры) следующим образом:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">typedef</span> <span class="tok-k">struct</span> <span class="tok-n">node</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">;</span>
+    <span class="tok-k">struct</span> <span class="tok-n">node</span> <span class="tok-o">*</span><span class="tok-n">next</span><span class="tok-p">;</span>
+<span class="tok-p">}</span>
+<span class="tok-n">node</span><span class="tok-p">;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Узел (node) будет содержать в себе переменную <code>int n</code> и указатель на следующий узел <code>struct node *</code> под названием <code>next</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>С данной структурой данных мы можем выполнять следующие операции: <code>delete</code> (удалить), <code>insert</code> (вставить) и <code>search</code> (искать).</p>
+</li>
+<li>
+<p>Вернемся к нашей первой диаграмме. Нам нужен хотя бы один указатель под названием  <code>first</code> (первый), который будет указывать на первый узел, начало списка. И последний узел будет указывать на <code>NULL</code>, таким образом, давая знать, что мы достигли конца списка.</p>
+</li>
+<li>
+<p>Для поиска элемента в массиве, нам нужно начать работу с первого элемента, далее, используя указатель, проследовать ко второму элементу и т.д. Это потому что каждый узел может находиться в любом участке памяти (т.е. байты нашей выделенной памяти расположены не последовательно), поэтому мы не можем здесь применить стратегию бинарного поиска. И скорость выполнения данного линейного поиска равна O(<em>n</em>), даже если наш список будет отсортированным.</p>
+</li>
+<li>
+    <p>Если бы мы не держали список отсортированным, тогда скорость <strong>вставки</strong> нового узла была бы O(1), так как мы могли бы просто вставить число в начало списка. Пусть <code>first</code> указывает на наш новый узел и пусть указатель <code>next</code> этого нового узла будет направлен на предыдущий первый узел. Но если мы хотим сохранить список отсортированным, нам сперва придется найти правильное место для <strong>вставки</strong> числа, что опять займет O(<em>n</em>).</p>
+</li>
+<li>
+<p><strong>Удаление</strong> узла займет столько же времени - O(<em>n</em>), так как нам сперва придется найти число, которое мы хотим удалить.</p>
+</li>
+<li>
+<p>Мы продемонстрировали на студентах принцип работы вставки. Нам нужно быть предельно осторожными при вставке элемента в конец списка, потому что нам нужно обновить последний узел так, чтобы он указывал на новый узел до того как мы перейдем по его указателю к <code>NULL</code>, тем самым теряя адрес этого последнего узла. Также не помешало бы проявить бдительность при обычном добавлении (вставке) узла в список, так как нам нужно изменить указатель нового узла, дабы он указывал на следующий узел, до того как мы изменим указатель предыдущего узла (так как только оттуда мы прослеживаем местоположение следующего узла).</p>
+</li>
+<li>
+<p><strong>Удаление</strong> элементов требует от нас правильного расположения выполняемых нами операций (правильная последовательность строчек кода), так как мы не хотим потерять часть нашего списка или наш узел до того как мы <code>free</code> (освободим) занимаемую им память.</p>
+</li>
+<li>
+<p>Давайте напишем функцию поиска, которая поможет нам лучше понять синтаксис использования узлов, структур и указателей:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">bool</span> <span class="tok-nf">search</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">,</span> <span class="tok-n">node</span> <span class="tok-o">*</span><span class="tok-n">list</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">node</span> <span class="tok-o">*</span><span class="tok-n">ptr</span> <span class="tok-o">=</span> <span class="tok-n">list</span><span class="tok-p">;</span>
+    <span class="tok-k">while</span> <span class="tok-p">(</span><span class="tok-n">ptr</span> <span class="tok-o">!=</span> <span class="tok-nb">NULL</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-n">ptr</span><span class="tok-o">-&gt;</span><span class="tok-n">n</span> <span class="tok-o">==</span> <span class="tok-n">n</span><span class="tok-p">)</span>
+        <span class="tok-p">{</span>
+            <span class="tok-k">return</span> <span class="tok-nb">true</span><span class="tok-p">;</span>
+        <span class="tok-p">}</span>
+        <span class="tok-n">ptr</span> <span class="tok-o">=</span> <span class="tok-n">ptr</span><span class="tok-o">-&gt;</span><span class="tok-n">next</span><span class="tok-p">;</span>
+    <span class="tok-p">}</span>
+    <span class="tok-k">return</span> <span class="tok-nb">false</span><span class="tok-p">;</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Наша функция создается с двумя аргументами: число <code>n</code>, которое мы хотим найти и список, который является указателем на первый <code>node</code> (узел).</p>
+</li>
+<li>
+<p>Мы создали временную переменную <code>node *ptr</code> и сделали так, чтобы она указывала на список.</p>
+</li>
+<li>
+<p>Затем, пока в списке есть элемент, мы воспользуемся <code>ptr&#8594;n</code>, дабы через указатель перейти к структуре узла и получить доступ к, хранящейся внутри него, переменной <code>n</code>. Если это именно то число, которое мы ищем, тогда функция <code>return true</code> (вернет правду) и в противном случае, наш <code>ptr</code> будет указывать на следующий элемент списка.</p>
+</li>
+<li>
+<p>После того, как мы просмотрим все элементы, мы можем <code>return false</code> (вернуть ложь), т.к. мы могли бы вернуть <code>true</code> (правду), если бы ранее нашли число <code>n</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Со связными списками у нас появилась возможность по необходимости увеличивать или уменьшать список. Но взамен мы получаем медленные поиски, вставки и удаления. И в мире программирования часто встречаются такие ситуации, когда вам нужно идти на компромиссы и определять, что для вас важнее: время, пространство или сложность кода.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="stacks-and-queues"><a class="link" href="#stacks-and-queues">Стеки и Очереди</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Представьте стопку подносов, где вы легко можете поднять верхний поднос или положить сверху еще один поднос. Такая структура данных, с названием <strong>стек</strong>, поддерживает две операции  <code>push</code> и <code>pop</code>, которые добавляют и удаляют элементы соответственно.</p>
+</li>
+<li>
+<p>В итоге, последний добавленный (push) элемент будет первым, который мы в последующем удалим (pop). Существуют приложения, где такое свойство бывает крайне полезным, как, к примеру, наш стек в памяти, где вызванная функция помещается на верхнюю часть нашей предыдущей функции.</p>
+</li>
+<li>
+<p>Мы можем самостоятельно реализовать данное свойство:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">typedef</span> <span class="tok-k">struct</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">numbers</span><span class="tok-p">[</span><span class="tok-n">CAPACITY</span><span class="tok-p">];</span>
+    <span class="tok-kt">int</span> <span class="tok-n">size</span><span class="tok-p">;</span>
+<span class="tok-p">}</span>
+<span class="tok-n">stack</span><span class="tok-p">;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Теперь у нас есть структура <code>stack</code>, в которой мы найдем массив состоящий из <code>int</code>ов с названием <code>numbers</code> (числа), имеющий размер <code>CAPACITY</code> (вместимость), который мы задоем в другой части нашего кода. Также у него есть свойство под названием <code>size</code> (размер), так как в нашем стеке количество элементов не всегда будет совпадать с вместимостью данного стека.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>И вместо того чтобы хранить весь массив в нашей структуре, мы можем хранить только указатель, который указывает на первый элемент массива:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">typedef</span> <span class="tok-k">struct</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">int</span> <span class="tok-o">*</span><span class="tok-n">numbers</span><span class="tok-p">;</span>
+    <span class="tok-kt">int</span> <span class="tok-n">size</span><span class="tok-p">;</span>
+<span class="tok-p">}</span>
+<span class="tok-n">stack</span><span class="tok-p">;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Теперь мы можем с помощью функции <code>malloc</code> выделить какую-то часть памяти для хранения наших чисел, а в структуре мы будем хранить только указатель на эту память. Также мы обретаем возможность выбрать насколько большим мы хотим задать каждый стек.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>"Очередь" (queue) является противоположностью "стека" (stack). В очереди первый элемент на входе, будет первым элементом на выходе (first in first out - FIFO), точно также как и очереди людей. У нас будут операции <code>enqueue</code> (добавить в очередь), которые помещают элементы в конец списка и <code>dequeue</code> (извлечь из очереди), которые извлекают начальные эдементы списка.</p>
+</li>
+<li>
+<p>С "очередью" нам нужно немного больше информации:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">typedef</span> <span class="tok-k">struct</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">front</span><span class="tok-p">;</span>
+    <span class="tok-kt">int</span> <span class="tok-n">numbers</span><span class="tok-p">[</span><span class="tok-n">CAPACITY</span><span class="tok-p">];</span>
+    <span class="tok-kt">int</span> <span class="tok-n">size</span><span class="tok-p">;</span>
+<span class="tok-p">}</span>
+<span class="tok-n">queue</span><span class="tok-p">;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Здесь мы используем массив для хранения нашей очереди, но теперь нам также нужно следить за тем, где находится передняя (front) часть данной очереди. Каждый раз, вызывая <code>dequeue</code>, нам нужно будет возвращать элемент на место указываемое индексом <code>front</code>. Потом мы повышаем <code>front</code>, дабы в следующий раз иметь доступ к следующему элементу. Так как мы имеем дело с массивом, мы не можем просто так взять и легко передвинуть его элементы дальше по списку, поэтому мы воспользуемся <code>front</code>ом, чтобы следить за тем, где располагается передняя часть массива.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Таким же образом мы можем динамически выделить память:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">typedef</span> <span class="tok-k">struct</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">front</span><span class="tok-p">;</span>
+    <span class="tok-kt">int</span> <span class="tok-o">*</span><span class="tok-n">numbers</span><span class="tok-p">;</span>
+    <span class="tok-kt">int</span> <span class="tok-n">size</span><span class="tok-p">;</span>
+<span class="tok-p">}</span>
+<span class="tok-n">queue</span><span class="tok-p">;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Стек и очередь - оба являются абстрактными типами данных, которые мы можем реализовать абсолютно любым способом, но ожидайте, что у них будут такие же свойства и операции.</p>
+</li>
+<li>
+<p>Мы посмотрели <a href="https://youtu.be/FKY1Z1hhSWg">интересную анимацию</a> о стеках и очередях.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="trees"><a class="link" href="#trees">Деревья</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Имея в нашем арсенале такой полезный инструмент как указатели, мы можем начать строить более сложные структуры данных, которые будут превосходить ранее используемые одномерные массивы:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/3.png" width="500"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>У нас может быть один узел, который будет указывать на несколько узлов и, в случае с этой структурой данных, мы получим дерево. Один корневой узел указывает на другие узлы (потомки) как в генеалогическом древе. И узлы не имеющие потомков называют листьями.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Теперь представьте если бы у нас были числа и мы бы хотели иметь возможность эффективно осуществлять поиск какого-то определенного числа, используя двоичный (бинарный) алгоритм поиска. Мы могли бы воспользоваться массивом, но мы также можем воспользоваться так называемым двоичным деревом поиска:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/4.png" width="400"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Теперь мы можем вставлять и добавлять элементы до тех пор, пока мы придерживаемся того, что потомок, находящийся слева, будет меньше родительского узла, а потомок, находящийся справа, будет больше того же узла.</p>
+</li>
+<li>
+<p>У любого узла могут быть максимум два потомка и мы легко можем добавлять к ним новые узлы, выделяя для них память и меняя указатели, дабы они были направлены на них (на новые узлы).</p>
+</li>
+<li>
+<p>Нам также нужно позаботиться о том, чтобы дерево было сбалансированным. К примеру, если бы мы продолжали добавлять все бóльшие и бóльшие элементы в самый правый край, тогда мы бы получили связный список. Поэтому нам нужно тщательнее подходить к вопросу вставки элементов, чтобы быть уверенными, что у нас действительно будет дерево, точно такое же, как приведенное выше на рисунке. В противном случае мы получим:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/5.png" width="300"></div>
+</div>
+</li>
+<li>
+<p>В более продвинутых курсах CS (Computer Science) вы сможете познакомиться с алгоритмами вставки элементов, которые тем самым создают сбалансированное дерево и с алгоритмами перебалансировки дерева.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Но мы начнем с кое-чего более легкого. Для реализации двоичного дерева поиска нам, возможно, придется начать с определения узла:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">typedef</span> <span class="tok-k">struct</span> <span class="tok-n">node</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">;</span>
+    <span class="tok-k">struct</span> <span class="tok-n">node</span> <span class="tok-o">*</span><span class="tok-n">left</span><span class="tok-p">;</span>
+    <span class="tok-k">struct</span> <span class="tok-n">node</span> <span class="tok-o">*</span><span class="tok-n">right</span><span class="tok-p">;</span>
+<span class="tok-p">}</span>
+<span class="tok-n">node</span><span class="tok-p">;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Число, хранимое в узле, будет опять <code>n</code> и мы также храним указатели на правый и левый потомки.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Теперь мы можем воспользоваться рекурсией, для более элегантного поиска:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">bool</span> <span class="tok-nf">search</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">,</span> <span class="tok-n">node</span> <span class="tok-o">*</span><span class="tok-n">tree</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-n">tree</span> <span class="tok-o">==</span> <span class="tok-nb">NULL</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-k">return</span> <span class="tok-nb">false</span><span class="tok-p">;</span>
+    <span class="tok-p">}</span>
+    <span class="tok-k">else</span> <span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-n">n</span> <span class="tok-o">&lt;</span> <span class="tok-n">tree</span><span class="tok-o">-&gt;</span><span class="tok-n">n</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">search</span><span class="tok-p">(</span><span class="tok-n">n</span><span class="tok-p">,</span> <span class="tok-n">tree</span><span class="tok-o">-&gt;</span><span class="tok-n">left</span><span class="tok-p">);</span>
+    <span class="tok-p">}</span>
+    <span class="tok-k">else</span> <span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-n">n</span> <span class="tok-o">&gt;</span> <span class="tok-n">tree</span><span class="tok-o">-&gt;</span><span class="tok-n">n</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">search</span><span class="tok-p">(</span><span class="tok-n">n</span><span class="tok-p">,</span> <span class="tok-n">tree</span><span class="tok-o">-&gt;</span><span class="tok-n">right</span><span class="tok-p">);</span>
+    <span class="tok-p">}</span>
+    <span class="tok-k">else</span>
+    <span class="tok-p">{</span>
+        <span class="tok-k">return</span> <span class="tok-nb">true</span><span class="tok-p">;</span>
+    <span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Так как мы знаем, что каждый потомок дерева также является началом меньшего двоичного поискового дерева, мы можем рекурсивно вызывать нашу функцию <code>search</code> (поиск) на всё меньшие и меньшие деревья.</p>
+</li>
+<li>
+<p>Если значение указателя равно <code>NULL</code>, тогда мы должны <code>return false</code> (вернуть ложь), так как в таком случае у нас нет никакого дерева.</p>
+</li>
+<li>
+<p>В противном случае, в зависимости от того, как именно <code>n</code> сравнивается с числом, находящимся в корне дерева, мы будем искать левое или правое потомственное дерево или <code>return true</code> (вернем правду). Так как функция <code>search</code> принимает <code>node *tree</code>, мы можем передать указатели <code>tree&#8594;left</code> и <code>tree-right</code>, и <code>search</code> будет воспринимать их в качестве корня дерева.</p>
+</li>
+<li>
+<p>И мы также <code>return</code> (возвращаем) это значение, которое возвращается к нам благодаря вызову функции <code>search</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы можем применить деревья для сжатия текста, не теряя при этом данные.</p>
+</li>
+<li>
+<p>Вспомните, что символы кодируются с помощью ASCII (каждому байту соответствует символ). Но если мы будем пользоваться только несколькими символами и некоторыми чаще других, мы можем использовать меньшее количество бит для часто пользуемых символов.</p>
+</li>
+<li>
+<p>Кодировка Хаффмана - является системой, которая использует такую концепцию для сжатия данных.</p>
+</li>
+<li>
+<p>Код Морзе тоже использует короткие наборы точек и черточек для часто используемых букв. Но не все сообщения могут быть легко понятными. К примеру, <code>H</code> равна четырем точкам и <code>I</code> двум точкам, а <code>E</code> одной точке, поэтому шесть точек в одной линии могут либо обозначать <code>HI</code>, либо <code>EEEEEE</code>.</p>
+</li>
+<li>
+<p>Кодировка Хаффмана обходит эти неясности. Предположим мы хотим отправить следующее сообщение:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/6.png" width="400"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Сперва мы подсчитываем частоту использования каждого символа, представив их отдельными частями сообщения.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Далее мы зададим наименьшее количество бит для самых распространенных символов и построим дерево, такое как показано ниже:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/7.png" width="400"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Строить мы начнем с самого низа, беря два наименьших узла и соединяя их, при этом складывая их частоту.</p>
+</li>
+<li>
+<p>Обратите внимание, что <code>E</code> в тексте используется чаще других символов, поэтому ей дается только один бит, <code>1</code>. Для представления редко встречающихся букв <code>B</code> и <code>C</code> потребуется наибольшее количество битов, либо <code>0000</code>, либо <code>0001</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>И для отправки сообщений, нам нужно добавить это преобразование сжатых битов к не сжатым символам. Если у нас имеется маленький файл и при этом в нем огромное количество разнообразных символов, то наш файл может стать больше, при попытке добавления данного преобразования. Мы не можем многократно сжимать файлы, тем самым делая их все меньше и меньше!</p>
+</li>
+<li>
+<p>Мы можем представить листок в дереве Хаффмана следующим образом:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">typedef</span> <span class="tok-k">struct</span> <span class="tok-n">node</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">char</span> <span class="tok-n">symbol</span><span class="tok-p">;</span>
+    <span class="tok-kt">float</span> <span class="tok-n">frequency</span><span class="tok-p">;</span>
+    <span class="tok-k">struct</span> <span class="tok-n">node</span> <span class="tok-o">*</span><span class="tok-n">left</span><span class="tok-p">;</span>
+    <span class="tok-k">struct</span> <span class="tok-n">node</span> <span class="tok-o">*</span><span class="tok-n">right</span><span class="tok-p">;</span>
+<span class="tok-p">}</span>
+<span class="tok-n">node</span><span class="tok-p">;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>С такой структурой мы можем хранить данные представленной выше диаграммы.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hash-tables-and-tries"><a class="link" href="#hash-tables-and-tries">Хэш-таблицы и Префиксные Деревья</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Еще одна структура данных - Хэш-таблица. С огромным количеством операций, требующих всего O(1), т.е. постоянное число шагов.</p>
+</li>
+<li>
+<p>Хэш-таблица по виду схожа с массивом:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/8.png" width="300"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы можем хранить любой кусок информации в каждом столбике хэш-таблицы и при этом мы можем получить постоянное время поиска элемента в нашей таблице.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Представьте, что у нас есть ведра и на каждой нарисована буква латинского алфавита. Также у нас есть тетрадки студентов, мы будем сортировать их по ведрам в зависимости от первой буквы имени студента. Поэтому наша хэш-функция будет работать именно с этими первыми буквами.</p>
+</li>
+<li>
+<p>Теперь мы можем работать с 1/26 частью наших отсортированных тетрадок, если конечно мы знаем в какую ведерку смотреть. И если мы будем использовать ту же самую хэш-функцию, мы всегда можем повторить процесс сортировки и положить наши тетрадки в те же самые ведерки.</p>
+</li>
+<li>
+<p>Так как хэш-таблица является массивом, мы можем получить сразу несколько элементов, которые по идее должны оказаться в одном блоке (или ведерке). Тут можно воспользоваться линейным зондированием (linear probing), т.е. техникой вставки или передвижения элемента в следующий свободный слот:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/9.png" width="200"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Если мы добавляем имя <code>Alex</code> или <code>Aaron</code>, но в блоке <code>A</code> уже есть имя <code>Alice</code>, тогда мы идем ниже по хэш-таблице к нашему следующему блоку.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы также можем хранить в каждом блоке указатель на связный список, поэтому любая ведерка может горизонтально увеличиваться:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/10.png" width="400"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+    <p>Такая техника имеет название <strong>хэширование с раздельными цепочками</strong> (separate chaining), где чем больше увеличивается наша таблица, тем меньше становятся наши связные списки.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>При худшем сценарии, когда мы будем заносить имена пользователей и у всех имена будут начинаться с одной и той же буквы, скорость работы будет линейной (n). Но все равно данный метод будет намного эффективнее обычного линейного алгоритма, так как здесь рассматривается 1/26 часть занесенных элементов.</p>
+</li>
+<li>
+    <p>И наконец, у нас есть еще одна структура данных под названием <strong>префиксное дерево</strong> или <strong>trie</strong> (произносится как "трай"):</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes5/11.png" width="400"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Название образовано от слова reTRIEval (получать). Представляет из себя дерево, где в качестве потомков выступают массивы. Каждый массив содержит указатели, которые указывают на другие слои массивов. В данной диаграмме, с изображением массивов, которые способны вместить 26 букв, у первого слоя массива есть указатели <code>M</code>, <code>P</code> и <code>T</code>, направленные на следующие слои массивов. И в этой диаграмме специально пропущены кое-какие части ниже располагающихся массивов (так как сложно представить, какая ширина диаграммы у нас получилась бы тогда), но вы просто считайте, что ширина каждого массива 26 букв.</p>
+</li>
+<li>
+<p>Чтобы найти элемент, в данном случае слово, мы начнем с первой буквы и посмотрим есть ли у нее потомок, а потом есть ли у этого потомка свой потомок, продолжая до тех пор, пока не дойдем до конца нашего слова и увидим приемлемое окончание нашего передвижения по дереву.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Скорость работы trie равна O(1), так как нам всего лишь нужно искать слово, основываясь на буквах, которые составляют это слово. И для данного процесса поиска безразлично количество содержащихся в trie букв. Операции по добавлению (вставке) и удалению слова будет также занимать постоянное количество времени.</p>
+</li>
+<li>
+<p>С этими абстрактными типами данных и структурами данных мы можем решать более сложные проблемы, которые будут требовать от нас более качественного и эффективного подхода в написании нашего кода. До следующего раза!</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>

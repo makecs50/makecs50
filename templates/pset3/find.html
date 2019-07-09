@@ -1,0 +1,539 @@
+---
+layout: header
+title: find
+permalink: /weeks/pset3/find
+---
+    <style>
+        .mjx-chtml {
+    display: inline-block;
+    line-height: 0;
+    text-indent: 0;
+    text-align: left;
+    text-transform: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    word-spacing: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 1px 0;
+}
+        
+        .MJXc-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+        .MathJax_Preview {
+    color: #888;
+}
+        div.stemblock div.content {
+    margin-bottom: 1.25em;
+}
+    </style>
+
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#distribution">Развертывание</a>
+<ul class="sectlevel2">
+<li><a href="#downloading">Скачивание</a></li>
+<li><a href="#understanding">Понимание</a></li>
+</ul>
+</li>
+<li><a href="#specification">Описание</a>
+<ul class="sectlevel2">
+<li><a href="#code-search-code"><code>search</code></a></li>
+<li><a href="#code-sort-code"><code>sort</code></a></li>
+</ul>
+</li>
+<li><a href="#walkthroughs">Прохождения</a>
+<ul class="sectlevel2">
+<li><a href="#search">search (поиск)</a></li>
+<li><a href="#sort">sort (сортировка)</a></li>
+</ul>
+</li>
+<li><a href="#usage">Использование</a></li>
+<li><a href="#testing">Проверка</a>
+<ul class="sectlevel2">
+<li><a href="#code-check50-code"><code>check50</code></a></li>
+</ul>
+</li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#changelog">Изменения</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Find (Найти)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Создайте программу, которая будет искать число среди определенного количества других чисел.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./generate 1000 | ./find 42</span>
+Didn't find needle in haystack. 
+(Иголка в стоге сена не была найдена) </code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="distribution"><a class="link" href="#distribution">Развертывание</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="downloading"><a class="link" href="#downloading">Скачивание</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ wget <a href="https://github.com/LeonEsquire/cs50_find/archive/master.zip" class="bare">https://github.com/LeonEsquire/cs50_find/archive/master.zip</a>
+$ unzip master.zip
+$ rm master.zip
+$ mv cs50_find-master find
+$ cd find
+$ ls
+Makefile    find.c      generate.c  helpers.c   helpers.h</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="understanding"><a class="link" href="#understanding">Понимание</a></h3>
+<div class="paragraph">
+<p>В файле <code>generate.c</code> реализована программа, использующая "генератор псевдослучайных чисел" (с помощью функции <code>drand48</code>) для генерации целой кучи случайных чисел (на самом деле псевдослучайные, т.к. компьютер не может создавать по-настоящему случайные числа) по одному на строку, каждая из которых в пределах [0, <code>LIMIT</code>), где <code>LIMIT</code> (лимит, предел) является константой (заданное и не изменяющееся число), заданной внутри файла. Т.е. каждое число больше или равно 0 и меньше чем <code>LIMIT</code>.</p>
+</div>
+<div class="paragraph">
+<p>Скомпилируйте программу, выполнив код ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>make generate</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Теперь запустите ее следующим образом.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./generate</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вас должны осведомить о правильном использовании программы, как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>Usage: generate n [s]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Данная строка говорит нам о том, что эта программа ожидает один или два аргумента командной строки. Первый аргумент <code>n</code> - обязательно должен присутствовать; он указывает сколько псевдослучайных чисел должно быть сгенерировано. Второй аргумент <code>s</code> не обязательно указывать (поэтому он был помещен в квадратные скобки); если же его предоставили, он будет обозначать число, которое будет использовано генератором псевдослучайных чисел в качестве "зернышка" (то, которое сеют для получения урожая). Зернышко используется на входе генератора псевдослучайных чисел, влияя на его выходные данные. К примеру, если вы посеете зернышко в <code>drand48</code>, сперва использовав <code>srand48</code> (еще одна функция, предназначенная для "сеяния" зернышка в <code>drand48</code>), используя к примеру аргумент <code>0</code> и затем вызовите три раза функцию <code>drand48</code> - <code>drand48</code> может вернуть <code>0.170828</code>, потом <code>0.749902</code> и <code>0.096372</code>. Но если вы посеете зернышко в <code>drand48</code>, сперва вызвав функцию <code>srand48</code> с использованием аргумента <code>1</code>, и затем вызовите три раза функцию  <code>drand48</code> - <code>drand48</code> может теперь уже вернуть <code>0.041630</code>, потом <code>0.454492</code> и <code>0.834817</code>. Но если вы повторно посеете зернышко в <code>drand48</code>, вызвав функцию <code>srand48</code>, использовав аргумент <code>0</code>, следующий раз вызвав три раза функцию <code>drand48</code> - вы опять получите <code>0.170828</code>, потом <code>0.749902</code> и <code>0.096372</code>! Видите, не так уж это и случайно.</p>
+</div>
+<div class="paragraph">
+<p> Повторно запустите эту программу, но на этот раз со значением, к примеру <code>10</code> для <code>n</code>, как указано ниже. Должен появится список из 10 псевдослучайных чисел.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./generate 10</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Запустите программу в третий раз, используя тоже самое значение <code>n</code>, и вы увидите список с другим набором значений. Теперь попробуйте запустить программу, дав значение <code>s</code> (т.е. <code>0</code>), как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./generate 10 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Опять запустите ту же саму команду:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./generate 10 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Спорим, вы опять увидели ту же самую последовательность чисел? О да, вот что происходит если вы не используете разные зернышки для псевдослучайного генератора чисел.</p>
+</div>
+<div class="paragraph">
+<p>Теперь разберем сам файл <code>generate.c</code>. (Помните как?) Комментарии, находящиеся в верхней части данного файла, объясняют общие возможности программы. Но похоже мы забыли дать комментарии к самому коду. Тщательно прочитайте код, пока вы не будете понимать каждую его сточку, а потом добавьте комментарии к нашему коду, заменяя каждый <code>TODO</code> (ЗАДАЧА или что делать) фразой, описывающей смысл или функциональность соответствующих линий кода. (Знайте, что <code>unsigned int</code> это обычный <code>int</code>, который не может быть отрицательным). Не забывайте, что вы всегда можете найти в интернете документацию на <code>drand48</code> и <code>srand48</code>, которая поможет вам лучше понимать их функционал.</p>
+</div>
+
+<div class="paragraph">
+<p>Закончив комментировать код <code>generate.c</code>, перекомпилируйте программу, дабы быть уверенным, что вы ничего не сломали, выполнив команду.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>make generate</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Если <code>generate</code> более не компилируется, сделайте паузу и посмотрите, где вы могли допустить ошибку.</p>
+</div>
+<div class="paragraph">
+<p>Теперь вспомните, что <code>make</code> автоматизирует компиляцию вашего кода, чтобы вам не пришлось вручную прописывать <code>clang</code> вместе с его многими аргументами. Заметьте, как <code>make</code> прописала и запустила за вас приличного размера команду, которая является выходными данными. Но, с увеличением размера вашей программы, <code>make</code> больше не сможет сама по себе компилировать ваш код. Вам придется начать говорить <code>make</code>, как компилировать вашу программу, в частности когда дело касается нескольких исходных файлов (т.е. <code>.c</code>). И теперь мы будем полагаться на "Makefiles" - файлы конфигурации, которые говорят <code>make</code>, какие именно шаги нужно применять.</p>
+</div>
+<div class="paragraph">
+<p>Как <code>make</code> узнал, каким образом компилировать программу "generate" в данном случае? На самом деле он использовал конфигурационный файл, который мы ранее создали. Давайте откроем файл <code>Makefile</code>, который находится в той же папке что и <code>generate.c</code>. Этот <code>Makefile</code> в своей основе представляет список правил, который мы написали для вас, говорящий "make", как создавать программу "generate" из файла <code>generate.c</code>. Соответствующие линии указываются ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="Makefile"><span class="tok-nf">generate</span><span class="tok-o">:</span> <span class="tok-n">generate</span>.<span class="tok-n">c</span>
+    clang -ggdb3 -O0 -std<span class="tok-o">=</span>c11 -Wall -Werror -o generate generate.c</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p> Первая линия говорит <code>make</code>, что "цель", имеющая название <code>generate</code>, должна быть создана вызовом команды второй линии. Знайте, что пропуск в начале второй линии - это не последовательность пробелов, а единожды нажатая кнопка "tab". К сожалению, для <code>make</code> является принципиальным, чтобы команды начинались с "tab", поэтому будьте осторожнее и смотрите, не изменяйте их на пробелы, в противном случае вы столкнетесь со странными ошибками! Флаг или аргумент <code>-Werror</code> говорит <code>clang'у</code> воспринимать предупреждения (плохо), как будто бы они были ошибками (намного хуже), чтобы заставить вас (в хорошем, поучительном смысле!) исправить их.</p>
+</div>
+<div class="paragraph">
+<p>Теперь посмотрите на <code>find.c</code>. Заметьте, что эта программа ожидает один аргумент командной строки: "иголку", которая будет искаться в "стоге" значений. Как только закончите работать с кодом, можете компилировать программу, выполнив команду, написанную ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>make find</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Заметьте, посмотрев на вывод команды, что <code>make</code> на самом деле выполнила следующее.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>clang -ggdb3 -O0 -std=c11 -Wall -Werror -o find find.c helpers.c -lcs50 -lm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Еще вы скомпилировали программу, включающую в себя не один, а два <code>.c</code> файла: <code>helpers.c</code> и <code>find.c</code>. Как <code>make</code> узнала, что ей нужно делать? Опять же, откройте <code>Makefile</code>, чтобы увидеть, кто стоял за всем этим. Подходящие линии появляются ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="Makefile"><span class="tok-nf">find</span><span class="tok-o">:</span> <span class="tok-n">find</span>.<span class="tok-n">c</span> <span class="tok-n">helpers</span>.<span class="tok-n">c</span> <span class="tok-n">helpers</span>.<span class="tok-n">h</span>
+    clang -ggdb3 -O0 -std<span class="tok-o">=</span>c11 -Wall -Werror -o find find.c helpers.c -lcs50 -lm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>В соответствии с зависимостями, подразумеваемыми выше (после двоеточия), любые изменения в <code>find.c</code>, <code>helpers.c</code> или <code>helpers.h</code> будут вынуждать <code>make</code> пересоздавать программу "find" при ее следующем вызове в качестве цели.</p>
+</div>
+<div class="paragraph">
+<p>Запустите программу, набрав следующее.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./find 13</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вам будет предложено предоставить немного сена (т.е. немного integer'ов), по одной "соломинке". Как только вам надоест предоставлять integer'ы, нажмите на клавиатуре ctrl-d, чтобы отправить программе символ <code>EOF</code> (end-of-file или конец файла). Данный символ вынудит функцию библиотеки CS50 <code>get_int</code> вернуть <code>INT_MAX</code> - константа, которая в соответствии с <code>find.c</code> вынудит <code>find</code> прекратить просить сено. Затем программа начнет искать иголку в предосталенном вами сене, в итоге давая знать, был ли найден первый в последнем. Короче, обыскивает массив на наличие кое-какого значения. По крайней мере, он его должен найти, но вряд ли у него пока что-нибудь получится! И вот настал ваш выход. Скоро вы узнаете, в чем заключается ваша задача.</p>
+</div>
+<div class="paragraph">
+<p>Оказывается, вы можете автоматизировать этот процесс предоставления сена, хоть и через "упаковывание" выходных данных <code>generate</code> и предоставление их в качестве входных данных <code>find</code>'у. Например, команда ниже передает 1000 псевдослучайных номеров программе <code>find</code>, которая потом ищет в них число <code>42</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./generate 1000 | ./find 42</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Заметьте, что упаковывая выходные данные, полученные от <code>generate</code> в <code>find</code> таким вот образом, вы на самом деле не увидите числа программы <code>generate</code>, но вы сможете наблюдать запросы <code>find</code>'а.</p>
+</div>
+<div class="paragraph">
+<p>Можно поступить по-другому - "перенаправить" выходные данные <code>generate</code>'а в файл с помощью команды, приведенной ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./generate 1000 &gt; numbers.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Далее вы можете перенаправить содержимое файла в виде входных данных программе <code>find</code>, используя команду.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./find 42 &lt; numbers.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Давайте закончим просматривать файл <code>Makefile</code>. Посмотрите на нижнюю линию.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>all: find generate</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Эта цель указывает, что вы можете создать обе программы <code>generate</code> и <code>find</code>, просто прописав следующее.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>make all</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Более того, ниже приведенное даст тот же результат (так как <code>make</code> по умолчанию создает первую цель файла <code>Makefile</code>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>make</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>О, если бы вы могли решить данный набор проблем одной командой! Наконец, посмотрите на эти последние линии <code>Makefile</code>'а:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>clean:
+    rm -f *.o a.out core find generate</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Эта цель позволяет вам удалить все файлы, чьи названия заканчиваются на <code>.o</code> или имеют названия <code>core</code> (очень скоро расскажем вам побольше!), <code>find</code> или <code>generate</code>, просто набрав команду приведенную ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>make clean</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Не добавляйте <code>*.c</code> к последней линии <code>Makefile</code>! (Почему?)</p>
+</div>
+<div class="paragraph">
+<p>Заметьте, что в <code>find.c</code> <code>main</code> вызывает <code>search</code> - функцию, объявленную в <code>helpers.h</code>. К сожалению, мы забыли полностью реализовать эту функцию в <code>helpers.c</code>! Загляните в <code>helpers.c</code> и вы увидите, что <code>search</code> всегда возвращает <code>false</code> (ложь), вне зависимости от того, есть ли <code>значение</code> в <code>значениях</code>. Для надежности мы могли бы поместить содержимое <code>helpers.h</code> и <code>helpers.c</code> в саму <code>find.c</code>. Но иногда лучше распределять программы в несколько файлов, тем более если некоторые функции являются "полезными функциями", которые в будущем могут пригодиться другим программам - как, к примеру, те, что в библиотеке CS50.</p>
+</div>
+<div class="paragraph">
+<p>Также заметьте в соответствии с <code>helpers.h</code>, что прототип <code>search</code> выглядит вот так:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">bool</span> <span class="tok-nf">search</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">value</span><span class="tok-p">,</span> <span class="tok-kt">int</span> <span class="tok-n">values</span><span class="tok-p">[],</span> <span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>А прототип <code>sort</code> так:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">void</span> <span class="tok-nf">sort</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">values</span><span class="tok-p">[],</span> <span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Обе функции принимают массив <code>values</code> в виде одного из своих аргументов, также и integer <code>n</code> - размер данного массива. Это потому, что, передавая функции массива, вы должны передавать его размер отдельно; вы не можете вывести размер массива из самого массива.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Закончите реализацию программы <code>find</code>, продолжив написание программ <code>search</code> и <code>sort</code> в <code>helpers.c</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="code-search-code"><a class="link" href="#code-search-code"><code>search</code></a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Ваш код должен сразу же вернуть <code>false</code> (ложь), если <code>n</code> будет не положительным.</p>
+</li>
+<li>
+<p>Ваш код должен вернуть <code>true</code> (истину), если <code>значение</code> окажется в <code>значениях</code>, и - <code>false</code> (ложь), если <code>значения</code> не будет в <code>значениях</code>.</p>
+</li>
+<li>
+<p>Время работы вашего кода должно быть в границах <em>O</em>(log <em>n</em>).</p>
+</li>
+<li>
+<p>Вам нельзя изменять объявление функции. Прототип должен оставаться тем же:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">bool</span> <span class="tok-nf">search</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">value</span><span class="tok-p">,</span> <span class="tok-kt">int</span> <span class="tok-n">values</span><span class="tok-p">[],</span> <span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">);</span></code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-sort-code"><a class="link" href="#code-sort-code"><code>sort</code></a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Ваша программа должна сортировать числа массива, переданные ей, начиная от меньшего и заканчивая наибольшим.</p>
+</li>
+<li>
+<p>Время выполнения вашего кода должно быть в <em>O</em>(<em>n</em><sup>2</sup>), где <em>n</em> - размер массива.</p>
+</li>
+<li>
+<p>Вам нельзя менять объявление функции. Прототип должен оставаться тем же:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">void</span> <span class="tok-nf">sort</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">values</span><span class="tok-p">[],</span> <span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">);</span></code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthroughs"><a class="link" href="#walkthroughs">Прохождения</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="search"><a class="link" href="#search">search (поиск)</a></h3>
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/45oXiwu0eZ8?rel=0" frameborder="0" allowfullscreen></iframe></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sort"><a class="link" href="#sort">sort (сортировка)</a></h3>
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/_V5jB7JrU5M?rel=0" frameborder="0" allowfullscreen></iframe></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Использование</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ваша программа должна проделывать тоже самое, что показано в примере ниже. Предположим, подчеркнутый текст - это то, что написал пользователь.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./find TODO</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Когда будете готовы проверить правильность вашей программы, попробуйте запустить команду указанную ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./generate 1000 50 | ./find 127</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Так как один из номеров, выведенных <code>generate</code>, когда в нее было посеяно зернышко <code>50</code>, оказался <code>127</code>, ваш код должен будет найти эту "иголку"!  Для разнообразия попробуйте запустить команду, приведенную ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./generate 1000 50 | ./find 128</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Так как <code>128</code> нет среди выведенных программой <code>generate</code> чисел, при использовании в качестве зернышка <code>50</code>, ваш код не должен находить эту иголку. Лучше всего провести еще несколько тестов, запуская <code>generate</code> с разными зернышками, и смотреть на выходные данные, упаковывая их в программе <code>find</code>, в поисках "иголки", которая, вы знаете, точно будет среди "сена".</p>
+</div>
+<div class="paragraph">
+<p>Заметьте, что <code>main</code> в <code>find.c</code> записан таким образом, что <code>find</code> возвращает <code>0</code>, если иголка найдена, и <code>1</code> в противном случае. Вы можете проверить так называемый "код выхода", который возвращает <code>main</code>, завершая свою работу</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>echo $?</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>после того, как запустим кое-какую команду. Предположим вы правильно имплементируете функцию <code>search</code>. Если вы пропишите</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./generate 1000 50 | ./find 127
+echo $?</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>то вы увидите <code>0</code>, потому что <code>127</code> есть среди 1,000, выведенных программой <code>generate</code> чисел - эти числа были сгенерированы благодаря зернышку <code>50</code>. В данном случае функция <code>search</code> должна вернуть <code>true</code> (истину), а функция <code>main</code> должна вернуть <code>0</code>.  Но если вы пропишите</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./generate 1000 50 | ./find 128
+echo $?</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>то вы увидите <code>1</code>, так как <code>128</code> нет среди 1,000, выведенных программой <code>generate</code> чисел - эти числа были сгенерированы благодаря зернышку <code>50</code> и в данном случае функция <code>search</code> должна вернуть <code>false</code> (ложь), а функция <code>main</code> должна вернуть <code>1</code>. Улавливаете логику?</p>
+</div>
+<div class="sect2">
+<h3 id="code-check50-code"><a class="link" href="#code-check50-code"><code>check50</code></a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>check50 cs50/2017/x/find/less</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вас потребуют ввести логин (<b>GitHub username</b>) и пароль (<b>GitHub password</b>) от вашей учетной записи на Github'е, которую вы можете завести, пройдя по данной ссылке <a href="https://github.com/join">https://github.com/join</a>.</p>
+</div>
+<div class="paragraph">
+<p>Зайдите на сайт <a href="https://cs50.me" target="_blank">cs50.me</a>, используя всё ту же учетную запись GitHub'а и нажмите на зеленую кнопку <b>authorize submit50</b> (Это действие производится только один раз).</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Перед тем как вы имплементируете <code>search</code> в границу времени <em>O</em>(log <em>n</em>), вам лучше написать временный код в <em>O</em>(<em>n</em>) границе, также как и в линейном поиске, потому что так легче реализовать правильный поиск. Таким образом, вы можете перейти к <code>sort</code>, зная, что <code>search</code> точно будет работать, как надо. И как только <code>sort</code> начнет выполняться должным образом, вы сможете вернуться и повторно имплементировать <code>search</code> в <em>O</em>(log <em>n</em>) времени, как с бинарным поиском. Не забудьте это сделать!</p>
+</div>
+<div class="paragraph">
+<p>Вы можете реализовать код <code>search</code> итеративным подходом (используя цикл) или рекурсивно (где функция будет вызывать саму себя). Если вы выберите последний способ, то знайте, что вам нельзя будет менять нашу имплементацию кода <code>search</code>, но вы можете создать новую, рекурсивную функцию, которую будет вызывать сама <code>search</code>.</p>
+</div>
+<div class="paragraph">
+<p>Для функции <code>sort</code> вы, скорее всего, захотите имплементировать пузырьковую сортировку, сортировку выбором или сортировку вставками! Просто помните, что нет единого правильного способа реализации любого из этих алгоритмов. Существует громное количество вариаций. Более того, вы можете улучшать их как пожелаете, до тех пор, пока ваша реализация остается в <em>O</em>(<em>n</em><sup>2</sup>). Хоть вы и не можете менять наш код функции <code>sort</code>, вы можете спокойно реализовать свою собственную функцию (функции) в <code>helpers.c</code>, которую (которые) затем сама <code>sort</code> может вызвать.</p>
+</div>
+<div class="paragraph">
+<p>Мы оставляем вам работу по определению лучшего способа проверки вашей имплементации функций <code>search</code> и <code>sort</code>. Но не забывайте, что у вас есть верный друг <code>eprintf</code>, который поможет вам в вашем дебаггинге! И не забывайте, что вы можете генерировать одинаковую последовательность псевдослучайных чисел опять, опять и опять, указывая зернышко программы <code>generate</code>.</p>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">Изменения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>28-02-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+

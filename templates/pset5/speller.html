@@ -1,0 +1,655 @@
+---
+layout: header
+title: speller
+permalink: /weeks/pset5/speller
+---
+    <style>
+        .mjx-chtml {
+    display: inline-block;
+    line-height: 0;
+    text-indent: 0;
+    text-align: left;
+    text-transform: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    word-spacing: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 1px 0;
+}
+        
+        .MJXc-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+        .MathJax_Preview {
+    color: #888;
+}
+        div.stemblock div.content {
+    margin-bottom: 1.25em;
+}
+    </style>
+
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#distribution">Развертывание</a>
+<ul class="sectlevel2">
+<li><a href="#downloading">Скачивание</a></li>
+<li><a href="#understanding">Понимание</a>
+<ul class="sectlevel3">
+<li><a href="#code-dictionary-c-h-code"><code>dictionary.{c,h}</code></a></li>
+<li><a href="#code-makefile-code"><code>Makefile</code></a></li>
+<li><a href="#code-speller-c-code"><code>speller.c</code></a></li>
+<li><a href="#code-texts-code"><code>texts/</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#questions">Вопросы</a></li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthrough">Прохождение</a></li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#testing">Проверка</a>
+<ul class="sectlevel2">
+<li><a href="#code-check50-code"><code>check50</code></a></li>
+</ul>
+</li>
+<li><a href="#staff-s-solution">Гарвардское Решение</a></li>
+<li><a href="#changelog">Изменения</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Speller (Орфографический Словарь
+)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Реализуйте программу, которая будет проверять правильность написания слов файла, как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./speller texts/austinpowers.txt</span>
+MISSPELLED WORDS
+(Слова с ошибками)
+
+[...]
+Bigglesworth
+[...]
+Virtucon
+[...]
+friggin'
+[...]
+trippy
+[...]
+
+WORDS MISSPELLED:
+(количество неправильно написанных слов)
+
+WORDS IN DICTIONARY:
+(слов в справочнике)
+
+WORDS IN TEXT:
+(слов в тексте)
+
+TIME IN load:
+(время для загурзку)
+
+TIME IN check:
+(время для проверки)
+
+TIME IN size:
+(время для размера)
+
+TIME IN unload:
+(время для выгрузки )
+
+TIME IN TOTAL:
+(общее время)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="distribution"><a class="link" href="#distribution">Развертывание</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="downloading"><a class="link" href="#downloading">Скачивание</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ wget <a href="https://github.com/LeonEsquire/cs50_speller/archive/master.zip" class="bare">https://github.com/LeonEsquire/cs50_speller/archive/master.zip</a>
+$ unzip master.zip
+$ rm master.zip
+$ mv cs50_speller-master speller
+$ cd speller
+$ ls
+dictionaries/  dictionary.c  dictionary.h  keys/  Makefile  questions.txt  speller.c  texts/</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="understanding"><a class="link" href="#understanding">Понимание</a></h3>
+<div class="paragraph">
+<p>Теоретически алгоритм с входными данными размера <em>n</em> и  временем (эффективностью) выполнения <em>n</em> асимптотически эквивалентен, в плане <em>O</em>, алгоритму с временем выполнения 2<em>n</em>. В действительности же последний будет в два раза медленее первого.</p>
+</div>
+<div class="paragraph">
+<p>Далее вам предстоит имплементировать программу, которая будет проверять с максимально возможной скоростью правильность введенного слова! Под "максимальной" мы имеем ввиду настоящую скорость - ту, которую можно заметить при реальной работе с программой, а не в асимптотическом представлении.</p>
+</div>
+<div class="paragraph">
+<p>В <code>speller.c</code> (орфографический справочник
+) мы создали программу, которая проверяет на орфографию файл, после загрузки справочника с жесткого диска в нашу память (оперативку). К сожалению, мы не разобрались с тем, как реализовать функционал загрузки справочника и функционал проверки орфографии. Обе задачи (и кое-что еще) нужно будет имплементировать вам самим! Но сперва маленькая экскурсия.</p>
+</div>
+<div class="sect3">
+<h4 id="code-dictionary-c-h-code"><a class="link" href="#code-dictionary-c-h-code"><code>dictionary.{c,h}</code></a></h4>
+<div class="paragraph">
+<p>Откройте <code>dictionary.h</code>. В данном файле объявлены четыре функции. Ознакомьтесь с тем, что должна делать каждая из них. Теперь откройте <code>dictionary.c</code>. Заметьте, что мы уже имплементировали код данных четырех функций, правда самым минимальным образом, достаточным для того, чтобы код компилировался. Ваша задача сводиться к тому, чтобы по-новому реимплементировать эти функции наилучшим образом, чтобы эта программа проверки работала так, как ее разрекламировал нам ваш дядя. Для нас главное скорость!</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-makefile-code"><a class="link" href="#code-makefile-code"><code>Makefile</code></a></h4>
+<div class="paragraph">
+<p>Вспомните, что <code>make</code> автоматизирует компиляцию вашего кода и вам не придется вручную запускать <code>clang</code> вместе с огромным количеством переключаетелей (аргументов). Но, по мере того, как будет увеличиваться размер вашей программы, make более не сможет сам определять, как именно ему компилировать код. Вам придется самим говорить make'у, как нужно компилировать вашу программу, особенно, когда речь пойдет о нескольких файловых источниках (т.е. <code>.c</code>), как например в этой проблеме. Поэтому мы избавимся от <code>Makefile</code>, файла конфигурации, который говорит make'у, что ему нужно делать. Откроем <code>Makefile</code> и разберем его линии.</p>
+</div>
+<div class="paragraph">
+<p>Линия, приведенная ниже, определяет переменную под названием <code>CC</code>, которая устанавливает, что make должен использовать <code>clang</code> для компиляции программ.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>CC = clang</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ниже идет линия, определяющая переменную <code>CFLAGS</code>, которая, в свою очередь, уточняет, что программа <code>clang</code> должна использовать кое-какие флаги (аргументы), многие из которых вам могут показаться знакомыми.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>CFLAGS = -ggdb3 -O0 -Qunused-arguments -std=c11 -Wall -Werror</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Следующая линия определяет переменную <code>EXE</code>. Ее значение будет задавать имя нашей программы.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>EXE = speller</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Другая линия определяет переменную <code>HDRS</code>. Ее значением выступает список, состоящий из разделенных пробелами заголовочных файлов, используемые программой <code>speller</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>HDRS = dictionary.h</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Далее идет линия, определяющая переменную <code>LIBS</code>, значением которой является список, состоящий из разделенных пробелами библиотек. Каждая из таких библиотек, должна начинаться с <code>-l</code> (вспомните как мы ранее использовали <code>-lcs50</code>). Вполне вероятно, что вам не придется перечислять какие-либо библиотеки для этой проблемы, но мы все же включили эту переменную на всякий случай.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>LIBS =</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Следующая линия определяет переменную <code>SRCS</code>. Ее значением выступает список, состоящий из разделенных пробелами файлов Си, которые вместе смогут имплементировать программу <code>speller</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>SRCS = speller.c dictionary.c</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Линия, приведенная ниже, определяет переменную под названием <code>OBJS</code>. Ее значение идентично значению <code>SRCS</code>, кроме того отличия, что каждое расширение файла не <code>.c</code>, а <code>.o</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>OBJS = $(SRCS:.c=.o)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Далее идущие линии определяют "цель", используя эти переменные, которые говорят make'у, как компилировать программу <code>speller</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$(EXE): $(OBJS) Makefile
+    $(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Следующая линия определяет, что все наши <code>.o</code> файлы зависят от <code>dictionary.h</code> и <code>Makefile</code>, поэтому изменение любого из них приведет к повторной компиляции <code>.o</code> файлов при следующем запуске <code>make</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$(OBJS): $(HDRS) Makefile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Наконец, линии, приведенные ниже, определяют другую цель, которая служит для очистки (clean) папки этой "проблемы".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>clean:
+    rm -f core $(EXE) *.o</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Можете как угодно изменять файл <code>Makefile</code>, все на ваше усмотрение. На самом деле, вам итак придется его менять, если вы создадите любые <code>.c</code> или <code>.h</code> файлы. Но будьте осторожны, постарайтесь не нарушить табуляцию, а именно заменив табы (<code>\t</code>), так как <code>make</code> ожидает, что эти табы будут под каждой целью.</p>
+</div>
+<div class="paragraph">
+<p>Связь всех этих линий дает вам возможность компилировать программу <code>speller</code>, используя только одну команду, хоть она и охватывает немало файлов:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>make speller</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Но есть еще лучший способ, вы можете просто выполнить следующее:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>make</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>И если вы когда-нибудь захотите удалить программу вместе с любыми другими <code>core</code> (важными) или <code>.o</code> файлами, вы можете сделать это одной командой:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>make clean</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>В общем, если вы захотите скомпилировать код данной проблемы, достаточно будет запустить:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>make</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-speller-c-code"><a class="link" href="#code-speller-c-code"><code>speller.c</code></a></h4>
+<div class="paragraph">
+<p>Хорошо, теперь откройте <code>speller.c</code> и потратьте кое-какое время, пытаясь понять код и комментарии приведенные внутри данного файла. Вам не нужно менять его содержимое, но, как бы там не было, вам надо понимать этот код. Заметьте, как мы, используя <code>getrusage</code>, будем измерять скорость выполнения работы (бенчмаркинг) вашей имплементации <code>check</code> (проверки), <code>load</code> (загрузки), <code>size</code> (размера) и <code>unload</code> (выгрузки). Обратите еще внимание на то, как мы, слово за словом, передаем на проверку функции <code>check</code> содержимое файла. В итоге предоставляя отчет о каждом слове с орфографической ошибкой, которое было найдено в данном файле и еще с кое-какой статистикой.</p>
+</div>
+<div class="paragraph">
+<p>Посмотрите, как нужно запускать программу <code>speller</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>Usage (использование): speller [dictionary] text</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>где предполагается, что <code>dictionary</code> (справочник) будет выступать в качестве файла, который содержит список слов (все слова строчные, т.е. написаны маленькими буквами). Каждое слово на отдельной линии и <code>text</code> выступает файл который будет проверяться на наличие орфографических ошибок. Квадратные скобки указывают на необязательность предоставления <code>dictionary</code> (справочника). Если этот аргумент не будет указан, тогда <code>speller</code> будет по умолчанию использовать <code>dictionaries/large</code>. Другими словами, команда</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./speller text</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>будет эквивалентна</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./speller dictionaries/large text</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>где <code>text</code> - это файл, который вы хотите проверить на орфографические ошибки. Достаточно сказать, что намного легче использовать первый метод. Конечно, <code>speller</code> не сможет загрузить какие-либо справочники, пока вы не реализуете <code>load</code> (загрузчик) в <code>dictionary.c</code>! А до тех пор, вы будете видеть сообщение <strong>Could not load</strong> (не удается загрузить файл).</p>
+</div>
+<div class="paragraph">
+<p>Внутри основного справочника находится 143,091 слов и все они должны быть загружены в память! Откройте этот файл для лучшего представления его структуры и размера. Обратите внимание на то, что каждое слова записано строчными (маленькими) буквами. Сверху вниз файл отсортирован лексикографически (гуглите :) ), с одним словом на каждую линию (каждая из которых оканчивается на <code>\n</code>). Ни одно слово не может превышать 45 символов и не одно из них не повторно не употребляется. Во время разработки может оказаться полезным представить программе <code>speller</code> свой собственный справочник <code>dictionary</code>, который будет содержать намного меньше слов. Так вам не придется уделять много времени на отладку, избегая огромную структуру памяти. В <code>dictionaries/small</code> есть такой справочник. Чтобы им воспользоваться выполните</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./speller dictionaries/small text</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>где <code>text</code> представляет из себя файл, который вы хотите проверить на орфографию. Теперь остановитесь и не продвигайтесь дальше, пока не будете уверены, что вы понимаете как работает сама программа <code>speller</code>!</p>
+</div>
+<div class="paragraph">
+<p>Вполне вероятно, что вы недостаточно разобрались с файлом <code>speller.c</code>. Вернитесь назад и повторно пройдитесь по нему!</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-texts-code"><a class="link" href="#code-texts-code"><code>texts/</code></a></h4>
+<div class="paragraph">
+<p>Мы предоставили вам огромное количество текста, чтобы вы могли протестировать реализацию программы <code>speller</code>. Среди данных текстов, можно найти часть сценария фильма <em>Остин Пауэрс: Человек-загадка международного масштаба</em>, звуковой фрагмент <a href="https://goo.gl/MBMdDd">Ральф Виггама</a>, три миллиона байтов от Толстого, кое-какие выдержки из работ Макиавелли и Шекспира, весь текст библии короля Якова и т.д. Дабы вы имели лучшее представление о том, с чем вам придется работать, откройте и просмотрите каждый из этих файлов, которые находятся в папке под названием <code>texts</code>, которую в свою очередь можно найти в папке <code>pset5</code>.</p>
+</div>
+<div class="paragraph">
+<p>Теперь, когда вы тщательно разобрали код <code>speller.c</code>, вы должны иметь представление каким получится результат на выходе (выходные данные программы), после запуска программы <code>speller</code> следующим образом</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./speller texts/austinpowers.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>В итоге, мы увидим результат приведенный ниже. Сперва попробуйте запустить "Гарвардское Решение" (используя основной справочник) с тем, что приведено ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~cs50/pset5/speller texts/austinpowers.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ниже идут выходные данные, которые появятся перед вами. Чисто для прикола, мы подобрали кое-какие наши любимые "неправильно написанные слова" (наверное надо знать английский, чтобы понять где здесь "прикол"). И, чтобы не испортить вам настроения, мы убрали нашу собственную статистику.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>MISSPELLED WORDS
+(слова с ошибками)
+
+[...]
+Bigglesworth
+[...]
+Virtucon
+[...]
+friggin'
+[...]
+trippy
+[...]
+
+WORDS MISSPELLED:
+WORDS IN DICTIONARY:
+WORDS IN TEXT:
+TIME IN load:
+TIME IN check:
+TIME IN size:
+TIME IN unload:
+TIME IN TOTAL:</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>TIME IN load</code> (время для загрузки) представляет число секунд, которые затрачивает <code>speller</code>, выполняя вашу имплементацию <code>load</code> (загрузки). <code>TIME IN check</code> (время для проверки) представляет число секунд, которые затрачивает <code>speller</code>, выполняя вашу имплементацию <code>check</code> (проверки). <code>TIME IN size</code> (время для размера) представляет число секунд, которые затрачивает <code>speller</code>, выполняя вашу имплементацию <code>size</code> (размер). <code>TIME IN unload</code> (время для выгрузки) представляет число секунд, которые затрачивает <code>speller</code>, выполняя вашу имплементацию <code>unload</code> (выгрузка).<code>TIME IN TOTAL</code> (общее время) представляют сумму всех этих измерений времени.</p>
+</div>
+<div class="paragraph">
+<p><strong>Имейте ввиду, что эти числа могут различаться при каждом запуске <code>speller</code>, в зависимости от загруженности среды разработки CS50 IDE, даже если вы не меняли свой код.</strong></p>
+</div>
+<div class="paragraph">
+<p>Под "misspelled" (слово с ошибкой) мы подразумеваем, что некоторые слова не находятся в <code>dictionary</code> (справочнике).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="questions"><a class="link" href="#questions">Вопросы</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Откройте файл <code>questions.txt</code> и ответьте на каждый из следующих вопросов одним или несколькими предложениями.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="olist arabic">
+<ol class="arabic" start="0">
+<li>
+<p>Что такое pneumonoultramicroscopicsilicovolcanoconiosis?</p>
+</li>
+<li>
+<p>Откройте документацию функции <code>getrusage</code> и объясните, что она делает?</p>
+</li>
+<li>
+<p>Опираясь на ту же документацию скажите, сколько полей имеет переменная типа <code>struct rusage</code>?</p>
+</li>
+<li>
+<p>Как вы думаете, почему мы передаем функции <code>calculate</code> ссылки (вместо значений) <code>before</code> и <code>after</code>, хоть мы и не меняем их содержимое?</p>
+</li>
+<li>
+<p>Дайте нам точное объяснение того, как именно функция <code>main</code> считывает слова из файла. Другими словами, докажите нам, что вы действительно понимаете, как работает цикл <code>for</code> данной функции.</p>
+</li>
+<li>
+<p>Почему, по вашему мнению, мы воспользовались функцией <code>fgetc</code>, таким образом поочередно считывая символы каждого слова, вместо того, чтобы применить <code>fscanf</code> вместе с <code>"%s"</code> считывая по одному слову за раз? Скажем по-другому - какие могут появиться проблемы, если мы будем использовать только <code>fscanf</code>?</p>
+</li>
+<li>
+<p>Как вы думаете, почему мы объявили параметры <code>check</code> и <code>load</code> как <code>const</code> (т.е. константы)?</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Перед вами стоит задача имплементироват <code>load</code>, <code>check</code>, <code>size</code> и <code>unload</code> найэфективнейшими способами так, чтобы значения <code>TIME IN load</code>, <code>TIME IN check</code>, <code>TIME IN size</code> и <code>TIME IN unload</code> были сведены к минимуму. Конечно, не очевидно, что означает свести к минимуму, поскольку эти показатели, разумеется, будут меняться по мере того, как вы будете предоставлять программе <code>speller</code> различные значения для <code>dictionary</code> и для <code>text</code>. Но в этом и заключается вызов, если не удовольствие решения этой проблемы. Эта проблема - ваш шанс начать полноценную разработку. Хоть мы и хотим, чтобы ваша программа занимала как можно меньше памяти, но вашим главном врагом является время. До того, как вы погрузитесь в этот увликательный мир программирования, получите кое-какие разъяснения от нас.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Вам нельзя менять <code>speller.c</code>.</p>
+</li>
+<li>
+<p>Вы можете вносить изменения в <code>dictionary.c</code> (и, более того, все должно быть отсортированным, дабы можно было полностью реализовать <code>load</code>, <code>check</code>, <code>size</code> и <code>unload</code>), но вам нельзя трогать объявления <code>load</code>, <code>check</code>, <code>size</code> и <code>unload</code>.</p>
+</li>
+<li>
+<p>Вы можете изменить <code>dictionary.h</code>, но вам нельзя изменять объявления <code>load</code>, <code>check</code>, <code>size</code> или <code>unload</code>.</p>
+</li>
+<li>
+<p>Вы можете менять <code>Makefile</code>.</p>
+</li>
+<li>
+<p>Вы можете добавить функции в <code>dictionary.c</code> или к файлам, которые вы сами создадите. Главное, чтобы ваш собственный код компилировался программой <code>make</code>.</p>
+</li>
+<li>
+<p>Ваша имплементация <code>check</code> должна быть чувствительной к регистру. Другими словами, если слово <code>foo</code> находится в справочнике, тогда <code>check</code> должна вернуть истину вне зависимости от того, какого размера буквы будут предоставлены. Ни один из <code>foo</code>, <code>foO</code>, <code>fOo</code>, <code>fOO</code>, <code>fOO</code>, <code>Foo</code>, <code>FoO</code>, <code>FOo</code> и <code>FOO</code> не должны считаться грамматически неверными.</p>
+</li>
+<li>
+<p>Ваша имплементация <code>check</code> должна возвращать <code>true</code> только для слов, которые действительно будут находиться в <code>словаре</code>. Будьте осмотрительны и не <a target="_blank" href="https://goo.gl/WRoqx1">хардкодьте</a> часто используемые слова (например <code>the</code>), дабы предотвратить проблемы при передаче вашей имплементации <code>словаря</code> (dictionary), в котором они будут отсутствовать. Другими словами, даже если <code>foo</code> будет в <code>словаре</code>, функция <code>check</code> должна вернуть <code>false</code> при предоставлении слова <code>foo&#8217;s</code>, если конечно <code>foo&#8217;s</code>  не присутствует в <code>словаре</code>.</p>
+</li>
+<li>
+<p>Вы можете предположить, что <code>check</code> будет получать только строки с символами алфавита и/или апострофами.</p>
+</li>
+<li>
+<p>Вы можете предположить, что любой <code>словарь</code>, переданный вашей программе, будет структурирован точно также, как наш, лексикографически отсортированный сверху вниз, по одному слову на линию, каждая из которых заканчивается на <code>\n</code>. Вы также можете предположить, что <code>словарь</code> будет содержать хотя бы одно слово. Количество символов в этих словах не должно превышать значения <code>LENGTH</code> (константа определенная в <code>dictionary.h</code>). Кроме того, ни одно слово не появится больше одного раза (никаких повторов) и каждое слово будет состоять только из алфавитных букв нижнего регистра (маленькие буквы) и возможно апосторофов.</p>
+</li>
+<li>
+<p>Ваша программа проверки правописания должна обязательно принимать <code>text</code> - в качестве входных данных, и, дополнительно, может принимать <code>словарь</code>. Несмотря на то, что вам скорее всего захочется предварительно обработать наш стандартный словарь дабы определить для него идеальную хеш-функцию, вы не можете сохранять результаты (выходные данные) такой обработки на запоминающий носитель (жесткий диск), чтобы потом обратно загружать данные с диска в память для получения преимущества при последующих запусках программы проверки правописания.</p>
+</li>
+<li>
+<p>У вашей программы не должно быть утечек памяти.</p>
+</li>
+<li>
+<p>Вы можете искать (хорошие) хеш-функции в интернете, главное указывать в своем коде источник, с которого вы скачали хеш-функцию.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Хорошо, готовы начать?</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Реализуйте <code>load</code>.</p>
+</li>
+<li>
+<p>Реализуйте <code>check</code>.</p>
+</li>
+<li>
+<p>Реализуйте <code>size</code>.</p>
+</li>
+<li>
+<p>Реализуйте <code>unload</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="link" href="#walkthrough">Прохождение...не добавили:)</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/fcPLUKaQMcE" frameborder="0" allowfullscreen></iframe></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Не забудьте реализовать освобождение памяти (<code>free</code>) в функции <code>unload</code>, которую вы выделили в функции <code>load</code>! Не забывайте про своего нового лучшего друга по имени <code>valgrind</code>. Знайте, что <code>valgrind</code> следит за утечками только тогда, когда ваша программа находится в рабочем состоянии (т.е. запущена), поэтому обязательно предоставляйте аргументы командной строки, если вы хотите, чтобы <code>valgrind</code> анализировал программу <code>speller</code> в то время, как вы пользуетесь определенным <code>словарем</code> и/или текстом, как показано ниже. Лучше всего использовать небольшой текст, так как, в противном случае, <code>valgrind</code>'у понадобится намного больше времени, чтобы начать свою работу.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>valgrind --leak-check=full ./speller texts/ralph.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Если вы запустите <code>valgrind</code>, не подставляя в качестве аргумента <code>text</code> для проверки программы <code>speller</code>, ваша имплементация функций <code>load</code> и <code>unload</code> не будут вызваны (а значит и анализированы).</p>
+</div>
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Как проверить, правильно ли ваша программа выводит слова с орфографическими ошибками? Ну, вы можете обратиться к "answer keys" (ключам ответов), которые находятся внутри папки <code>keys</code> (ключи), которую в свою очередь можно найти внутри папки программы <code>speller</code>. К примеру, внутри текстового документа <code>keys/austinpowers.txt</code> находятся все слова, которые ваша программа <em>должна</em> распознавать как неправильные слова.</p>
+</div>
+<div class="paragraph">
+<p>Поэтому вы могли бы применить свою программу на каком-нибудь тексте в одном окне, как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./speller texts/austinpowers.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>И далее, вы могли бы запустить "Гарвардское Решение" на том же самом тексте в другом окне, как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~cs50/pset5/speller texts/austinpowers.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>И потом, вы могли бы визуально сравнить оба окна. Однако, такой подход не практичен и очень быстро надоест. Поэтому, вы, скорее всего, захотите "перенаправить" выходные данные вашей программы в файл (точно также, как вы возможно поступали с программой <code>generate</code> в 3 Наборе Проблем), как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./speller texts/austinpowers.txt &gt; student.txt
+~cs50/pset5/speller texts/austinpowers.txt &gt; staff.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Уже потом вы можете сравнить два файла, строка за строкой, в одном и том же окне, с помощью такой программы как <code>diff</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>diff -y student.txt staff.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Альтернативный способ, для сохранения времени, - вы можете просто сравнить выходные данные вашей программы (предполагая, что вы перенаправили выходные данные, например к <code>student.txt</code>) с одним из файлов с ответами (answer keys), не применяя "Гарвардское Решение", как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>diff -y student.txt keys/austinpowers.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Если ваш результат совпадает с нашим, <code>diff</code> выведет две (2) колонки, которые должны будут быть одинаковыми и могут, возможно, отличаться только нижними временами исполнения. Если же колонки различаются, тогда вы увидите <code>&gt;</code> или <code>|</code> в местах их отличия. К примеру, если вы увидите следующее</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>MISSPELLED WORDS                                                MISSPELLED WORDS
+
+FOTTAGE                                                         FOTTAGE
+INT                                                             INT
+                                                              &gt; EVIL'S
+s                                                               s
+                                                              &gt; EVIL'S
+Farbissina                                                      Farbissina</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>это означает, что ваша программа (чьи выходные данные показаны слева) не считает, что слово <code>EVIL&#8217;s</code> неправильно записано, в то время как выходные данные нашего "Гарвардского Решения" (изображено справа) считает его правильным. Это и подразумевает отсутствие <code>EVIL&#8217;s</code> в левой колонке и присутствие <code>EVIL&#8217;s</code> в правой.</p>
+</div>
+<div class="sect2">
+<h3 id="code-check50-code"><a class="link" href="#code-check50-code"><code>check50</code></a></h3>
+<div class="paragraph">
+<p>Чтобы проверить ваш код более автоматизированно, вы можете также выполнить команду.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>check50 cs50/2017/x/speller</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Заметьте, что <code>check50</code> не может обнаружить и не проверяет утечки памяти, поэтому обязательно воспользуйтесь <code>valgrind</code>'ом.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="staff-s-solution"><a class="link" href="#staff-s-solution">Гарвардское Решение</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Как определить на сколько быстр (и правилен) ваш код? Воспользуйтесь нашим решением и сравните показатели нашей программы с показателями вашей реализации орфографического словаря.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~cs50/pset5/speller texts/austinpowers.txt</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">Изменения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>07-02-19</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Исправление ссылки Github'a.</p>
+</li>
+<li>
+<p>03-05-17</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+

@@ -1,0 +1,158 @@
+---
+layout: header
+title: water
+permalink: /weeks/pset1/water
+---
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#background">Объяснение</a></li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthrough">Прохождение</a></li>
+<li><a href="#usage">Использование</a></li>
+<li><a href="#testing">Проверка</a>
+<ul class="sectlevel2">
+<li><a href="#code-check50-code"><code>check50</code></a></li>
+</ul>
+</li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#changelog">ИЗМЕНЕНИЯ</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Water (Вода)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Создайте программу, которая показывает сколько воды израсходовал пользователь, переводя минуты потраченные в душе в бутылки питьевой воды.  (Minutes - Минуты, Bottles - Бутылки)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./water</span>
+Minutes: <span class="underline">1</span>
+Bottles: 12
+
+$ <span class="underline">./water</span>
+Minutes: <span class="underline">10</span>
+Bottles: 120</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background"><a class="link" href="#background">Объяснение</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Не нужно быть гением, чтобы понимать, что, чем больше вы принимаете душ, тем больше расходуется воды. Но сколько воды? Даже если у вас душ с малым напором, как минимум 6 литров воды в минуту будет из него вытекать. Это примерно 12 бутылок воды. Тогда, если вы будете принимать 10 минутный душ, вам как минимум понадобится целых 120 полулитровых бутылок!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p> Напишите в файле <code>water.c</code>, находясь в папке <code>~/workspace/nproblem1/</code>, программу, которая спрашивает пользователя, сколько минут он или она принимает душ (в виде положительного целого числа) и затем отображает на экране количество бутылок равное израсходованной воды (в виде целого числа)</p>
+</li>
+<li>
+<p>Не нужно проверять, введет пользователь положительное или отрицательное целое число (integer)! Поэтому не беспокойтесь о циклах и о переполнении (loops и overflow)!</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="link" href="#walkthrough">Прохождение</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+<div class="col-md-12">
+
+<iframe width="100%" height="550" src="https://www.youtube.com/embed/TXP0CroyyZc?rel=0" frameborder="0" allowfullscreen></iframe>
+    </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Использование</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ваша программа должна проделывать тоже самое, что показано в примере ниже. Предположим, подчеркнутый текст - это то, что написал пользователь.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./water</span>
+Minutes: <span class="underline">10</span>
+Bottles: 120</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="code-check50-code"><a class="link" href="#code-check50-code"><code>check50</code></a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="text">check50 cs50/2017/x/water</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вас потребуют ввести логин (<b>GitHub username</b>) и пароль (<b>GitHub password</b>) от вашей учетной записи на Github'е, которую вы можете завести, пройдя по данной ссылке <a href="https://github.com/join">https://github.com/join</a>.</p>
+</div>
+<div class="paragraph">
+<p>Зайдите на сайт <a href="https://cs50.me" target="_blank">cs50.me</a>, используя всё ту же учетную запись GitHub'а и нажмите на зеленую кнопку <b>authorize submit50</b> (Это действие производится только один раз).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>С помощью функции <code>get_int</code> вы можете предложить пользователю ввести целое число (integer), как показано ниже:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">int</span> <span class="tok-n">minutes</span> <span class="tok-o">=</span> <span class="tok-n">get_int</span><span class="tok-p">();</span></code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">ИЗМЕНЕНИЯ</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>20-01-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>

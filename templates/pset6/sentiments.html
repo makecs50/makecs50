@@ -1,0 +1,643 @@
+---
+layout: header
+title: sentiments
+permalink: /weeks/pset6/sentiments
+---
+    <style>
+        .mjx-chtml {
+    display: inline-block;
+    line-height: 0;
+    text-indent: 0;
+    text-align: left;
+    text-transform: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    word-spacing: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 1px 0;
+}
+        
+        .MJXc-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+        .MathJax_Preview {
+    color: #888;
+}
+        div.stemblock div.content {
+    margin-bottom: 1.25em;
+}
+    </style>
+
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#background">Объяснение</a></li>
+<li><a href="#distribution">Развертывание</a></li>
+<li><a href="#getting-started">С чего начать</a></li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthroughs">Прохождения</a></li>
+<li><a href="#usage">Использование</a></li>
+<li><a href="#testing">Проверка</a></li>
+<li><a href="#staff-s-solution">Гарвардское Решение</a></li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#changelog">ИЗМЕНЕНИЯ</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Sentiments (Настроения)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Создайте программу, которая будет определять каким является слово: положительным или отрицательным.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./smile love</span>
+<span class="green">:)</span>
+$ <span class="underline">./smile hate</span>
+<span class="red">:(</span>
+$ <span class="underline">./smile Stanford</span>
+<span class="yellow">:|</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Создайте программу, которая будет классифицировать твиты на положительные и отрицательные.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./tweets @cs50</span>
+ <span class="yellow">0 hello, @world</span>
+ <span class="green">1 I love you, @world</span>
+<span class="red">-1 I hate you, @world</span>
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Напишите веб-сайт генерирации круговой диаграммы, в которой будут классифицироваться твиты пользователя.</p>
+<div class="imageblock related thumb">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/pset6/1.png" alt="sentiments"></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background"><a class="link" href="#background">Объяснение</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>
+Анализ тональности текста (сентимент-анализ, англ. Sentiment analysis, англ. Opinion mining) связан с выводом сантимента (т.е. настроения) из текста. К примеру, рецензии (обзоры) фильмов на сайте <a href="https://www.kinopoisk.ru/">Кинопоиска</a> часто бывают позитивными или негативными. С отзывами на сайте <a href="https://www.citilink.ru/">Citilink</a> такая же история. Но мы будем работать с твитами так называемого сайта <a href="https://twitter.com/">Twitter.com</a> и постараемся понять какие они: положительные или отрицательные.</p>
+</div>
+<div class="paragraph">
+<p>Некоторые слова имеют положительные значения (например "love"), в то время как другие - отрицательные значения (например "hate"). Поэтому, если кто-нибудь оставит твит "I love you" (я люблю тебя), вы можете сделать вывод, что здесь идет положительный настрой (сантимент). И если кто-то оставил бы твит "I hate you" (я ненавижу тебя), вы бы поняли, что здесь идет отрицательный настрой. Не всегда можно делать вывод о тексте опираясь только на отдельно взятые слова, так как предложение "I do not love you" (я не люблю тебя) - явно не несет в себе положительный посыл, но мы не будем ломать над этим голову в рамках данного задания. Некоторые слова существуют без каких-либо положительных или отрицательных посылов (например слово "the").</p>
+</div>
+<div class="paragraph">
+<p>Несколько лет назад Док. Минкинг Ху и Проф. Бинг Лиу из Чикагского Университета штата Иллинойс любезно собрали для нас <a href="https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon">списки</a> <a href="https://raw.githubusercontent.com/cs50/problems/sentiments/positive-words.txt">2006 положительных слов</a> и <a href="https://raw.githubusercontent.com/cs50/problems/sentiments/negative-words.txt">4783 отрицательных слов</a>. Мы воспользуемся ими для классификации твитов! Но сперва кое-какие разъяснения.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="distribution"><a class="link" href="#distribution">Развертывание</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="downloading"><a class="link" href="#downloading">Скачивание</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ wget <a href="https://github.com/cs50/problems/archive/sentiments.zip" class="bare">https://github.com/cs50/problems/archive/sentiments.zip</a>
+$ unzip sentiments.zip
+$ rm sentiments.zip
+$ mv problems-sentiments sentiments
+$ cd sentiments
+$ chmod a+x smile tweets
+$ ls
+analyzer.py     helpers.py          positive-words.txt  smile*     tweets*
+application.py  negative-words.txt  requirements.txt    templates/</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="understanding"><a class="link" href="#understanding">Понимание</a></h3>
+<div class="sect3">
+<h4 id="code-smile-code"><a class="link" href="#code-smile-code"><code>smile</code></a></h4>
+<div class="paragraph">
+<p>Откройте файл <code>smile</code>, находящийся в папке <code>sentiments/</code>. Название программы не заканчивается расширением <code>.py</code> (хотя файл содержит в себе программу написанную на Python). Но ничего страшного! Посмотрите на первую линию нашего кода:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>#!/usr/bin/env python3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Эта строка говорит нашему компьютеру интерпретировать (т.е. запускать) данную программу, используя <code>python3</code> (или <code>python</code> на CS50 IDE) - интерпретатор, понимающий язык Python 3 версии.</p>
+</div>
+<div class="paragraph">
+    <p>Далее обратите внимание на то, что программа импортирует класс под названием <code>Analyzer</code> из модуля <code>analyzer</code> (анализатор), вместе с функцией <code>colored</code> (окрашенный) из модуля <code>termcolor</code>. Первое (класс <code>Analyzer</code>) вы имплементируете в файл под названием <code>analyzer.py</code>. (Вспомните, что <code>class</code> Python'а схож со <code>struct</code>'ом Си, отличие лишь в том, что класс также может содержать в себе функции, по-другому известные как "методы", когда они внутри класса). Последнее (функция <code>colored</code>) окрашивает выходные, отображаемые в терминальном окне, данные.</p>
+</div>
+<div class="paragraph">
+<p>Эта программа определяет только одну функцию <code>main</code>, которая вызывается благодаря последней линии в файле. Внутри <code>main</code> мы сперва удостоверяемся, что <code>sys.argv</code> действительно содержит ожидаемое число аргументов командной строки. Далее мы инстанциируем (т.е. создаем) объект класса <code>Analyzer</code>. Потом передаем слово методу (данного объекта) <code>analyze</code>, которое предоставил пользователь в <code>sys.argv[1]</code>. Как мы скоро увидим, этот метод вернет:<br>
+- положительный <code>int</code>, если его входные данные положительные<br>
+- отрицательный <code>int</code>, если его входные данные отрицательные<br>
+- <code>0</code>, если входные данные не будут ни положительными, ни отрицательными.<br> В конечном итоге программа выведет цветной смайлик.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-analyzer-py-code"><a class="link" href="#code-analyzer-py-code"><code>analyzer.py</code></a></h4>
+<div class="paragraph">
+<p>Откройте <code>anlyzer.py</code> из папки <code>sentiments/</code>. Внутри нет ничего особенного (пока)! Обратите внимание, что здесь импортируется <a href="http://www.nltk.org/">Natural Language Toolkit</a> (Инструмент Обработки Естественного Языка), включающий в себя функцию <a href="http://www.nltk.org/api/nltk.tokenize.html">tokenizer</a>, используемую для разделения твита (который представляет из себя текст или точнее текстовый объект <code>str</code>, максимальное число символов в котором, может составлять 140 символов) на <code>список</code> слов (т.е. более мелкие объекты <code>str</code>).</p>
+</div>
+<div class="paragraph">
+<p>Внутри находится наше определение класса <code>Analyzer</code>, у которого есть два метода: <code>__init__</code>, вызываемый при любом инстанциировании класса <code>Analyzer</code>; и <code>analyze</code>, который может быть вызван для анализа кое-какого <code>text</code> (текста). Этот первый метод принимает два аргумента в дополнение к <code>self</code>: <code>positives</code>, чье значение представляет из себя путь к текстовому файлу, содержащему положительные слова; и <code>negatives</code>, чье значение представляет из себя путь к текстовому файлу, содержащему отрицательные слова. В то же время <code>analyze</code> принимает один аргумент в дополнение к <code>self</code>: <code>str</code>, которое необходимо проанализировать для выяснения настроения текста. Хотя эта функция (временно) захардкодена на возвращение <code>0</code>, при любых условиях.</p>
+</div>
+<div class="paragraph">
+<p>Вспомните, что методу, в качестве первого параметра, автоматически передается ссылка на <code>self</code> (сам объект). Таким образом методам предоставляется возможность ссылаться на переменные  объекта ("instance variables" или "переменные экземпляра").</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-positive-words-txt-code-code-negative-words-txt-code"><a class="link" href="#code-positive-words-txt-code-code-negative-words-txt-code"><code>positive-words.txt</code>, <code>negative-words.txt</code></a></h4>
+<div class="paragraph">
+<p>Откройте файлы <code>positive-words.txt</code> и <code>negative-words.txt</code> (не изменяя их). В начале документа идет огромное количество комментариев, начинающиеся с <code>;</code> (Это всего лишь текстовый файл, поэтому выбор автора в качестве указателя на комментарий символа <code>;</code> - является случайным и не имеет в себе никакой смысловой нагрузки для нашей программы). Соответственно списки положительных и отрицательных слов идут ниже, после этих комментариев и пустой строки.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-tweets-code"><a class="link" href="#code-tweets-code"><code>tweets</code></a></h4>
+<div class="paragraph">
+<p>Откройте файл <code>tweets</code>. Внутри ничего кроме призыва к <code>TODO</code> (написанию кода)! Еще вернемся к данной части.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-helpers-py-code"><a class="link" href="#code-helpers-py-code"><code>helpers.py</code></a></h4>
+<div class="paragraph">
+<p>Откройте <code>helpers.py</code>. Перед вами две функции: <code>chart</code> (диаграмма) и <code>get_user_timeline</code> (получить_пользовательскую_ленту - лента новостей). Даются три значения переменных (<code>positive</code>, <code>negative</code> и <code>neutral</code>, каждый из них является <code>int</code>'ом или <code>float</code>'ом). <code>chart</code> (диаграмма) генерирует HTML код (в виде <code>str</code> или string'a) для отображения всех этих значений на круговой диаграмме (диаграмма-торт). Предоставляя "screen name" (ник пользователя twitter, например @makecs50) функции <code>get_user_timeline</code>, нам возвращается <code>list</code> (список или массив) твитов (каждый из которых является <code>str</code> или string'ом). Эта функция использует <a href="https://twython.readthedocs.io/">Twython</a> - библиотеку Python'а, которая позволяет получить твиты с помощью <a href="https://dev.twitter.com/overview/api">Twitter&#8217;s API</a> (application programming interface или программный интерфейс приложения) - бесплатный сервис, который может быть использован в программе для работы с твитами. Обратите внимание, функция ожидает наличия двух переменных среды (англ. environment variable). Переменные среды обитают внутри вашего терминального окна. Это пары вида ключ/значение, к которым программы (как например <code>tweets</code>) могут обращаться внутри своего кода. Мы совсем скоро воспользуемся <code>API_KEY</code> и <code>API_SECRET</code> для хранения данных для доступа к Twitter'у.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-application-py-code"><a class="link" href="#code-application-py-code"><code>application.py</code></a></h4>
+<div class="paragraph">
+<p>Откройте файл <code>application.py</code>. В этом файле есть "controller" (контроллер), построенного на Flask веб-приложения у которого есть две конечные точки: <code>/</code> и <code>/search</code>. Первая отображает обычную веб-форму, с помощью которой вы можете искать пользователя на сайте Twitter, используя его никнейм. Вторая отображает круговую диаграмму, которая категоризирует твиты данного пользователя. Обратите внимание, что 100% всех этих твитов (временно) предполагаются нейтральными.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-templates-index-html-code"><a class="link" href="#code-templates-index-html-code"><code>templates/index.html</code></a></h4>
+<div class="paragraph">
+<p>Откройте <code>templates/index.html</code>. Внутри самая обычная форма. Заметьте как она, используя функцию Flask'а <code>url_for</code>, понимает на какой URL должна быть отправлена форма.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-templates-search-html-code"><a class="link" href="#code-templates-search-html-code"><code>templates/search.html</code></a></h4>
+<div class="paragraph">
+<p>Откройте <code>templates/search.html</code> - этот шаблон выводит никнейм пользователя вместе с круговой диаграммой.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-templates-layout-html-code"><a class="link" href="#code-templates-layout-html-code"><code>templates/layout.html</code></a></h4>
+<div class="paragraph">
+<p>Откройте документ <code>templates/layout.html</code>. Здесь находится слой, от которого зависит работа документа <code>index.html</code> и <code>search.html</code>. Данный документ пользуется преимуществами CSS библиотеки <a href="http://getbootstrap.com/">Bootstrap</a>, которая позволяет переписать, по умолчанию заданные в браузере, стили отображения сайта.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-requirements-txt-code"><a class="link" href="#code-requirements-txt-code"><code>requirements.txt</code></a></h4>
+<div class="paragraph">
+<p>Откройте <code>requirements.txt</code> (не изменяя его, хотя вы можете это позже сделать, если пожелаете). Внутри этого файла уточняются библиотеки, по одной на каждую линию, от которых зависит работа всех этих функций.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-started"><a class="link" href="#getting-started">С чего начать</a></h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>В терминальном окне (командной строке) выполните</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>cd ~/workspace/pset6/sentiments/
+pip3 install --user -r requirements.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>чтобы установить (install) зависимости всех этих програм.</p>
+</div>
+</li>
+<li>
+<p>Зарегистрируйтесь на сайте <a href="https://twitter.com/signup">twitter.com/signup</a>, если у вас еще нет своего аккаунта.</p>
+</li>
+<li>
+<p>Перейдите на страницу <a href="https://apps.twitter.com/">apps.twitter.com</a>, залогиньтесь и нажмите <strong>Create New App</strong> (Создать Новое Приложение).</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Подойдет любое (доступное) <strong>Name</strong> (имя).</p>
+</li>
+<li>
+<p>Дайте любое (достаточного размера) <strong>Description</strong> (описание).</p>
+</li>
+<li>
+<p>В поле <strong>Website</strong> укажите <strong>https://cs50.harvard.edu/</strong> (или любой другой URL).</p>
+</li>
+<li>
+<p>Поле <strong>Callback URL</strong> оставьте пустым.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Нажмите на <strong>Create your Twitter application</strong> (Создать ваше Твиттерское приложение). Вы должны увидеть надпись "Your application has been created" (Ваше приложение было создано) .</p>
+</li>
+<li>
+<p>Нажмите <strong>Keys and Access Tokens</strong> (Ключи и Токены Доступа).</p>
+</li>
+<li>
+<p>Нажмите <strong>modify app permissions</strong> (редактировать разрешения приложения).</p>
+</li>
+<li>
+<p>Выберите <strong>Read only</strong> (только чтение), а затем нажмите <strong>Update Settings</strong> (Обновить Настройки).</p>
+</li>
+<li>
+<p>Опять нажмите на <strong>Keys and Access Tokens</strong> (Ключи и Токены Доступа).</p>
+</li>
+<li>
+<p>Выделите и скопируйте значение, находящееся справа от <strong>Consumer Key (API Key)</strong> (ключ клиента).</p>
+</li>
+<li>
+<p>В терминальном окне выполните</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>export API_KEY=value</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>где на месте <code>value</code> (значения), должно быть вставлено, вами скопированное ранее, значение, без каких-либо пробелов перед или после <code>=</code>.</p>
+</div>
+</li>
+<li>
+<p>Выделите и скопируйте значение, находящееся справа от <strong>Consumer Secret (API Secret)</strong> (Секрет Клиента).</p>
+</li>
+<li>
+<p>В терминальном окне выполните</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>export API_SECRET=value</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>где на месте <code>value</code> (значения), должно быть вставлено, вами скопированное ранее, значение, без каких-либо пробелов перед или после <code>=</code>.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Если вы закроете данное терминальное окно и/или откроете другое, тогда вам придется повторить пять последних шагов.</p>
+</div>
+<div class="paragraph">
+<p>Далее попробуйте запустить</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./smile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>дабы увидеть работу этой программы (smile). Помните, что все слова (временно) будут считаться нейтральными, из-за хардкодного <code>0</code> в файле <code>analyze.py</code>.</p>
+</div>
+<div class="paragraph">
+<p>Теперь попробуйте запустить</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>flask run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>далее выберите поле <strong>CS50 IDE &gt; Web Server</strong> в верхнем левом углу среды разработки CS50 (CS50 IDE). Запустите поиск, используя какой-нибудь пользовательский никнейм (screen name), и вы должны будете увидеть диаграмму! Конечно сейчас, из-за значения <code>100.0</code> в файле <code>application.py</code>, диаграмма будет полностью желтой. Завершите работу Flask сочетанием кнопок control-c.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="code-analyzer-py-code-2"><a class="link" href="#code-analyzer-py-code-2"><code>analyzer.py</code></a></h3>
+<div class="paragraph">
+<p>Завершите реализацию <code>analyzer.py</code> таким образом, чтобы</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>метод <code>__init__</code> загружал положительные и отрицательные слова в память так, чтобы метод <code>analyze</code> мог иметь доступ к ним</p>
+</li>
+<li>
+<p>и <code>analyze</code> анализирует сентиментальность <code>text</code> (текста), возвращая положительный результат (score) в случае, если <code>text</code> будет больше положительным, чем отрицательным. Негативный результат - если <code>text</code> будет больше отрицательным, чем положительным. И, наконец, в противном случае мы получим <code>0</code>. Результат (score) вычисляется следующим образом:</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>присвойте каждому слову <code>text'а</code> значение: <code>1</code> - если слово находится в <code>positives</code> (положительные), <code>-1</code> - если слово находится в <code>negatives</code> (отрицательные) и <code>0</code> в противнном случае</p>
+</li>
+<li>
+<p>сумма этих значений будет оценкой всего текста</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>К примеру, если <code>text</code> имел бы вид "I love you" (и объект на основе класса <code>Analyzer</code> был бы сгенерирован с, по умолчанию заданными, значениями именованных параметров), тогда его оценка была бы 0 + 1 + 0 = 1, так как</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>"I" нет ни в <code>positive-words.txt</code>, ни в <code>negative-words.txt</code>,</p>
+</li>
+<li>
+<p>"love" находится в <code>positive-words.txt</code>, и</p>
+</li>
+<li>
+<p>"you" нет ни в <code>positive-words.txt</code>, ни в <code>negative-words.txt</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Достаточно сказать, что существуют <a href="https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html">более сложные алгоритмы</a>, но мы не будем всё усложнять!</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-tweets-code-2"><a class="link" href="#code-tweets-code-2"><code>tweets</code></a></h3>
+<div class="paragraph">
+<p>Завершите реализацию функции <code>main</code> в файле <code>tweets</code> таким образом, что программа будет:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>принимать только один аргумент командной строки - никнейм пользователья Twitter</p>
+</li>
+<li>
+<p>запрашивать API Twittera'а, прося предоставить последние 50 твитов пользователя</p>
+</li>
+<li>
+<p>анализировать сентиментальность каждого предоставленного твита</p>
+</li>
+<li>
+<p>выводить оценку и текст каждого твита, которые будут окрашены в зеленый цвет, при позитивной оценке, красный - при отрицательной и желтый в другом случае.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-application-py-code-2"><a class="link" href="#code-application-py-code-2"><code>application.py</code></a></h3>
+<div class="paragraph">
+<p>Завершите реализацию функции <code>search</code> в файле <code>application.py</code> таким образом, что функция будет:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>запрашивать API Twittera'а, прося предоставить последние 100 твитов пользователя</p>
+</li>
+<li>
+<p>делить каждый твит на положительные, отрицательные или нейтральные</p>
+</li>
+<li>
+<p>генерировать диаграмму, которая будет точно отображает все эти настроения (сантименты) в процентах.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Если пользователь оставил меньше 100 твитов, тогда классифицируйте столько, сколько их всего есть у пользователя.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="link" href="#walkthrough">Прохождение</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/yb7npNGbx0Y" frameborder="0" allowfullscreen></iframe></div>
+</div>
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/5edIbzMwIrg" frameborder="0" allowfullscreen></iframe></div>
+</div>
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/QsWi-NFLOnk" frameborder="0" allowfullscreen></iframe></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Использование</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ваша программа должна проделывать тоже самое, что показано в примере ниже. Предположим, подчеркнутый текст - это то, что написал пользователь.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./smile</span>
+Usage: ./smile word
+$ <span class="underline">./smile foo bar</span>
+Usage: ./smile word
+$ <span class="underline">./smile love</span>
+<span class="green">:)</span>
+$ <span class="underline">./smile hate</span>
+<span class="red">:(</span>
+$ <span class="underline">./smile Stanford</span>
+<span class="yellow">:|</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./tweets</span>
+Usage: ./tweets @screen_name
+$ <span class="underline">./tweets @foo @bar</span>
+Usage: ./tweets @screen_name
+$ <span class="underline">./tweets @cs50</span>
+ <span class="yellow">0 hello, @world</span>
+ <span class="green">1 I love you, @world</span>
+<span class="red">-1 I hate you, @world</span>
+...</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Для этого задания нет команды <code>check50</code>! Но вот некоторые твиттерские никнеймы, в которых могут быть кое-какие положительные и отрицательные настроения</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://twitter.com/cs50">cs50</a></p>
+</li>
+<li>
+<p><a href="https://twitter.com/davidjmalan">davidjmalan</a></p>
+</li>
+<li>
+<p><a href="https://twitter.com/DrJillStein">DrJillStein</a></p>
+</li>
+<li>
+<p><a href="https://twitter.com/GovGaryJohnson">GovGaryJohnson</a></p>
+</li>
+<li>
+<p><a href="https://twitter.com/HillaryClinton">HillaryClinton</a></p>
+</li>
+<li>
+<p><a href="https://twitter.com/realDonaldTrump">realDonaldTrump</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="staff-s-solution"><a class="link" href="#staff-s-solution">Гарвардское Решение</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="code-smile-code-2"><a class="link" href="#code-smile-code-2"><code>smile</code></a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~cs50/pset6/smile</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-tweets-code-3"><a class="link" href="#code-tweets-code-3"><code>tweets</code></a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~cs50/pset6/tweets</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="code-analyzer-py-code-3"><a class="link" href="#code-analyzer-py-code-3"><code>analyzer.py</code></a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Вполне вероятно, что вы найдете полезным воспользоваться классом <a href="http://www.nltk.org/api/nltk.tokenize.html#module-nltk.tokenize.casual"><code>nltk.tokenize.casual.TweetTokenizer</code></a>, который может быть использован для tokenize (токенизирования) твита (т.е. для того, чтобы поделить его на <code>список/массив</code>  слов), с помощью кода:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">tokenizer</span> <span class="tok-o">=</span> <span class="tok-n">nltk</span><span class="tok-o">.</span><span class="tok-n">tokenize</span><span class="tok-o">.</span><span class="tok-n">TweetTokenizer</span><span class="tok-p">()</span>
+<span class="tok-n">tokens</span> <span class="tok-o">=</span> <span class="tok-n">tokenizer</span><span class="tok-o">.</span><span class="tok-n">tokenize</span><span class="tok-p">(</span><span class="tok-n">tweet</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>К примеру, если <code>tweet</code> будет  содержать текст <code>I love you</code>, тогда переменная <code>tokens</code> (жетоны) будет равна <code>["I", "love", "you"]</code>. Tokenizer воспринимает пунктуационные знаки как отдельные token'ы (жетоны), так что не нужно переживать, если слова подобные <code>a+</code> (которое есть в <code>positive-words.txt</code>) будут разделены на два token'а (жетона).</p>
+</div>
+</li>
+<li>
+<p>Обязательно пропустите комментарии и пустые линии, находящиеся внутри документов <code>positives</code> и <code>negatives</code>.</p>
+</li>
+<li>
+<p>Если вы хотите, чтобы переменная была доступна как внутри <code>__init__</code>, так и внутри <code>analyze</code> - обязательно объявите ее внутри <code>self</code> как "переменную экземпляра" (instance variable). К примеру, если бы вы объявили</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">n</span> <span class="tok-o">=</span> <span class="tok-mi">42</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>внутри метода <code>__init__</code>, тогда <code>self.n</code> также будет доступна внутри метода <code>analyze</code>.</p>
+</div>
+</li>
+<li>
+<p>Возможно вам будет интересен метод <a href="https://docs.python.org/3/library/stdtypes.html#str.lower"><code>str.lower</code></a>.</p>
+</li>
+<li>
+<p>Имейте ввиду, что функция <code>get_user_timeline</code> возвращает <code>None</code>, если произойдет какая-либо ошибка, как например, если будет указан не существующий никнейм или твиты пользователя будут скрыты от других.</p>
+</li>
+
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-tweets-code-4"><a class="link" href="#code-tweets-code-4"><code>tweets</code></a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Здесь вам поможет файл <code>smile</code>!</p>
+</li>
+<!--
+<li>
+<p>Так как название файла <code>tweets</code> не заканчивается расширением <code>.py</code>, CS50 IDE не будет знать, что это код Python'а, поэтому синтаксическое выделение кода по умолчанию будет выключена. При открытом файле, отображающимся в панели с табами, измените в  <strong>Text</strong> на <strong>Python</strong> in the tab&#8217;s bottom-right corner to enable.</p>
+</li>
+-->
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-application-py-code-3"><a class="link" href="#code-application-py-code-3"><code>application.py</code></a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Здесь вам поможет файл <code>tweets</code>!</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">Изменения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>22-05-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+            </div>
+        </div>
+

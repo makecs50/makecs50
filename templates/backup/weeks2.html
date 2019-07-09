@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.7/css/bootstrap.min.css') }}">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i" rel="stylesheet">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+    
+
+        <title>Лекции</title>
+    </head>
+    <body>
+        <div class="se-pre-con"></div>
+
+        <div id="wrapper">
+            <div class="overlay"></div>
+
+            <!-- Sidebar -->
+            <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+                <ul class="nav sidebar-nav">
+                    <li class="sidebar-brand">
+                        <a href="/"><b>
+                            CS50</b>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/">Главная</a>
+                    </li>
+                    <li>
+                        <a href="/weeks/">Лекции</a>
+                    </li>
+<!--                     <li> <a target="_blank" href="http://discuss.makecs50.ru">Обсуждение</a> </li> -->
+                    <li> <a href="{{url_for('about')}}">О нас</a> </li>
+<li><a target="_blank" href="/apply/">Записаться</a></li>   
+           </ul>
+                
+                <div class="nav sidebar-nav1">
+           
+<!--            <a href="http://twitter.com/makecs50" target="_blank" class="icon-button twitter"><i class="icon-twitter"></i><span></span></a> -->
+           
+<!--
+<a href="http://facebook.com" class="icon-button facebook"><i class="icon-facebook"></i><span></span></a>
+<a href="http://plus.google.com" class="icon-button google-plus"><i class="icon-google-plus"></i><span></span></a>
+-->
+           
+       </div>
+       			{% if current_user.is_authenticated %}
+       
+       				{% if current_user.roles[0] and (
+	   					current_user.roles[0].name == 'admin'
+	   					or current_user.roles[0].name == 'moderator') %}
+	   					<a class="closing_button" id="new_user_button" href="{{url_for('register_page')}}">Добавить пользователя</a>
+       				{% endif %}
+       				
+	   				<a class="closing_button" href="{{url_for('logout')}}"><i class="fa fa-sign-out" aria-hidden="true"></i> Выйти</a>
+       			{% else %}
+ 					<a class="closing_button" href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i> Войти</a> 					
+  					
+  				{% endif %}
+  				
+  				<div style="height: 30px; position: absolute; bottom: 0; width: 100%; background: rgba(0, 0, 0, 0.2); text-align: center; font-size: 24px; color: white; ">
+                <a target="_blank" href="https://www.instagram.com/makecs50/"><i style="margin-top: 3px; margin-left: 25%; float: left" class="fa fa-instagram" aria-hidden="true"> </i></a>
+                <a target="_blank" href="https://twitter.com/makecs50"><i style="margin-top:3px; margin-right: 25%;  float: right" class="fa fa-twitter" aria-hidden="true"></i></a>
+            </div>
+            
+            </nav>
+            <!-- /#sidebar-wrapper -->
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+                <button type="button" class="hamburger is-closed" data-toggle="offcanvas">
+                    <span class="hamb-top"></span>
+                    <span class="hamb-middle"></span>
+                    <span class="hamb-bottom"></span>
+                </button>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-9 col-lg-10 col-lg-offset-2">
+	         <div class="row">
+                        <div class="col-md-12">
+						{% with messages = get_flashed_messages() %}
+						  {% if messages %}
+						    {% for message in messages %}
+						    <div class="alert alert-warning alert-dismissible main-center" role="alert">
+							    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						      <li>{{ message }}</li>
+						    </div>
+						    {% endfor %}
+						  {% endif %}
+						{% endwith %}
+                        </div>
+                        </div>
+
+	                        
+	                        
+<div class="row">
+   <div class="col-md-12">
+    <h2 class="week_header col-xs-12">Неделя 10</h2>
+    <ul class="week_stuff col-xs-12">
+	    
+	    
+
+		        <li class="unlocked_lesson"><a  href="{{url_for('mashup')}}">Набор Проблем 8</a></li>
+		  
+	          
+        
+    </ul>
+    </div>
+</div>    
+
+																
+<div class="row">
+   <div class="col-md-12">
+    <h2 class="week_header col-xs-12">Неделя 9</h2>
+    <ul class="week_stuff col-xs-12">
+	    
+	    
+		    	<li><a href="{{ TOPIC_DICT["Weeks"][8][1]}}">{{ TOPIC_DICT["Weeks"][8][0].decode('utf-8') }}</a></li> 
+		        <li class="unlocked_lesson"><a  href="/weeks/pset7/">Набор Проблем 7</a></li>
+		  
+	          
+        
+    </ul>
+    </div>
+</div>
+
+	                        
+	                        
+<div class="row">
+   <div class="col-md-12">
+    <h2 class="week_header col-xs-12">Неделя 8</h2>
+    <ul class="week_stuff col-xs-12">
+        	
+		   
+		    	<li><a href="{{ TOPIC_DICT["Weeks"][7][1]}}">{{ TOPIC_DICT["Weeks"][7][0].decode('utf-8') }}</a></li> 
+		        <li class="unlocked_lesson"><a  href="/weeks/pset6/">Набор Проблем 6</a></li>
+		    
+		
+        
+       	                                
+        
+        
+        
+        
+    </ul>
+    </div>
+</div>
+
+	                        
+	                        <div class="row">
+                               <div class="col-md-12">
+                                <h2 class="week_header col-xs-12">Неделя 7</h2>
+                                <ul class="week_stuff col-xs-12">
+	              
+	                                <li><a href="{{ TOPIC_DICT["Weeks"][6][1]}}">{{ TOPIC_DICT["Weeks"][6][0].decode('utf-8') }}</a></li>
+                                    <li><a target="_blank" href="{{url_for('presentation7')}}">Презентация</a></li>
+		         
+                                </ul>
+                                </div>
+                            </div>
+	                        
+                           
+                           <div class="row">
+                               <div class="col-md-12">
+                                <h2 class="week_header col-xs-12">Неделя 6</h2>
+                                <ul class="week_stuff col-xs-12">
+
+	                                <li><a href="{{ TOPIC_DICT["Weeks"][5][1]}}">{{ TOPIC_DICT["Weeks"][5][0].decode('utf-8') }}</a></li>
+                                    <li><a target="_blank" href="{{url_for('presentation6')}}">Презентация</a></li>
+		  
+                                </ul>
+                                </div>
+                            </div>
+                           
+                           
+                           <div class="row">
+                               <div class="col-md-12">
+                                <h2 class="week_header col-xs-12">Неделя 5</h2>
+                                <ul class="week_stuff col-xs-12">
+                                    <li><a href="{{ TOPIC_DICT["Weeks"][4][1]}}">{{ TOPIC_DICT["Weeks"][4][0].decode('utf-8') }}</a></li>
+                                    <li><a target="_blank" href="{{url_for('presentation5')}}">Презентация</a></li>
+                                    <li class="unlocked_lesson"><a  href="/weeks/pset5/">Набор Проблем 5</a></li>
+		              
+                                </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                               <div class="col-md-12">
+                                <h2 class="week_header col-xs-12">Неделя 4</h2>
+                                <ul class="week_stuff col-xs-12">
+	                                
+		                             <li><a href="{{ TOPIC_DICT["Weeks"][3][1]}}">{{ TOPIC_DICT["Weeks"][3][0].decode('utf-8') }}</a></li>
+                                    <li><a target="_blank" href="{{url_for('presentation4')}}">Презентация</a></li>
+                                    <li class="unlocked_lesson"><a  href="/weeks/pset4/">Набор Проблем 4</a></li>
+		             
+                                </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="row">
+                               <div class="col-md-12">
+                                <h2 class="week_header col-xs-12">Неделя 3</h2>
+                                <ul class="week_stuff col-xs-12">
+	                                
+	      
+                                    <li><a href="{{ TOPIC_DICT["Weeks"][2][1]}}">{{ TOPIC_DICT["Weeks"][2][0].decode('utf-8') }}</a></li>
+                                    <li><a target="_blank" href="{{url_for('presentation3')}}">Презентация</a></li>
+                                    <li class="unlocked_lesson"><a  href="/weeks/pset3/">Набор Проблем 3</a></li>
+		                                    
+                                </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                               <div class="col-md-12">
+                                <h2 class="week_header col-xs-12">Неделя 2</h2>
+                                <ul class="week_stuff col-xs-12">
+	                                             <li><a href="{{ TOPIC_DICT["Weeks"][1][1]}}">{{ TOPIC_DICT["Weeks"][1][0].decode('utf-8') }}</a></li>
+                                    <li><a target="_blank" href="{{url_for('presentation2')}}">Презентация</a></li>
+                                    <li><a  href="/weeks/pset2/">Набор Проблем 2</a></li>
+		    
+                                </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                               <div class="col-md-12">
+                                <h2 class="week_header col-xs-12">Неделя 1</h2>
+                                <ul class="week_stuff col-xs-12">
+                                    <li><a href="{{ TOPIC_DICT["Weeks"][0][1]}}"><i  aria-hidden="true"></i>{{ TOPIC_DICT["Weeks"][0][0].decode('utf-8') }}</a></li>
+                                    <li><a target="_blank" href="{{url_for('presentation1')}}"><i  aria-hidden="true"></i>Презентация</a></li>
+                                    <li class="unlocked_lesson"><a  href="/weeks/pset1/"><i aria-hidden="true"></i>Набор Проблем 1</a></li>
+                                </ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                               <div class="col-md-12">
+                                <h2 class="week_header col-xs-12">Неделя 0</h2>
+                                <ul class="week_stuff col-xs-12">
+                                    <li><a href="/weeks/notes0/">Материалы</a></li>
+                                    <li><a href="{{ url_for('static', filename='binary.html') }}" target="_blank">Бинарный код</a></li>
+                                    <li><a target="_blank" href="{{url_for('presentation0')}}">Презентация</a></li>
+                                    <li><a href="/weeks/pset0/">Набор Проблем 0</a></li>
+                                </ul>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /#page-content-wrapper -->
+
+        </div>
+        <!-- /#wrapper --> 
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/myScript.js') }}"></script>
+		<script src="https://use.fontawesome.com/a98ab50559.js"></script>
+        <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter44263234 = new Ya.Metrika({
+                    id:44263234,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/44263234" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+    </body>
+</html>

@@ -1,0 +1,351 @@
+---
+layout: header
+title: caesar
+permalink: /weeks/pset2/caesar
+---
+    
+    <style>
+        .mjx-chtml {
+    display: inline-block;
+    line-height: 0;
+    text-indent: 0;
+    text-align: left;
+    text-transform: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    word-spacing: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 1px 0;
+}
+        
+        .MJXc-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+        .MathJax_Preview {
+    color: #888;
+}
+        div.stemblock div.content {
+    margin-bottom: 1.25em;
+}
+    </style>
+    
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#background">Объяснение</a></li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthrough">Прохождение</a></li>
+<li><a href="#usage">Использование</a></li>
+<li><a href="#testing">Проверка</a>
+<ul class="sectlevel2">
+<li><a href="#code-check50-code"><code>check50</code></a></li>
+</ul>
+</li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#changelog">Изменения</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Caesar (Цезарь)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Создайте программу, которая будет шифровать текст, используя "Шифр Цезаря".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./caesar 13</span>
+plaintext:  <span class="underline">HELLO</span>
+ciphertext: URYYB</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background"><a class="link" href="#background">Объяснение</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Предположим, что Цезарь (да, тот самый Цезарь, пусть будет Юлием) "шифровал" важные сообщения (т.е. засекречивал обратимым способом), смещая каждую букву определенным количеством позиций. К примеру, он мог записать A как B, B как C, C как D и, дойдя до Z, начать алфавит с начала и написать A (Z как A). Поэтому, чтобы кому-нибудь передать сообщение HELLO (привет), Цезарь мог бы написать IFMMP. Получив такого вида сообщения, адресатам пришлось бы заниматься их "декодированием" путем смещения букв в противоположном направлении, используя то же количество позиций.</p>
+</div>
+<div class="paragraph">
+<p>Секретность этой "криптосистемы" держится только на Цезаре и на получателях сообщений, знающих секрет - количество произведенных Цезарем смещений букв в его сообщении (т.е. 1 позиция). Не очень надежный метод по современным стандартам, но если бы вы были первым человеком применившим этот метод, получилось бы довольно надежно!</p>
+</div>
+<div class="paragraph">
+<p>Незашифрованным текстом обычно называют <em>plaintext</em> (простой текст). Засекреченным текстом - <em>ciphertext</em> (шифрованный текст). И используемым секретом выступает <em>key</em> (ключ).</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Таблица 1. Шифрование слова HELLO ключом "1" дает результат IFMMP.</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>простой текст</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">H</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>+ ключ</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>= зашифрованный текст</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">I</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">F</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">M</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">M</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">P</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>В общем алгоритм (шифр) Цезаря — это вид шифра подстановки, в котором каждый символ заменяется символом, находящимся на <em>k</em> позиций левее или правее него в алфавите. Если переменная <em>p</em> будет хранить в себе простой текст (т.е. не зашифрованное сообщение ), <em>p<sub>i</sub></em> представляет <em>i<sup> ую</sup></em> (айную) букву переменной <em>p</em>, и <em>k</em> - это секретный ключ (неотрицательное целое число). Тогда каждая буква <em>c<sub>i</sub></em> в зашифрованном тексте переменной <em>c</em>, высчитывается следующим образом</p>
+</div>
+
+
+<div class="stemblock">
+<div class="content">
+    <span class="MathJax_Preview" style="/* color: inherit; *//* display: none; */"></span><span class="mjx-chtml MJXc-display" style="text-align: center;"><span id="MathJax-Element-1-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;><msub><mi>c</mi><mi>i</mi></msub><mo>=</mo><mo stretchy=&quot;false&quot;>(</mo><msub><mi>p</mi><mi>i</mi></msub><mo>+</mo><mi>k</mi><mo stretchy=&quot;false&quot;>)</mo><mo lspace=&quot;thickmathspace&quot; rspace=&quot;thickmathspace&quot;>mod</mo><mn>26</mn></math>" role="presentation" style="font-size: 116%;text-align: center;position: relative;"><em><span id="MJXc-Node-1" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-2" class="mjx-mrow"><span id="MJXc-Node-3" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-4" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.218em; padding-bottom: 0.272em;">c</span></span></span><span class="mjx-sub" style="font-size: 70.7%; vertical-align: -0.212em; padding-right: 0.071em;"><span id="MJXc-Node-5" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.434em; padding-bottom: 0.272em;">i</span></span></span></span><span id="MJXc-Node-6" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.057em; padding-bottom: 0.326em;">=</span></span><span id="MJXc-Node-7" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.488em; padding-bottom: 0.595em;">(</span></span><span id="MJXc-Node-8" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-9" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.218em; padding-bottom: 0.488em;">p</span></span></span><span class="mjx-sub" style="font-size: 70.7%; vertical-align: -0.212em; padding-right: 0.071em;"><span id="MJXc-Node-10" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.434em; padding-bottom: 0.272em;">i</span></span></span></span><span id="MJXc-Node-11" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.272em; padding-bottom: 0.434em;">+</span></span><span id="MJXc-Node-12" class="mjx-mi MJXc-space2"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.488em; padding-bottom: 0.272em;">k</span></span><span id="MJXc-Node-13" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.488em; padding-bottom: 0.595em;">)</span></span><span id="MJXc-Node-14" class="mjx-mo" style="padding-left: 0.278em; padding-right: 0.278em;"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.434em; padding-bottom: 0.326em;">mod</span></span><span id="MJXc-Node-15" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.38em; padding-bottom: 0.38em;">26</span></span></span></span></em></span></span><script type="math/tex; mode=display" id="MathJax-Element-1">c_i = (p_i + k) \bmod 26</script>
+</div>
+</div>
+
+
+<div class="paragraph">
+<p>где mod 26 означает "остаток после деления на 26." Может показаться, что эта формула только усложняет шифр, но на самом деле это просто более точный способ выразить алгоритм необходимых действий.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p> Разработайте и реализуйте программу <code>caesar</code>, которая будет шифровать сообщения используя шифр Цезаря.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Начните писать вашу программу в файле <code>caesar.c</code>, который будет находиться в папке <code>caesar</code>.</p>
+</li>
+<li>
+<p>Ваша программа должна принимать только один аргумент командной строки - неотрицательный integer. Дайте ему название <em>k</em>, чтобы было понятно, о чем мы ведем речь.</p>
+</li>
+<li>
+<p>Если ваша программа будет запущена без каких-либо дополнительных аргументов командной строки или с количеством превышающим один аргумент, она должна будет вывести на экран ошибку (пользуйтесь <code>printf</code>, текст ошибки на ваше усмотрение) и при этом <code>main</code> должна сразу вернуть значение <code>1</code> (обычно ею обозначают ошибку).</p>
+</li>
+<li>
+<p>Будем считать, что пользователь будет вводить неотрицательный integer (т.е. <code>1</code>). Не нужно проверять, числовое это значение или нет.</p>
+</li>
+<li>
+<p>Не надо ограничивать переменную <em>k</em>, записывая код так, что она будет меньше или равна числу 26 (количество букв в английском алфавите). Ваша программа должна работать со всеми неотрицательными целыми числами <em>k</em>, которые будут меньше 2<sup>31</sup> - 26. Другими словами, вам не нужно бояться, что ваша программа может перестать работать, если пользователь предоставит слишком огромное значение <em>k</em>, под которое у <code>int</code> может не хватить памяти (Вспомните переполнение <code>int</code> - overflow). Алфавитные буквы были у вас на входе (то, что ввел пользователь) и алфавитные буквы должны также быть на выходе (то, что в итоге выведится на экран), даже если значение <em>k</em> будет больше 26. К примеру, если <em>k</em> равняется 27, то <code>A</code> не должна быть заменена символом <code>[</code>, хотя <code>[</code> и находится в 27 позициях от буквы <code>A</code> в таблице ASCII (как показано здесь <a href="http://www.asciichart.com/">asciichart.com</a>). На месте <code>A</code> должна появиться <code>B</code>, так как <code>B</code> на 27-й позиции от <code>A</code>, учитывая что после <code>Z</code> мы снова начинаем с <code>A</code>.</p>
+</li>
+<li>
+<p>Ваша программа должна вывести на экран <code>plaintext:</code> ("простой текст", обязательно на английском, без новой строки, т.е. без <code>\n</code> ) и попросить пользователя ввести простой текст типа <code>string</code> (используя <code>get_string</code>).</p>
+</li>
+<li>
+<p>Ваша программа должна вывести на экран <code>ciphertext:</code> ("зашифрованный текст", обязательно на английском, без новой строки, т.е. без <code>\n</code> ) сразу после чего выводится зашифрованный текст, где каждая алфавитная буква была смещена другой, находящейся в <em>k</em> позициях от нее; неалфавитные символы должны быть выведены на экран без изменений.</p>
+</li>
+<li>
+<p> Ваша программа не должна изменять регистр: заглавные буквы, хоть и смещенные, должны оставаться заглавными; строчные буквы, хоть и смещенные, должны оставаться строчными.</p>
+</li>
+<li>
+<p>После выведения зашифрованного текста, вы должны также вывести на экран новую строку. Далее ваша программа должна завершить свою работу, вернув число <code>0</code> - результат выполненной работы функции <code>main</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="link" href="#walkthrough">Прохождение</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/aE-45zSy6DE?rel=0" frameborder="0" allowfullscreen></iframe></div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Использование</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ваша программа должна проделывать тоже самое, что показано в примере ниже. Предположим, подчеркнутый текст - это то, что написал пользователь.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./caesar 1</span>
+plaintext:  <span class="underline">HELLO</span>
+ciphertext: IFMMP</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./caesar 13</span>
+plaintext:  <span class="underline">hello, world</span>
+ciphertext: uryyb, jbeyq</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./caesar 13</span>
+plaintext:  <span class="underline">be sure to drink your Ovaltine</span>
+ciphertext: or fher gb qevax lbhe Binygvar</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./caesar</span>
+Usage: ./caesar k</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./caesar 1 2 3 4 5</span>
+Usage: ./caesar k</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="code-check50-code"><a class="link" href="#code-check50-code"><code>check50</code></a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>check50 cs50/2017/x/caesar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вас потребуют ввести логин (<b>GitHub username</b>) и пароль (<b>GitHub password</b>) от вашей учетной записи на Github'е, которую вы можете завести, пройдя по данной ссылке <a href="https://github.com/join">https://github.com/join</a>.</p>
+</div>
+<div class="paragraph">
+<p>Зайдите на сайт <a href="https://cs50.me" target="_blank">cs50.me</a>, используя всё ту же учетную запись GitHub'а и нажмите на зеленую кнопку <b>authorize submit50</b> (Это действие производится только один раз).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Программа должна принимать один аргумент командной линии <em>k</em>, поэтому вам нужно объявить функцию <code>main</code> следующим образом:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">int</span> <span class="tok-n">main</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">argc</span><span class="tok-p">,</span> <span class="tok-n">string</span> <span class="tok-n">argv</span><span class="tok-p">[])</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вспомните, что <code>argv</code> является массивом strings (строк). Вы можете представить массив в виде ряда шкафчиков в раздевалке гимнастов, внутри которых находятся какие-то значения (возможно даже носки). В нашем случае внутри каждого такого шкафчика находится <code>string</code>. Чтобы открыть (т.е. "получить доступ через индекс") первый шкафчик, вы должны воспользоваться синтаксисом <code>argv[0]</code>, так как в массиве индексация начинается с нуля. Следующий можете открыть синтаксисом <code>argv[1]</code> и так далее. Конечно, если у вас всего <code>n</code> шкафчиков, то вам лучше всего закончить весь этот процесс открывания шкафчиков в раздевалке, как только вы дойдете до <code>argv[n - 1]</code> (или охранника), так как <code>argv[n]</code> не существует!  (или же он принадлежит кому-нибудь другому, в любом случае вам нельзя его открывать.)</p>
+</div>
+<div class="paragraph">
+<p>Вы можете присвоить значение переменной <em>k</em> следующим кодом</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-n">string</span> <span class="tok-n">k</span> <span class="tok-o">=</span> <span class="tok-n">argv</span><span class="tok-p">[</span><span class="tok-mi">1</span><span class="tok-p">];</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>предполагая, что она действительно там! Вспомните, что  <code>argc</code> является <code>int</code>, который равен числу строк (strings), находящихся в <code>argv</code>, поэтому лучше всего сперва проверить значение <code>argc</code> до того как пытаться открыть шкафчик, которого вовсе может и не быть! В идеале <code>argc</code> должен равняться <code>2</code>. Почему? Вспомните, что внутри <code>argv[0]</code> по умолчанию находится название самой программы. Поэтому значение <code>argc</code> будет всегда как минимум равняться <code>1</code>. Но для этой программы вам нужно получить от пользователя аргумент командной строки <code>k</code>, что присваивает <code>argc</code> значение <code>2</code>. Конечно, если пользователь предоставит больше одного аргумента командной строки, значение <code>argc</code> может стать больше <code>2</code> и если такое произойдет, ваша программа должна будет вывести ошибку и вернуть число <code>1</code>.</p>
+</div>
+<div class="paragraph">
+<p>То, что пользователь введет целое число, не означает, что его ввод автоматически будет помещен в <code>int</code>. Совсем наоборот, он будет сохранен как <code>string</code> (строка), которая, так уж получилось, будет выглядеть как <code>int</code>! Поэтому вам нужно будет преобразовать эту <code>string</code> в <code>int</code>. Нам повезло, что кто-то уже написал функцию делающую все это за нас - <a href="https://msdn.microsoft.com/ru-ru/library/yd5xkb5c.aspx"><code>atoi</code></a>. Вот как ей можно воспользоваться:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">int</span> <span class="tok-n">k</span> <span class="tok-o">=</span> <span class="tok-n">atoi</span><span class="tok-p">(</span><span class="tok-n">argv</span><span class="tok-p">[</span><span class="tok-mi">1</span><span class="tok-p">]);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Заметьте, что на этот раз мы объявили переменную <code>k</code>, указав ее тип как <code>int</code>. Так вы сможете осуществлять над ней арифметические вычисления.</p>
+</div>
+<div class="paragraph">
+<p>Так как <code>atoi</code> объявлен в библиотеке <code>stdlib.h</code>, вам нужно будет <code>#include</code> (включить) этот заголовочный файл (.h или .header) в верхнюю часть вашего кода (Ваш код итак будет компилироваться, если даже вы не будете включать ее, потому что мы уже <code>#include</code> (добавили) данную библиотеку в <code>cs50.h</code>. Но не стоит доверять другой библиотеке <code>#include</code> (включение) в ваш код необходимых вам заголовочных файлов.).</p>
+</div>
+<div class="paragraph">
+<p>Как только в перемнную <code>k</code> будет помещено значение типа <code>int</code>, вам нужно будет попросить пользователя ввести простой текст. Вполне вероятно, что функция библиотеки CS50 <code>get_string</code> сможет помочь вам с этим.</p>
+</div>
+<div class="paragraph">
+<p>Как только вы получите <code>k</code> и какой-нибудь простой текст <code>p</code>, вы сможете начать шифровать буквы. Вспомните, что вы можете проводить итерацию (перебирание) каждой буквы <code>string</code> (строки), выводя их на экран, как показано ниже:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">for</span> <span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-n">n</span> <span class="tok-o">=</span> <span class="tok-n">strlen</span><span class="tok-p">(</span><span class="tok-n">p</span><span class="tok-p">);</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">n</span><span class="tok-p">;</span> <span class="tok-n">i</span><span class="tok-o">++</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%c&quot;</span><span class="tok-p">,</span> <span class="tok-n">p</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p> Другими словами, точно также как <code>argv</code> является массивом strings (строк), так и <code>string</code> является массивом chars (символов). Значит вы можете использовать квадратные скобки для получения доступа к каждому символу по отдельности точно также, как вы это делали с <code>argv</code> для доступа к strings (строкам). Неплохо, да? Конечно, по отдельности выводить на экран символы - далеко не криптография. Конечно, если <em>k</em> не равен 0. Но все, что нами было приведено выше, поможет вам оказать помощь Цезарю в написании его шифра!</p>
+</div>
+<div class="paragraph">
+<p>Между прочим, вам нужно будеть <code>#include</code> (включить) еще один заголовочный файл для того, чтобы иметь возможность пользоваться функцией <a href="http://cppstudio.com/post/664/"><code>strlen</code></a>.</p>
+</div>
+
+<div class="paragraph">
+<p>И по поводу обнуления индекса для повторного смещения с <code>Z</code> на <code>A</code> (или <code>z</code> на <code>a</code>) - не забывайте о <code>%</code>, операторе остатка (modulo) в языке программирования Си. Пользуйтесь <a href="http://asciitable.com/" class="bare">http://asciitable.com/</a>, таблица ASCII содержит в себе не только алфавитные буквы - это на всякий случай, вдруг вы случайно начнете выводить непонятные символы.</p>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">Изменения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>08-02-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+

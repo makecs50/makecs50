@@ -1,0 +1,523 @@
+---
+layout: header
+title: whodunit
+permalink: /weeks/pset4/whodunit
+---
+    <style>
+        .mjx-chtml {
+    display: inline-block;
+    line-height: 0;
+    text-indent: 0;
+    text-align: left;
+    text-transform: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    word-spacing: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 1px 0;
+}
+        
+        .MJXc-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+        .MathJax_Preview {
+    color: #888;
+}
+        div.stemblock div.content {
+    margin-bottom: 1.25em;
+}
+    </style>
+
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#distribution">Развертывание</a>
+<ul class="sectlevel2">
+<li><a href="#downloading">Скачивание</a></li>
+</ul>
+</li>
+<li><a href="#background">Объяснение</a></li>
+<li><a href="#questions">Вопросы</a></li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthrough">Прохождение</a></li>
+<li><a href="#usage">Использование</a></li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#testing">Проверка</a></li>
+<li><a href="#changelog">Изменения</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Whodunit (Кто это сделал?)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ответьте на некоторые вопросы и затем реализуйте программу, которая сможет вытащить спрятанное сообщение из BMP изображения, как указано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./whodunit clue.bmp verdict.bmp</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="distribution"><a class="link" href="#distribution">Развертывание</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="downloading"><a class="link" href="#downloading">Скачивание</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ wget <a href="http://cdn.cs50.net/2018/x/psets/4/whodunit.zip" class="bare">http://cdn.cs50.net/2018/x/psets/4/whodunit.zip</a>
+$ unzip whodunit.zip
+$ rm whodunit.zip
+$ mv problems-whodunit whodunit
+$ cd whodunit
+$ ls
+bmp.h  clue.bmp  copy.c  large.bmp  small.bmp  smiley.bmp</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background"><a class="link" href="#background">Объяснение</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Добро пожаловать в особняк Tudor. Вы гость, трагически погибшего, мистера Джона Бодди, ставшего жертвой чей-то грязной игры. Для того, чтобы одержать победу, вы должны определить whodunit (кто совершил преступление?).</p>
+</div>
+<div class="paragraph">
+<p>К сожалению для вас (хотя к еще большему сожалению для мистера Бодди), единственной уликой является 24-битный BMP файл под названием <code>clue.bmp</code> (улика/зацепка), изображенный ниже, который господин Бодди оставил на своем компьютере, в свои последние минуты жизни. В файле есть скрытое среди красного "шума" изображение whodunit (того, кто совершил преступление.).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/pset4/1.png" alt="clue"></div>
+</div>
+<div class="paragraph">
+<p>Вы давно выбросили этот кусок красного пластика, который помог бы решить эту загадку, значит вы должны подойти к этой проблеме глазами компьютерного специалиста.</p>
+</div>
+<div class="paragraph">
+<p>Но, для начала, некоторая информация.</p>
+</div>
+<div class="paragraph">
+<p>Наверное, самый простой способ представить изображение будет сетка пикселей (то есть точки), каждая из которых может быть разного цвета. Поэтому, чтобы представить черно-белые изображения, нам нужно использовать на кождом пикселе 1 бит, где 0 - черный цвет и 1 - белый цвет, как показано ниже.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/pset4/2.png" alt="grid"></div>
+</div>
+<div class="paragraph">
+<p>Поэтому изображение - это просто сетка битов (то есть карта битов/bitmap или отображение битов). Для более красочных (имеющих больше цветов) изображений вам просто нужно большее количество битов на пиксель. Формат файла (например GIF), который поддерживает "8-битный цвет" использует 8 бит в каждом пикселе. Формат файла (например BMP, JPG, PNG), который поддерживает "24-битный цвет" использует 24 бита в каждом пикселе. (BMP фактически поддерживает 1-, 4-, 8-, 16-, 24- и 32-битный цвет.)</p>
+</div>
+<div class="paragraph">
+<p>Мистер Бодди использует 24-битную структуру BMP, обозначая 8 битами количество красного цвета, другими 8 битами количество зеленого цвета и оставшимися 8 битами количество синего цвета в пикселе. Если вы когда-нибудь слышали об аббревиатуре RGB, поздравляем, вы сейчас работаете именно с ними: красный (RED), зеленый (GREEN), синий (BLUE).</p>
+</div>
+<div class="paragraph">
+<p>
+Если значения R, G и B какого-то пикселя на BMP изображении, будут равны 0xff, 0x00 и 0x00 (шестнадцатеричная система счисления), то этот пиксель будет чисто красным, так как 0xff (иначе известное как 255 в десятичной системе) означает "много красного", в то время как 0x00 и 0x00 означают "никакого зеленого" и "никакого синего". Учитывая то, насколько красное BMP изображение оставил нам мистер Бодди, мы можем спокойно заявить, что в нем определенно много пикселей именно с такими значениями RGB. Естественно в нем присутствуют пиксели и с другими значениями.</p>
+</div>
+<div class="paragraph">
+<p>Между прочим в HTML и CSS (языки с помощью которых  создаются веб-сайты) модели цветов устроены точно таким же образом. Здесь больше информации по этому поводу <a href="https://ru.wikipedia.org/wiki/%D0%A6%D0%B2%D0%B5%D1%82%D0%B0_HTML">wikipedia</a>.</p>
+</div>
+<div class="paragraph">
+<p>Теперь перейдем к проблеме более техническим способом. Вспомните, что файл представляет из себя всего лишь последовательность битов, расположенных между собой определенным образом. Поэтому 24-битный BMP-файл - это тоже просто последовательность битов, где (почти) каждые 24 бита представляют цвет какого-то пикселя. Но в BMP файле также есть какие-то "метаданные" - информация, к примеру высота и ширина изображения. Эти метаданные хранятся в начале файла в виде двух структур данных, которые в народе называют "заголовками" (не путать с заголовками языка Си).
+
+Первым из этих заголовков является <code>BITMAPFILEHEADER</code> (заголовок файла), его длина 14 байтов (напомним, что 1 байт равен 8 битам). Второй называется <code>BITMAPINFOHEADER</code> (заголовок данных), его длина 40 байтов. Далее после этих заголовков следует уже сам bitmap (изображение): массив байтов, трое из которых образуют цвет пикселя. (В 1, 4 и 16-битном BMP-файлах, но не в 24 или 32, есть еще один заголовок, сразу после <code>BITMAPINFOHEADER</code> (заголовка данных), и он называется <code>RGBQUAD</code> - массив, определяющий "значения интенсивности" каждого цвета палитры устройства). BMP хранит эти три значения в обратном порядке (т.е. BGR), 8 битов для представления синего, далее 8 битов для зеленого и 8 битов для красного (некоторые BMP также хранят все биты в обратном порядке, т.е. верхняя строка битов изображения начинается с самого конца BMP файла. Не волнуйтесь, в данном наборе проблем биты расположены в обычно порядке). Если бы мы превратили 1-битный смайлик в 24-битный, заменяя черный красным, 24-битное BMP-изображение сохранило бы эти биты так, что <code>0000ff</code> указывал бы на красный цвет и <code>ffffff</code> на белый. Мы выделили красным цветом все примеры чисел <code>0000ff</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>ffffff  ffffff  <span class="red">0000ff</span>  <span class="red">0000ff</span>  <span class="red">0000ff</span>  <span class="red">0000ff</span>  ffffff  ffffff
+ffffff  <span class="red">0000ff</span>  ffffff  ffffff  ffffff  ffffff  <span class="red">0000ff</span>  ffffff
+<span class="red">0000ff</span>  ffffff  <span class="red">0000ff</span>  ffffff  ffffff  <span class="red">0000ff</span>  ffffff  <span class="red">0000ff</span>
+<span class="red">0000ff</span>  ffffff  ffffff  ffffff  ffffff  ffffff  ffffff  <span class="red">0000ff</span>
+<span class="red">0000ff</span>  ffffff  <span class="red">0000ff</span>  ffffff  ffffff  <span class="red">0000ff</span>  ffffff  <span class="red">0000ff</span>
+<span class="red">0000ff</span>  ffffff  ffffff  <span class="red">0000ff</span>  <span class="red">0000ff</span>  ffffff  ffffff  <span class="red">0000ff</span>
+ffffff  <span class="red">0000ff</span>  ffffff  ffffff  ffffff  ffffff  <span class="red">0000ff</span>  ffffff
+ffffff  ffffff  <span class="red">0000ff</span>  <span class="red">0000ff</span>  <span class="red">0000ff</span>  <span class="red">0000ff</span>  ffffff  ffffff</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Таким образом, если присмотреться, вы можете увидеть красный смайлик, образованный битами, которые расположены слева направо, сверху вниз.</p>
+</div>
+<div class="paragraph">
+<p>Вспомните, что шестнадцатеричная цифра представляется 4 битами. Соответственно <code>ffffff</code> в шестнадцатеричной системе означает <code>111111111111111111111111</code> в бинарной.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">Хорошо, теперь остановитесь! Не продолжайте дальше, пока вы точно не будете уверены, что понимаете почему <code>0000ff</code> представляет красный пиксель в 24-битном BMP файле.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Хорошо, оставим теорию и перейдем к практике. Внутри файлового браузера (панель слева) среды разработки CS50 (CS50 IDE), дважды щелкните по <strong>smiley.bmp</strong>, таким образом откроется изображение маленького смайлика, 8x8 пикселей. Увеличьте размер изображения с помощью выподающего меню, которое можно найти в новом окне открытого изображения. Измените увеличение с <strong>100%</strong> на <strong>800%</strong>, дабы можно было разгледеть смайлик, который будет выглядеть также, как показано ниже (если изображение будет размытым, убедитесь, что у <strong>Smooth</strong>, располагающегося сверху окна, не поставлена галочка). Таким образом вы можете разглядеть каждый пиксель изображения (как большие квадратики).</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="{{ site.url }}/assets/images/notes/pset4/3.png" alt="smiley"></span></p>
+</div>
+<div class="paragraph">
+<p>Теперь давайте заглянем "под капот" и посмотрим на байты, которые образуют изображение <code>smiley.bmp</code>. В этом нам поможет <code>xxd</code> - "hex editor" (шестнадцатеричный редактор) командной строки. Выполните в терминальном окне следующее:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>xxd -c 24 -g 3 -s 54 smiley.bmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ниже приведен результат того, что вы должны увидеть (Наверное, будет лучше если вы увеличите размер терминального окна). Как это было ранее, мы выделили красным цветом все значения <code>0000ff</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>0000036: ffffff ffffff <span class="red">0000ff</span> <span class="red">0000ff</span> <span class="red">0000ff</span> <span class="red">0000ff</span> ffffff ffffff  ........................
+000004e: ffffff <span class="red">0000ff</span> ffffff ffffff ffffff ffffff <span class="red">0000ff</span> ffffff  ........................
+0000066: <span class="red">0000ff</span> ffffff <span class="red">0000ff</span> ffffff ffffff <span class="red">0000ff</span> ffffff <span class="red">0000ff</span>  ........................
+000007e: <span class="red">0000ff</span> ffffff ffffff ffffff ffffff ffffff ffffff <span class="red">0000ff</span>  ........................
+0000096: <span class="red">0000ff</span> ffffff <span class="red">0000ff</span> ffffff ffffff <span class="red">0000ff</span> ffffff <span class="red">0000ff</span>  ........................
+00000ae: <span class="red">0000ff</span> ffffff ffffff <span class="red">0000ff</span> <span class="red">0000ff</span> ffffff ffffff <span class="red">0000ff</span>  ........................
+00000c6: ffffff <span class="red">0000ff</span> ffffff ffffff ffffff ffffff <span class="red">0000ff</span> ffffff  ........................
+00000de: ffffff ffffff <span class="red">0000ff</span> <span class="red">0000ff</span> <span class="red">0000ff</span> <span class="red">0000ff</span> ffffff ffffff  ........................</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>В самом левом столбике находятся адреса (шестнадцатеричные), которые указывают на отступ от первого байта файла. Обратите внимание, что <code>00000036</code> в шестнадцатеричной системе равен <code>54</code> в десятичной. Поэтому вы начинаете работу с <code>54</code> байта изображения <code>smiley.bmp</code>. Вспомните, что первые 14 + 40 = 54 байта BMP заполнены метаданными. Если вы действительно хотите увидеть эти метаданные, выводя их вместе с битовыми пикселями (bitmap), выполните следующее.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>xxd -c 24 -g 3 smiley.bmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Если бы <code>smiley.bmp</code> действительно содержал в себе символы ASCII, вы бы увидели их в самом правом столбике <code>xxd</code>, вместо всех этих точек.</p>
+</div>
+<div class="paragraph">
+<p>Поэтому <code>smiley.bmp</code> 8 пикселей в ширину и 8 пикселей в высоту, и имеет 24-битную структуру (каждый пиксель которого представлен 24 ÷ 8 = байтами). Каждая строка (или "растровая строка") занимает (8 пикселей) × (3 байта на каждый пиксель) = 24 байта, а это количество кратно 4. Оказывается, если количество байтов в растровой строке не кратны 4, BMP файлы хранятся немного по-другому. В <code>small.bmp</code>, к примеру, представлено еще одно 24-битное BMP-изображение, зеленый квадрат с шириной и высотой в 3 пикселя. Если вы откроете его (дважды нажмете по нему), вы увидите, что он выглядит так, как показано ниже, хотя и намного меньше (Опять же, увеличьте картинку, для более удобной работы).</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="{{ site.url }}/assets/images/notes/pset4/4.png" alt="smiley"></span></p>
+</div>
+<div class="paragraph">
+<p>Таким образом каждая строка в <code>small.bmp</code> занимает (3 пикселя) × (3 байта на пиксель) = 9 байтов, что не кратно 4. Поэтому строки заполняют нулями, которые позволяют увеличить их длину, дабы они (строки) были кратны 4. Другими словами, в каждую строку 24-битного BMP-изображения, необходимо добавить от 0 до 3 байтов отступов (Понятно почему?). В случае <code>small.bmp</code>, необходимо 3 байта нулей, т.к. (3 пикселя) × (3 байта на пиксель) + (3 байта отступов) = 12 байтов, что действительно кратно 4.</p>
+</div>
+<div class="paragraph">
+<p>Чтобы "увидеть" этот отступ выполните следующую команду:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>xxd -c 12 -g 3 -s 54 small.bmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Обратите внимание, мы применили другое значение для <code>-c</code>, отличное от того, что мы использовали для <code>smiley.bmp</code>. Поэтому <code>xxd</code>, на этот раз, выводит только 4 столбика (3 для зеленого квадрата и 1 для отступа). Вы должны увидеть следующие выходные данные (мы выделили зеленым все числа <code>00ff00</code> ).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>    0000036: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> 000000  ............
+    0000042: <span class="green">00ff00</span> ffffff <span class="green">00ff00</span> 000000  ............
+    000004e: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> 000000  ............</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Для разнообразия, давайте используем <code>xxd</code> на <code>large.bmp</code>, который идентичен <code>small.bmp</code>, но имеет соотношения 12 пикселей на 12 пикселей, т.е. разрешение изображения в четыре раза больше. Попробуйте выполнить команду, приведенную ниже (вам, скорее всего, придется расширить окно, чтобы избежать переноса строк).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>xxd -c 36 -g 3 -s 54 large.bmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вы увидите следующий результат (мы опять выделили зеленым <code>00ff00</code>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>0000036: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+000005a: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+000007e: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+00000a2: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+00000c6: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> ffffff ffffff ffffff ffffff <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+00000ea: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> ffffff ffffff ffffff ffffff <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+000010e: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> ffffff ffffff ffffff ffffff <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+0000132: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> ffffff ffffff ffffff ffffff <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+0000156: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+000017a: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+000019e: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................
+00001c2: <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span> <span class="green">00ff00</span>  ....................................</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Можно заметить, что у этого BMP отсутствуют отступы! В конце концов, (12 пикселей) × (3 байта на пиксель) = 36 байтов кратны 4.</p>
+</div>
+
+<div class="paragraph">
+<p><code>xxd</code> способен только показывать байты. Как же нам добраться до них для программного изменения? В <code>copy.c</code> находится программа, чьей основной целью является создавание копии BMP файла, кусочек за кусочком. Конечно вы могли бы просто воспользоваться командой <code>cp</code>. Но <code>cp</code> ничем не сможет помочь мистеру Бодди. Давайте будем просто надеяться, что <code>copy.c</code> сможет!</p>
+</div>
+<div class="paragraph">
+<p>Скомпилируйте <code>copy.c</code> в программу <code>copy</code>, используя <code>make</code>. (Помните как?) Затем запустите команду приведенную ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./copy smiley.bmp copy.bmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Если вы далее выполните ls (с подходящим ключом или аргументом), вы увидите, что у <code>smiley.bmp</code> и <code>copy.bmp</code> одинаковые размеры. Давайте еще раз проверим действительно ли они одинакового размера! Выполните команду приведенную ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>diff smiley.bmp copy.bmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Если эта команда ничего не выведет, значит файлы действительно идентичны (На заметку, некоторые программы, такие как Photoshop, включают хвостовые нули в конец BMP файлов. Наша версия <code>copy</code> откидывает их, поэтому не стоит переживать, если вы попробуете копировать скачанный или созданный вами BMP и обнаружете, что копия на несколько байтов меньше оригинала). Для визуального подтверждения, откройте оба файла (двойным нажатием) и проверьте идентичность. Но программа проверяет каждый байт, поэтому его "глаз" будет острее вашего!</p>
+</div>
+<div class="paragraph">
+<p>Как же создалась эта копия? Оказывается, <code>copy.c</code> полагается в этом вопросе на <code>bmp.h</code>. Давайте посмотрим. Откройте <code>bmp.h</code> и вы увидите определения этих заголовков, о которых мы уже говорили. Также этот файл определяет <code>BYTE</code>, <code>DWORD</code>, <code>LONG</code> и <code>WORD</code> - типы данных, обычно встречающиеся в мире Windows программирования. Заметьте, они являются всего лишь псевдонимами для примитивов (int, float, bool и т.п.), с которыми (мы надеемся) вы уже знакомы. Оказывается, <code>BITMAPFILEHEADER</code> и <code>BITMAPINFOHEADER</code> пользуются этими типами данных. Этот файл также определяет <code>struct</code> (структуру) под названием <code>RGBTRIPLE</code>, которая, попросту говоря, "инкапсулирует" три байта: синий, зеленый м красный (очередность, которую мы получаем, загружая RGB из памяти компьютера).</p>
+</div>
+<div class="paragraph">
+<p>Почему эти <code>struct</code>'ы так полезны? Вспомните, что файл - это просто последовательность байтов (или битов), располагающихся в памяти. И эти байты расположены таким образом, что первые несколько байтов что-то представляют, следующие несколько байтов представляют что-то другое и так далее. "Форматы файлов" существуют из-за того, что мир стандартизировал представление байтов (то, что они обозначают). Теперь мы можем просто считывать файл с жесткого диска, таким образом помещая его в RAM (оперативную память) в виде одного большого массива байтов. Помните, что байт, находящийся на <code>[i]</code>'ом индексе, представляет одну вещь, в то время как байт на <code>[j]</code>'ом индексе представляет другой. Но почему бы не присудить этим байтам имена, чтобы мы могли бы еще легче доставать их из памяти? Именно это позволяет нам делать <code>struct</code>, находящийся в <code>bmp.h</code> файле. Чем представлять файл как одну большую последовательность байтов, мы можем представить его как последовательность <code>struct</code>'ов.</p>
+</div>
+<div class="paragraph">
+<p>Вспомните, что у <code>smiley.bmp</code> размер 8 на 8 пикселей и поэтому он должен занимать 14 + 40 + (8 × 8) × 3 = 246 байтов дискового пространства (HDD). Можете проверить это, используя команду <code>ls</code>. Вот как будет выглядеть он (файл) на жестком диске, согласно Microsoft'у:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="{{ site.url }}/assets/images/notes/pset4/5.png" alt="new"></span></p>
+</div>
+<div class="paragraph">
+<p>Как предполагает эта форма, порядок имеет значение, когда идет речь о членах <code>struct</code>'а. 57-м байтом представлен <code>rgbtBlue</code> (а не <code>rgbtRed</code>), т.к. <code>rgbtBlue</code> первым определяется в <code>RGBTRIPLE</code>. Использованный нами <code><em>атрибут</em></code> под названием <code><em>packed</em></code> делает так, что <code>clang</code> не будет пытаться выравнивать члены по слову (при этом, адрес первого байта каждого члена кратен 4), чтобы в наших <code>struct</code>'ах не было "пробелов", которых фактически не существует на жестком диске. Не стоит особо напрягаться по поводу данного способа имплементации.</p>
+</div>
+<div class="paragraph">
+<p>И на последок, вы скорее всего заметили в <code>copy.c</code>, что когда мы хотим вывести сообщение об ошибке, мы используем функцию <code>fprintf</code> (первым аргументом которого, является <code>stderr</code>) вместо более знакомой нам <code>printf</code>. Оказывается, <code>printf</code> выводит сообщения в поток "standard output" (стандартного вывода или <code>stdout</code>), путь которого лежит в терминальное окно пользователя. Как течение реки (stdout), несущее различное количество упавших в нее веток (сообщений printf) к финальному месту назначения - суше (терминальному окну пользователя). Также существует поток "standard error" (стандартного вывода ошибок или <code>stderr</code>), конечное место прибывания которого, также терминальное окно пользователя (не запутались?). С помощью <code>stdout</code> и <code>stderr</code> программист может отделять сообщения с ошибками от обычных сообщений так, если того захочет пользователь, что одно или другое (или оба) может быть "перенаправлено" (с помощью <code>&gt;</code>) или помещено (с помощью <code>|</code>) куда-то помимо терминального окна пользователя.</p>
+</div>
+<div class="paragraph">
+<p>Другими словами это</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, world</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>идентично этому</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-n">fprintf</span><span class="tok-p">(</span><span class="tok-n">stdout</span><span class="tok-p">,</span> <span class="tok-s">&quot;hello, world</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>но оптимальнее использовать первый вариант. Однако, чтобы вывести сообщение с ошибкой в поток <code>stderr</code>, используйте <code>fprintf</code> как указано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-n">fprintf</span><span class="tok-p">(</span><span class="tok-n">stderr</span><span class="tok-p">,</span> <span class="tok-s">&quot;Ошибка: ./whodunit вхФайл выхФайл</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="questions"><a class="link" href="#questions">Вопросы</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+
+</div>
+
+<div class="paragraph">
+<p>В файле <code>questions.txt</code> есть вопросы, на которые вы должны ответить одним или бóльшим количеством предложений. Пользуйтесь онлайн документацией языка Си.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Что такое <code>stdint.h</code>?</p>
+</li>
+<li>
+<p>В чем смысл использования в программе <code>uint8_t</code>, <code>uint32_t</code>, <code>int32_t</code> и <code>uint16_t</code>?</p>
+</li>
+<li>
+<p>Сколько байтов занимают <code>BYTE</code>, <code>DWORD</code>, <code>LONG</code> и <code>WORD</code>?</p>
+</li>
+<li>
+<p>Какими должны быть первые три байта любого BMP файла (просто укажите каким должно быть значение используя ASCII, десятичную или шестнадцатеричную систему счисления)? Первые байты, используемые для обозначения формата файла, называются "магическими числами".</p>
+</li>
+<li>
+<p>Какая разница между <code>bfSize</code> и <code>biSize</code>?</p>
+</li>
+<li>
+<p>Что будет означать отрицательное значение <code>biHeight</code>?</p>
+</li>
+<li>
+<p>Какое поле в <code>BITMAPINFOHEADER</code> (заголовке данных) уточняет глубину цвета изображения BMP (т.е. количество битов на пиксель)?</p>
+</li>
+<li>
+<p>Почему функция <code>fopen</code> файла <code>copy.c</code> может вернуть <code>NULL</code> на линии 24 и 32?</p>
+</li>
+<li>
+<p>Почему третьим аргументом функции <code>fread</code>, в нашем коде, всегда выступает <code>1</code>?</p>
+</li>
+<li>
+<p>Какое значение присваивает 65 линия файла <code>copy.c</code> нашему <code>padding</code>'у (отступу), если <code>bi.biWidth</code> равен <code>3</code>?</p>
+</li>
+<li>
+<p>Какую функцию выполняет <code>fseek</code>?</p>
+</li>
+<li>
+<p>Что такое <code>SEEK_CUR</code>?</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Реализуйте программу под названием <code>whodunit</code>(кто это сделал?) таким образом, что она раскроет спрятанное в оставленном мистером Бодди сообщение, говорящее кто совершил приступление (whodunit).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Напишите свою программу в файле <code>whodunit.c</code>, который должен будет находиться в папке <code>whodunit</code>.</p>
+</li>
+<li>
+<p>Ваша программа должна принимать ровно два аргумента: название входного файла, который нужно будет открыть для считывания и название выходного файла, который также будет открыт для дальнейшей его записи.</p>
+</li>
+<li>
+<p>Если вашу программу запустят с меньшим или большим количеством аргументов командной строки, она должна будет указать пользователю, используя функцию <code>fprintf</code> (с первым параметром <code>stderr</code>, для вывода ошибок), как правильно вводить данные и при этом функция <code>main</code> должна вернуть <code>1</code>.</p>
+</li>
+<li>
+<p>Если входной файл будет невозможно открыть для чтения, ваша программа должна сообщить об этом пользователю через <code>fprintf</code> (и ее посылкой сообщения потоку <code>stderr</code>), <code>main</code> должна вернуть <code>2</code>.</p>
+</li>
+<li>
+<p>Если выходной файл будет невозможно открыть для записи, ваша программа должна сообщить об этом пользователю через <code>fprintf</code> (и ее посылкой сообщения потоку <code>stderr</code>), <code>main</code> должна вернуть <code>3</code>.</p>
+</li>
+<li>
+<p>Если входной файл не является не сжатым 24-битным BMP-изображением версии 4.0, ваша программа должна сообщить об этом пользователю через <code>fprintf</code> (и ее посылкой сообщения потоку <code>stderr</code>), <code>main</code> должна вернуть <code>4</code>.</p>
+</li>
+<li>
+<p>При успешном исходе, <code>main</code> должна вернуть <code>0</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="link" href="#walkthrough">Прохождение</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/jVOwcRH9I2M" frameborder="0" allowfullscreen></iframe></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Использование</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ваша программа должна проделывать тоже самое, что показано в примере ниже. Предположим, подчеркнутый текст - это то, что написал пользователь.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./whodunit</span>
+Usage: ./whodunit infile outfile
+$ <span class="underline">echo $?</span>
+1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./whodunit clue.bmp verdict.bmp</span>
+$ <span class="underline">echo $?</span>
+0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Вспомните детство, когда вы держали кусочек красного пластика (один линза 3D очков) над подобными секретными сообщениями. В общем, если вы его подносили к глазу, то все вокруг виделось красным и вы могли прочитать секретное сообщение. Реализуйте эту же идею в программе <code>whodunit</code>. Как и в случае с <code>copy</code> (копированием), ваша программа должна принимать ровно два аргумента командной строки. И если вы выполните приведенную ниже команду, в <code>verdict.bmp</code> должно сохраниться BMP-изображение, в котором рисунок мистера Бодди избавится от цветового шума.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./whodunit clue.bmp verdict.bmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Предлагаем вам начать решать эту проблему с команды приведенной ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>cp copy.c whodunit.c</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Далее добавьте и/или измените всего лишь несколько линий кода.</p>
+</div>
+<div class="paragraph">
+<p>В <code>smiley.bmp</code> нет никаких спрятанных сообщений, но вы все равно можете проверить работоспособность вашей программы на ее пикселях. У данного BMP-изображения небольшой размера, поэтому, во время разработки, вы можете сравнивать его и выходные данные вашей программы, используя <code>xxd</code>.</p>
+</div>
+<div class="paragraph">
+<p>Не нервничайте, это задание можно решить нескольки путями. Главное чтобы вы сами могли разглядеть сообщение нарисованное мистером Бодди, хотя кому какая разница, ведь человек уже мертв! Но так уж получилось, что вы можете извлечь пользу из всей этой истории =)  *черный юмор*</p>
+</div>
+<div class="paragraph">
+<p>Отправляя решение, вы должны будете указать кто совершил убийство!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Т.к. программу <code>whodunit</code> можно написать несколькими путями, невозможно проверить правильность вашего кода, используя <code>check50</code>!</p>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">Изменения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>11-04-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+            </div>
+        </div>

@@ -1,0 +1,1365 @@
+---
+layout: header
+title: Note1
+permalink: /weeks/notes1
+---
+
+  <div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#scratch-vs-c">Scratch vs C</a></li>
+<li><a href="#hello-c">hello, Cи</a></li>
+<li><a href="#the-cs50-library">Библиотека CS50</a></li>
+<li><a href="#data-types">Типы Данных</a></li>
+<li><a href="#more-c">Больше Си</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Неделя 1</h1>
+<div class="sect1">
+<h2 id="scratch-vs-c"><a class="link" href="#scratch-vs-c">Scratch vs. C</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Scratch помог нам изучить основные концепции программирования и теперь мы можем применить их в настоящем языке программирования, Cи.</p>
+</li>
+<li>
+<p>Помните, на прошлой неделе, когда мы хотели запустить наше приложение в Scratch, мы знали, что нам нужно было использовать блок с названием <code>когда щелкнут по зеленому флажку</code>.</p>
+</li>
+<li>
+<p>Наш пример реализации блока "сказать": <code> hello, world</code> можно реализовать в Cи следующим образом:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, world</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>printf</code> похож на блок Scratch'a <code>сказать</code>, и он отобразит на экране всё, что будет внутри его кавычек.</p>
+</li>
+<li>
+<p>Вот так мы начинаем наше знакомство с синтаксисом, двойные кавычки и точка с запятой - всё потихоньку.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>В Scratch'e блок <code>сказать</code> представлял из себя функцию, которая принимала аргумент или параметр. В Си это можно сделать как-то так:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, world</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Управляющий символ <code>\n</code> создает новую строку - все равно, что нажать на Enter, находясь в блокноте.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>В случае с циклами, в Scratch у нас есть блок <code>всегда</code>, который позволяет бесконечно повторять какое-то действие. В Си мы будем делать так:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">while</span> <span class="tok-p">(</span><span class="tok-nb">true</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, world</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Выражение, находящееся внутри фигурных скобок, будет выполняться снова и снова <code>пока(while)</code> условие, находящееся внутри скобок, будет истиной, и так как <code>истина (true)</code> всегда будет истиной, цикл никогда не завершится, бесконечно повторяя себя.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Чтобы цикл имел определенное количество повторов, надо будет немного усложнить код:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">for</span> <span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">50</span><span class="tok-p">;</span> <span class="tok-n">i</span><span class="tok-o">++</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, world</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы вернемся к этому циклу чуть позже, а пока достаточно знать, что слово <code>for</code> или "для", является особым, обозначающим начало цикла.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>В Scratch, мы использовали блоки <code>задать [i] значение [0]</code> для представления переменных, способные хранить значения. В Си мы сделаем это так:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>int</code> обозначает integer, в нем мы создаем переменную для хранения целых чисел. <code>i</code> - это название нашей новой переменной, и <code>0</code> - это значение, которое мы ему присвоим.</p>
+</li>
+<li>
+<p>Наконец, точка с запятой обозначает завершение данного выражения</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Булево выражения по сути своей являются вопросами, которые дают один результат: истину (true) или ложь (false). В Scratch'e это выглядело как <code>i &lt; 50</code> или <code>i</code> меньше <code>50</code>. В Си все также просто    :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">50</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>С <code>x &lt; y</code> тоже самое. Выражение одинаковое как в Sratch, так и в Cи, до тех пор пока оба <code>x</code> и <code>y</code> будут представлять из себя созданные нами переменные, которым были присвоены значения.</p>
+</li>
+<li>
+<p>Также можно использовать условия, позволяющие выбрать одну из нескольких дорог. В Scratch'e мы показывали что-то похожее на это:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/conditions_scratch.jpg" alt="Conditions in Scratch" width="200">
+</div>
+</div>
+</li>
+<li>
+<p>Всё это можно намного легче выразить в Cи:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-n">x</span> <span class="tok-o">&lt;</span> <span class="tok-n">y</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;x меньше y</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span>
+<span class="tok-k">else</span> <span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-n">x</span> <span class="tok-o">&gt;</span> <span class="tok-n">y</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;x больше y</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span>
+<span class="tok-k">else</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;x равен y</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Scratch не поленился показать нам списки, в которых мы могли хранить сразу несколько значений. В Си тоже самое проделывают массивы, в которых мы можем упорядоченно хранить огромное число элементов. </p>
+</li>
+<li>
+<p> В прошлый раз Scratch представил нам такой блок как <code>элемент (1) из [argv]</code>, который доставал первый элемент из списка под названием <code>argv</code>. В Си (мы начинаем считать начиная с 0, т.к. это самое маленькое неотрицательное число) мы гораздо легче сможем проделать вышеприведенную операция <code>argv[0]</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hello-c"><a class="link" href="#hello-c">hello, C</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Вернемся к нашему примеру:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, world</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>main</code> представляет из себя блок <code>когда щелкнут по зеленой кнопке</code>, и помечает <em>основной (main)</em> кусочек кода, который будет выполняться при любых условиях.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Этот код, читабельный для "обычных" людей (или понятный "людям"), необходимо перевести в <strong>машинный код</strong>, который выглядит как-то так:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-mo">01111111</span> <span class="tok-mo">01000101</span> <span class="tok-mo">01001100</span> <span class="tok-mo">01000110</span> <span class="tok-mo">00000010</span> <span class="tok-mo">00000001</span> <span class="tok-mo">00000001</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00000010</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00111110</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000001</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mi">10110000</span> <span class="tok-mo">00000101</span> <span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mi">11010000</span> <span class="tok-mo">00010011</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00111000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00001001</span> <span class="tok-mo">00000000</span> <span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00100100</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00100001</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00000110</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000101</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mi">11111000</span> <span class="tok-mo">00000001</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mi">11111000</span> <span class="tok-mo">00000001</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00001000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00000011</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000100</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00111000</span> <span class="tok-mo">00000010</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00111000</span> <span class="tok-mo">00000010</span> <span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00111000</span> <span class="tok-mo">00000010</span> <span class="tok-mo">01000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-mo">00011100</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span> <span class="tok-mo">00000000</span>
+<span class="tok-p">...</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Кто бы мог подумать...</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Нельзя забывать: как бы мы не пытались убежать от той простой истины, что компьютер работает только с бинарными числами, <code>0</code>ми и <code>1</code>ми, каждая такая последовательность (шаблон) <code>0</code>ей и <code>1</code>иц представляет из себя специальные инструкции CPU (процессора - центрального процессорного устройства компьютера). Одна последовательность <code>0</code> и <code>1</code> будет обозначать "выведи это на экран", другая последовательность - "сложи эти два числа" или любую другую операцию из огромного числа возможных.</p>
+</li>
+<li>
+<p>Нам не нужно самим писать все эти числа, т.к. есть программы <strong>compilers</strong> (компиляторы), которые берут код, написанный на понятном для людей языке Си (<strong>source code или исходный код</strong>), и переводит его в машинный.</p>
+</li>
+<li>
+<p>У каждого из нас установлены на рабочем компьютере, мало отличающимися друг от друга, различные операционные системы, такие как macOS, Windows или другие. Поэтому, чтобы избежать всевозможных несовместимостей, мы будем использовать "облачную" систему <a href="https://cs50.io">CS50 IDE</a>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Что это означает? Хотелось бы сказать "не ваше дело" и "просто поверьте на слово и хватит всем интересоваться", но черт с вами... Это среда разработки, а точнее веб-среда разработки основанная на платформе Cloud9, позволяющая установить и настроить программное обеспечение, к которому потом может получить доступ огромное количество пользователей, у каждого из которых будет своя индвидуальная среда.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Заходим на страницу сайта, создаем бесплатный аккаунт и перед вами будет:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/cs50io_light.png" alt="Saving in CS50 IDE" width="100%">
+</div>
+</div>
+</li>
+<li>
+<p> Теперь у нас есть файл под названием <code>hello.c</code>. Привыкайте к тому, что файлы с исходным кодом написанным на Си, имеют расширение <code>.c</code>. Мы также напишем в редакторе:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, world</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p> Мы привыкли запускать программы на своих машинках двойным нажатием по иконке. Облачные компьютеры, которыми мы теперь будем пользоваться, используют операционную систему linux, которая часто поставляется с графическим интерфейсом (GUI), но больше она известна своим интерфейсом командной строки - ее мы и будем использовать.</p>
+</li>
+<li>
+<p>В нижней части нашего рабочего пространства мы напишем <code>clang hello.c</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~/workspace/ $ clang hello.c</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>clang</code> (в языке программирования Си) является компилятором, которого мы просим скомпилировать наш файл <code>hello.c</code>.</p>
+</li>
+<li>
+<p><code>~/workspace/</code> обозначает, что мы находимся в папке под названием <code>workspace</code>, в которой находится <code>hello.c</code>  (в этом можно удостовериться, посмотрев на список файлов в левой панели). Знак <code>$</code> дает нам знать, что мы можем начинать писать команды.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>После того как мы нажмем enter, покажется что ничего не произошло:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~/workspace/ $ clang hello.c
+~/workspace/ $</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Но в итоге clang создаст программу, присвоив ей по-умолчанию имя <code>a.out</code>. Давайте её запустим:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~/workspace/ $ ./a.out
+hello, world
+~/workspace/ $</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Все отобразилось так, как мы и хотели. Также наш курсор переместился на новую строку. Вспомните, что в нашем исходном коде был дополнительный символ <code>\n</code>, который и создал эту новую строку.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Если бы мы его убрали из нашего исходного кода, сохранили, повторно скомпилировали, а затем и запустили - мы увидели бы следующее:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~/workspace/ $ clang hello.c
+~/workspace/ $ ./a.out
+hello, world~/workspace/ $</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Программа бы запустилась, но без новой строки.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p> Поэтому мы оставим все как есть. И помните - каждый раз, когда мы хоть что-то меняем в исходном коде, его обязательно нужно повторно скомпилировать.</p>
+</li>
+<li>
+<p>Мы еще можем попросить нашего нового друга clang'a, скомпилировать программу, присвоив ей красивое имя. Нам помогут аргументы (по-другому флаги или переключатели) командной строки:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~/workspace/ $ clang -o hello hello.c</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Итак, по середине мы добавили <code>-o</code> для <code>данных на выходе</code> (т.е. для создаваемой программы), указав, что хотим присвоить им название <code>hello</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Теперь можно нажать enter и запустить <code>./hello</code>.</p>
+</li>
+<li>
+<p>Но как-то слишком все это выглядит обременяющим, не говоря уже о том, что чем тяжелее будет наша программа, тем больше аргументов нам придется использовать. Поэтому гениальные (ленивые) разработчики создали программу <code>make</code>, которую мы и будем в дальнейшем использовать.</p>
+</li>
+<li>
+<p>Но сперва кое-какие поправки. Мы исполним команду <code>ls</code>, чтобы показать все файлы нашей директории (папки) <code>workspace</code> :</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~/workspace/ $ ls
+a.out*  hello*  hello.c</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p> Она выводит на экран список файлов, которые мы можем увидеть на левой стороне нашего рабочего пространства. Но на этом мы не остановимся:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~/workspace/ $ rm a.out</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Данная команда <code>rm</code> удаляет файл. Она просит нас подтвердить удаление - и как же тут отказать, пишем <code>y</code> (означает "yes" или "да").</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p> Выполнимые программы, т.е. те, что мы можем запустить, тоже выводятся командой <code>ls</code>, помеченные <code>*</code> (звездочкой) и особым цветом.</p>
+</li>
+<li>
+<p>Давайте воспользуемся <code>make</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~/workspace/ $ make hello</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Эта программа создаст запускаемый исполнимый файл с названием <code>hello</code>, который формируется из файла с исходным кодом  <code>hello.c</code>. Все это она проделывает, использую только одно слово (hello).</p>
+</li>
+<li>
+<p>После нажатия enter мы увидим длинную команду начинающуюся с <code>clang</code>. Тут огромное количество дополнительных аргументов (опций, которые нам пригодятся в будущем), но сейчас для нас самое главное то, что мы опять получили файл с названием <code>hello</code>, который мы можем запустить.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Другая командная линия linux, ой неправильно, остальные команды:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>cd</code> change directory (изменить папку), так мы перемещаемся по папкам</p>
+</li>
+<li>
+<p><code>ls</code> уже видели</p>
+</li>
+<li>
+<p><code>mkdir</code> make directory (создать папку), создает папку</p>
+</li>
+<li>
+<p><code>rm</code> remove (удалить), удаляет файл</p>
+</li>
+<li>
+<p><code>rmdir</code> remove directory (удалить папку), удаляет папку</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the-cs50-library"><a class="link" href="#the-cs50-library">Библиотека CS50</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Давайте создадим больше интересных программ.</p>
+</li>
+<li>
+<p>Чтобы принимать вводимые пользователем данные, мы создали для вас несколько функций:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>get_char</code></p>
+</li>
+<li>
+<p><code>get_double</code></p>
+</li>
+<li>
+<p><code>get_float</code></p>
+</li>
+<li>
+<p><code>get_int</code></p>
+</li>
+<li>
+<p><code>get_long_long</code></p>
+</li>
+<li>
+<p><code>get_string</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Создадим файл <code>string.c</code> (string или строка, представляет из себя последовательность символов):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">string</span> <span class="tok-n">name</span> <span class="tok-o">=</span> <span class="tok-n">get_string</span><span class="tok-p">();</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, %s</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">name</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Первые строчки кода включают библиотеки или группы написанных кем-то функций, которые мы можем использовать в нашем коде. Библиотека <code>cs50.h</code> содержит в себе приведенные выше функции, а <code>stdio.h</code> (Standard Input and Output/Стандартный Ввод и Вывод) содержит основные функции Си, как например <code>printf</code>. Библиотека <code>cs50.h</code> также дает нам возможность пользоваться особым типом переменной под названием <code>string</code>, которого нету в Си.</p>
+</li>
+<li>
+<p> В нашей функции <code>main</code> мы сперва создадим переменную <code>string</code> под названием <code>name</code> и используем функцию <code>get_string</code>. Нам нужно закончить функцию <code>()</code>, т.к. мы можем использовать функцию, даже если ей не предоставить никаких аргументов (скобки оставляем пустыми). Результат полученный функцией <code>get_string</code> (какой-то текст) будет повмешен в переменную <code>name</code>.</p>
+</li>
+<li>
+<p>
+Затем на следующей строке мы воспользуемся странным синтаксисом <code>%s</code>, чтобы включить в текст, который отобразится на экране, значение переменной. Если бы мы просто написали <code>printf("hello, name\n")</code>, на экране отобразилось бы <code>hello, name</code>. Но с <code>%s</code> мы можем добавить (или включить в текст) значение переменной <code>name</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Теперь можно написать <code>make string</code>, а потом и <code>./string</code>. Кажется что ничего не происходит. Программа просто ждет, что мы что-нибудь введем, а если быть точнее: она ждет текст (вы понимаете почему?). Давайте напишем <code>David</code>, нажмите enter и вы увидите, что она (программа) ответит вам <code>hello, David</code>, как и планировалось. Отлично!</p>
+</li>
+<li>
+<p>Но давайте сделаем нашу программу немного понятнее. До того как мы попросим текст (string) от пользователя с помощью <code>get_string</code>, давайте сперва дадим ему понять, что мы от него хотим:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;Name: &quot;</span><span class="tok-p">);</span>
+    <span class="tok-n">string</span> <span class="tok-n">name</span> <span class="tok-o">=</span> <span class="tok-n">get_string</span><span class="tok-p">();</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, %s</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">name</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>И получится, что вводить данные пользователь будет сразу после текста `Name: `, в той же строке.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p> Шаг за шагом, строчка за строчкой, маленькими детскими шагами мы построили нашу простую программу и в общем это отличная техника написания любой программы. Делая так, мы будем проверять наш код на каждом этапе, чтобы убедиться что все работает, как нам нужно.</p>
+</li>
+<li>
+<p>Давайте пойдем немного другим путем:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-n">get_int</span><span class="tok-p">();</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, %i</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">i</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Теперь мы получаем целое число (integer), хранящаяся в переменной <code>i</code>, затем отдаем ее <code>printf</code> в виде <code>%i</code>, т.к. <code>%s</code> является заполнителем для текста (string), а <code>i</code> хранит в себе не string (текст), а integer (целое число).</p>
+</li>
+<li>
+<p>Если мы скомпилируем, запустим и напишем <code>David</code>, программа нам скажет <code>Retry</code> (повторить попытку), пока мы не дадим ей (программе или, если быть еще точнее, функции get_int) число.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Эти первые примеры проведут нас (медленно, но с огромной пользой) через необходимые основы разработки, чтобы дальше мы могли создавать поистине потрясающие программы.</p>
+</li>
+<li>
+<p>В действительности, Си позволяет нам получить еще больший контроль над процессами, происходящими в компьютере, и "смотреть под капот" (как код взаимодействует с железом) без каких-либо проблем.</p>
+</li>
+<li>
+<p>Напишем другую короткую программу:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;x это &quot;</span><span class="tok-p">);</span>
+    <span class="tok-kt">int</span> <span class="tok-n">x</span> <span class="tok-o">=</span> <span class="tok-n">get_int</span><span class="tok-p">();</span>
+
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;y это &quot;</span><span class="tok-p">);</span>
+    <span class="tok-kt">int</span> <span class="tok-n">y</span> <span class="tok-o">=</span> <span class="tok-n">get_int</span><span class="tok-p">();</span>
+
+    <span class="tok-kt">int</span> <span class="tok-n">z</span> <span class="tok-o">=</span> <span class="tok-n">x</span> <span class="tok-o">+</span> <span class="tok-n">y</span><span class="tok-p">;</span>
+
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;суммой x и y будет %i</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">z</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Итак, мы получили от пользователя два числа, <code>x</code> и <code>y</code>, создали новую переменную <code>z</code>, которая хранит сумму двух чисел, и вывели результат на экран.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Но мы создали лишнее целое число, которое, на самом деле, можно просто пропустить:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;x это &quot;</span><span class="tok-p">);</span>
+    <span class="tok-kt">int</span> <span class="tok-n">x</span> <span class="tok-o">=</span> <span class="tok-n">get_int</span><span class="tok-p">();</span>
+
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;y это &quot;</span><span class="tok-p">);</span>
+    <span class="tok-kt">int</span> <span class="tok-n">y</span> <span class="tok-o">=</span> <span class="tok-n">get_int</span><span class="tok-p">();</span>
+
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;суммой x и y будет %i</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">x</span> <span class="tok-o">+</span> <span class="tok-n">y</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Немного математики:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;x это &quot;</span><span class="tok-p">);</span>
+    <span class="tok-kt">int</span> <span class="tok-n">x</span> <span class="tok-o">=</span> <span class="tok-n">get_int</span><span class="tok-p">();</span>
+
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;y это &quot;</span><span class="tok-p">);</span>
+    <span class="tok-kt">int</span> <span class="tok-n">y</span> <span class="tok-o">=</span> <span class="tok-n">get_int</span><span class="tok-p">();</span>
+
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%i плюс %i будет %i</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">x</span><span class="tok-p">,</span> <span class="tok-n">y</span><span class="tok-p">,</span> <span class="tok-n">x</span> <span class="tok-o">+</span> <span class="tok-n">y</span><span class="tok-p">);</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%i минус %i будет %i</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">x</span><span class="tok-p">,</span> <span class="tok-n">y</span><span class="tok-p">,</span> <span class="tok-n">x</span> <span class="tok-o">-</span> <span class="tok-n">y</span><span class="tok-p">);</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%i умножить на %i будет %i</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">x</span><span class="tok-p">,</span> <span class="tok-n">y</span><span class="tok-p">,</span> <span class="tok-n">x</span> <span class="tok-o">*</span> <span class="tok-n">y</span><span class="tok-p">);</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%i поделить на %i будет %i</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">x</span><span class="tok-p">,</span> <span class="tok-n">y</span><span class="tok-p">,</span> <span class="tok-n">x</span> <span class="tok-o">/</span> <span class="tok-n">y</span><span class="tok-p">);</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;остаток от деления %i на %i будет %i</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">x</span><span class="tok-p">,</span> <span class="tok-n">y</span><span class="tok-p">,</span> <span class="tok-n">x</span> <span class="tok-o">%</span> <span class="tok-n">y</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Обратите внимание на то, как мы реализуем все эти операции в Си. <code>%</code> дает нам остаток от деления первого числа на второе.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Что же мы ждем? Компилируем, запускаем и пишем <code>1</code> для <code>x</code>, после чего нажимаем Enter, далее <code>10</code> для <code>y</code> и опять Enter:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>...
+1 поделить на 10 будет 0
+...</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p> Все выглядит приемлемо кроме этой одной линии! Правильным ответом должен быть <code>0.1</code>, не так ли? Но помните что мы работаем с integer'ами (целыми числами) <code>x</code> и <code>y</code>, выводя их на экран и используя заполнитель <code>%i</code>, поэтому числа после запятой отбрасываются или вырезаются. (вместо <code>0.1</code> нам выдают <code>0</code>.)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы можем исправить данный недочет, используя другой тип переменной под названием <code>float</code>, для числа с плавающей запятой (нецелое число):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;x это &quot;</span><span class="tok-p">);</span>
+    <span class="tok-kt">float</span> <span class="tok-n">x</span> <span class="tok-o">=</span> <span class="tok-n">get_float</span><span class="tok-p">();</span>
+
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;y это &quot;</span><span class="tok-p">);</span>
+    <span class="tok-kt">float</span> <span class="tok-n">y</span> <span class="tok-o">=</span> <span class="tok-n">get_float</span><span class="tok-p">();</span>
+
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%f поделить на %f будет %f</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">x</span><span class="tok-p">,</span> <span class="tok-n">y</span><span class="tok-p">,</span> <span class="tok-n">x</span> <span class="tok-o">/</span> <span class="tok-n">y</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Теперь все правильно!</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="data-types"><a class="link" href="#data-types">Типы Данных</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Существует множество различных типов данных:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>bool</code> для булеанового значения (true или false / истина или ложь)</p>
+</li>
+<li>
+<p><code>char</code> для одного символа</p>
+</li>
+<li>
+<p><code>double</code> для крупного нецелого числа с бо́льшим количеством битов, чем у обычного <code>float</code></p>
+</li>
+<li>
+<p><code>float</code></p>
+</li>
+<li>
+<p><code>int</code></p>
+</li>
+<li>
+<p><code>long long</code> для крупного целого числа с бо́льшим количеством битов, чем у обычного <code>int</code></p>
+</li>
+<li>
+<p><code>string</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p> Давайте напишем еще одну программу, чтобы показать сколько байтов выделяется под каждый из этих типов данных</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;bool это %lu</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-k">sizeof</span><span class="tok-p">(</span><span class="tok-kt">bool</span><span class="tok-p">));</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;char это %lu</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-k">sizeof</span><span class="tok-p">(</span><span class="tok-kt">char</span><span class="tok-p">));</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;double это %lu</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-k">sizeof</span><span class="tok-p">(</span><span class="tok-kt">double</span><span class="tok-p">));</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;float это %lu</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-k">sizeof</span><span class="tok-p">(</span><span class="tok-kt">float</span><span class="tok-p">));</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;int это %lu</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-k">sizeof</span><span class="tok-p">(</span><span class="tok-kt">int</span><span class="tok-p">));</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;long long это %lu</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-k">sizeof</span><span class="tok-p">(</span><span class="tok-kt">long</span> <span class="tok-kt">long</span><span class="tok-p">));</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;string это %lu</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-k">sizeof</span><span class="tok-p">(</span><span class="tok-n">string</span><span class="tok-p">));</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>bool это 1
+char это 1
+double это 8
+float это 4
+int это 4
+long long это 8
+string это 8</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Оказывается, если брать конкретно нашу систему Cloud9, <code>bool</code> будет занимать целый байт, char (character или символ) тоже возьмет 8 битов и т.д.</p>
+</li>
+<li>
+<p>Но подождите, string (текст) не больше 8 байтов? Не волнуйтесь, совсем скоро мы расскажем вам как string может быть больше представленной величины.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Память в компьютере не может быть бесконечной и поэтому мы ограничены в количестве доступных байтов, поэтому мы можем хранить только ограниченное число цифр. К примеру представьте, что у нас есть бинарное число с 8 битами:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>1 1 1 1 1 1 1 0</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Если мы добавим к нему <code>1</code>, то получим <code>1 1 1 1 1 1 1 1</code>. Но что произойдет если мы добавим еще одну <code>1</code>? Мы начнем переносить единицу над каждой цифрой пока не получим <code>0 0 0 0 0 0 0 0</code>, но у нас не осталось слева битов чтобы там сохранить это большее число.</p>
+</li>
+<li>
+<p>В программах такое поведение встречается при работе с integer'ами:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">n</span> <span class="tok-o">=</span> <span class="tok-mi">1</span><span class="tok-p">;</span>
+    <span class="tok-k">for</span> <span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">64</span><span class="tok-p">;</span> <span class="tok-n">i</span><span class="tok-o">++</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;n это %i</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">n</span><span class="tok-p">);</span>
+        <span class="tok-n">n</span> <span class="tok-o">=</span> <span class="tok-n">n</span> <span class="tok-o">*</span> <span class="tok-mi">2</span><span class="tok-p">;</span>
+    <span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы знаем, что для <code>int</code> выделяется 4 байта или 32 бита, т.e. 2^32 возможных значений, это около 4 миллиардов значений. Но половина этих значений отрицательная, поэтому самое высокое положительное значение около 2 миллиардов.</p>
+</li>
+<li>
+<p>В этой программе мы начинаем с <code>n</code> равного <code>1</code>, каждый раз удваивая его:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>n это 1
+n это 2
+n это 4
+n это 8
+...
+n это 1073741824
+n это -2147483648
+n это 0
+n это 0
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Теперь мы знаем, что рано или поздно, если наше число будет только увеличиваться и станет больше размера выделенных для него битов, произойдет что-то ужасное.
+Этот "ужас" называют <strong>overflow</strong> (переполнение).</p>
+</li>
+<li>
+<p>Мы можем поменять тип переменной <code>n</code> на <code>long long</code> и вывести его значение на экран, используя заполнитель <code>%lld</code>.
+Но, опять же, мы увидим, что дойдя до последнего шага - число "перевернется" и станет отрицательным.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>В реальном мире, некоторые игры могут использовать integer'ы для обозначения значений (чисел), пораждая на свет <a href="http://www.geek.com/games/why-gandhi-is-always-a-warmongering-jerk-in-civilization-1608515/">безумных диктаторов</a> !</p>
+</li>
+<li>
+<p>Еще более серьезные баги (ошибки) могут дать нам 
+ <a href="https://www.engadget.com/2015/05/01/boeing-787-dreamliner-software-bug/">выключающиеся самолеты</a>.</p>
+</li>
+<li>
+<p>Другой баг <strong>floating-point imprecision</strong> (неточность нецелых чисел, следующих после запятой). У float'ов ограниченное количество битов. Но цифры следующие в числе после запятой - неограниченные, поэтому компьютеру приходится округлять и неточно отображать некоторые числа.</p>
+</li>
+<li>
+<p>Давайте напишем программу, которая сможет нам это продемонстрировать:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%.55f</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-mf">1.0</span> <span class="tok-o">/</span> <span class="tok-mf">10.0</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Новая часть в коде <code>%.55f</code> просто говорит функции <code>printf</code> отобразить 55 чисел после запятой.</p>
+</li>
+<li>
+<p>Мы использовали <code>1.0</code> и <code>10.0</code> только для того, чтобы удостовериться, что типы данных действительно будут float'ами (так как мы не задали их как переменные). Мы могли бы написать <code>(float) 10</code>, чтобы изменить целое число <code>10</code> и превратить его в 10 с плавающей запятой (или точкой).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Запустим программу и получим:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>0.100000000000000000555111512312578...</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Интересно, оказывается так выглядит приблизительное представление компьютера, числа <code>0.1</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Вот <a href="https://youtu.be/HYFlGnkw5BU">клип</a> о последствиях компьютерной неточности.</p>
+</li>
+<li>
+<p>Давайте повторим - мы знаем, что есть несколько типов данных, которые мы имеем у себя в арсенале и можем представить (или отобразить в тексте) через символы (заполнители):</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>%c</code></p>
+</li>
+<li>
+<p><code>%f</code></p>
+</li>
+<li>
+<p><code>%d</code></p>
+</li>
+<li>
+<p><code>%i</code></p>
+</li>
+<li>
+<p><code>%lld</code></p>
+</li>
+<li>
+<p><code>%s</code></p>
+</li>
+<li>
+<p><code>&#8230;&#8203;</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>В дополнение к <code>\n</code>, который служит для добавления новой строки, мы можем использовать определенные <strong>escape sequences (управляющие последовательности)</strong> или символы, которые применяются в <code>printf</code> для добавления в текст кавычек, табуляции и т.п.:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>\a</code></p>
+</li>
+<li>
+<p><code>\n</code></p>
+</li>
+<li>
+<p><code>\r</code></p>
+</li>
+<li>
+<p><code>\t</code></p>
+</li>
+<li>
+<p><code>\'</code></p>
+</li>
+<li>
+<p><code>\"</code></p>
+</li>
+<li>
+<p><code>\\</code></p>
+</li>
+<li>
+<p><code>\0</code></p>
+</li>
+<li>
+<p><code>&#8230;&#8203;</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="more-c"><a class="link" href="#more-c">Больше Си</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Напишем программу, в которой гораздо шире используются идеи Scratch'а, что позволит нам реализовать более сложные конструкции кода Си:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-n">get_int</span><span class="tok-p">();</span>
+    <span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;отрицательное</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+    <span class="tok-p">}</span>
+    <span class="tok-k">else</span> <span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-n">i</span> <span class="tok-o">&gt;</span> <span class="tok-mi">0</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;положительное</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+    <span class="tok-p">}</span>
+    <span class="tok-k">else</span>
+    <span class="tok-p">{</span>
+        <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;ноль</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+    <span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Так как переменная <code>i</code> в последнем <code>else</code> (иначе) не больше и не меньше нуля, нам не нужно уточнятиь условие <code>else if (i == 0)</code>, по логике отсюда вытекает, что переменная <code>i</code> будет равна нулю. Обратите внимание, что мы используем <code>==</code> для сравнения двух переменных или значений из-за того, что один знак <code>=</code> служит для присвоения одного значения другому.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Можем немного поиграться с логикой:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">char</span> <span class="tok-n">c</span> <span class="tok-o">=</span> <span class="tok-n">get_char</span><span class="tok-p">();</span>
+    <span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-n">c</span> <span class="tok-o">==</span> <span class="tok-sc">&#39;Y&#39;</span> <span class="tok-o">||</span> <span class="tok-n">c</span> <span class="tok-o">==</span> <span class="tok-sc">&#39;y&#39;</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;yes</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+    <span class="tok-p">}</span>
+    <span class="tok-k">else</span> <span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-n">c</span> <span class="tok-o">==</span> <span class="tok-sc">&#39;N&#39;</span> <span class="tok-o">||</span> <span class="tok-n">c</span> <span class="tok-o">==</span> <span class="tok-sc">&#39;n&#39;</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;no</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+    <span class="tok-p">}</span>
+    <span class="tok-k">else</span>
+    <span class="tok-p">{</span>
+        <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;error</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+    <span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы получаем от пользователя символ (character) <code>c</code> и сравниваем его либо с <code>Y</code>, либо с <code>y</code> или либо с <code>N</code>, либо с <code>n</code>. В Си мы используем <code>||</code>  для указания логического <strong>или</strong>, где только одно из выражений должно быть истиной для выполнения условия. <code>&amp;&amp;</code> для логического <strong>и</strong>, где оба выражения должны быть истиной, чтобы условие было выполнено. </p>
+</li>
+<li>
+<p> Заметьте, мы используем одинарные кавычки вокруг символов, чтобы отличить их от текста (string), где есть только один символ и двойные кавычки соответственно.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Давайте по-другому создадим предыдущую программу:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">char</span> <span class="tok-n">c</span> <span class="tok-o">=</span> <span class="tok-n">get_char</span><span class="tok-p">();</span>
+    <span class="tok-k">switch</span> <span class="tok-p">(</span><span class="tok-n">c</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-k">case</span> <span class="tok-sc">&#39;Y&#39;</span><span class="tok-o">:</span>
+        <span class="tok-k">case</span> <span class="tok-sc">&#39;y&#39;</span><span class="tok-o">:</span>
+            <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;yes</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+            <span class="tok-k">break</span><span class="tok-p">;</span>
+        <span class="tok-k">case</span> <span class="tok-sc">&#39;N&#39;</span><span class="tok-o">:</span>
+        <span class="tok-k">case</span> <span class="tok-sc">&#39;n&#39;</span><span class="tok-o">:</span>
+            <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;no</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+            <span class="tok-k">break</span><span class="tok-p">;</span>
+        <span class="tok-k">default</span><span class="tok-o">:</span>
+            <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;error</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+            <span class="tok-k">break</span><span class="tok-p">;</span>
+    <span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы используем <strong>switch</strong> (переключатель), у которого есть различные случаи (case). Совпав с одним из них, переменная запустит выполнение кода, находящегося ниже случая (case'а). И выполнение остановится только тогда, когда дойдет до выражения <code>break;</code> (остановить, сломать), который выведет нас из конструкции switch'a (переключателя).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Удалим все строчки с <code>break;</code> выражениями и посмотрим что произойдет:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">char</span> <span class="tok-n">c</span> <span class="tok-o">=</span> <span class="tok-n">get_char</span><span class="tok-p">();</span>
+    <span class="tok-k">switch</span> <span class="tok-p">(</span><span class="tok-n">c</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-k">case</span> <span class="tok-sc">&#39;Y&#39;</span><span class="tok-o">:</span>
+        <span class="tok-k">case</span> <span class="tok-sc">&#39;y&#39;</span><span class="tok-o">:</span>
+            <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;yes</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+
+        <span class="tok-k">case</span> <span class="tok-sc">&#39;N&#39;</span><span class="tok-o">:</span>
+        <span class="tok-k">case</span> <span class="tok-sc">&#39;n&#39;</span><span class="tok-o">:</span>
+            <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;no</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+
+        <span class="tok-k">default</span><span class="tok-o">:</span>
+            <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;error</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+
+    <span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>И в этом случае (хе-хе), все выражения, находящиеся ниже первого совпавшего случая (case), будут выполнены.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Давайте посмотрим, как разрабатывать дизайн кода, создав свою функцию:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">string</span> <span class="tok-n">s</span> <span class="tok-o">=</span> <span class="tok-n">get_string</span><span class="tok-p">();</span>
+    <span class="tok-n">otobrazi_imy</span><span class="tok-p">(</span><span class="tok-n">s</span><span class="tok-p">);</span>
+<span class="tok-p">}</span>
+
+<span class="tok-kt">void</span> <span class="tok-nf">otobrazi_imy</span><span class="tok-p">(</span><span class="tok-n">string</span> <span class="tok-n">name</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, %s</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">name</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Заметьте, что ниже нашей функции <code>main</code> мы создали новую, назвав ее <code>otobrazi_imy</code>. Эта функция принимает переменную с типом <code>string</code> (текст или строку) в виде параметра, к которому она будет в дальнейшем обращаться как к <code>name</code>. Никаких значений эта функция не возвращает, поэтому мы зададим ее тип возвращаемого значения как <code>void</code> (пустота/ничего). В то время как <code>main</code> возвращает значение с типом <code>int</code>. Потом еще поговорим на эту тему.</p>
+</li>
+<li>
+<p> Но теперь, если мы скажем программе <code>otobrazi_imy(s)</code> в нашей функции <code>main</code>, то мы все равно получим ошибку. Все это из-за того, что компилятор читает код сверху вниз, по порядку. Поэтому, когда <code>main</code> вызывает функцию <code>otobrazi_imy</code>, она еще не существует для компилятора. Поэтому нам нужно объявить ее, используя <strong>prototype</strong> (прототип):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">void</span> <span class="tok-nf">otobrazi_imy</span><span class="tok-p">(</span><span class="tok-n">string</span> <span class="tok-n">name</span><span class="tok-p">);</span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">string</span> <span class="tok-n">s</span> <span class="tok-o">=</span> <span class="tok-n">get_string</span><span class="tok-p">();</span>
+    <span class="tok-n">otobrazi_imy</span><span class="tok-p">(</span><span class="tok-n">s</span><span class="tok-p">);</span>
+<span class="tok-p">}</span>
+
+<span class="tok-kt">void</span> <span class="tok-nf">otobrazi_imy</span><span class="tok-p">(</span><span class="tok-n">string</span> <span class="tok-n">name</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, %s</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">name</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p> Мы пишем над функцией <code>main</code> прототип <code><span class="tok-kt">void</span> <span class="tok-nf">otobrazi_imy</span><span class="tok-p">(</span><span class="tok-n">string</span> <span class="tok-n">name</span><span class="tok-p">)</span></code>, указывая то, какие параметры она получит, а затем и вернет, для того чтобы компилятор поискал ее (функцию) немного позже.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>И внутри наших библиотек <code>cs50.h</code> и <code>stdio.h</code> находятся точно такие же прототипы - однострочные выражения, объявляющие функции подобные <code>get_string</code> и <code>printf</code> с их имплементацией (implementation или реализацией) в другом файле.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Чтобы продемонстрировать возвращаемые значения, мы можем написать программу следующим образом:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">kvadrat</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">);</span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;x это &quot;</span><span class="tok-p">);</span>
+    <span class="tok-kt">int</span> <span class="tok-n">x</span> <span class="tok-o">=</span> <span class="tok-n">get_int</span><span class="tok-p">();</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;x^2 это %i</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">kvadrat</span><span class="tok-p">(</span><span class="tok-n">x</span><span class="tok-p">));</span>
+<span class="tok-p">}</span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">kvadrat</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-k">return</span> <span class="tok-n">n</span> <span class="tok-o">*</span> <span class="tok-n">n</span><span class="tok-p">;</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Функция <code>kvadrat</code> принимает в виде параметра переменную типа <code>int</code> и возвращает что-то с типом данных <code>int</code>. Внутри функции выполняется только <code>return n * n</code>.</p>
+</li>
+<li>
+<p>Теперь мы можем использовать функцию <code>kvadrat(x)</code> в нашей другой функции <code>printf</code>, которая будет ждать результат с типом данных <code>int</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Если мы вернемся к нашей начальной функции<code>get_string</code>, мы можем кое-что понять. Например, что у функции <code>get_string</code> возможно есть прототип, который выглядит как-то так <code>string get_string(void)</code>, так как она выполняется не принимая никаких параметров или аргументов (с пустыми скобками), но возвращает введеный пользователем текст:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">string</span> <span class="tok-n">s</span> <span class="tok-o">=</span> <span class="tok-n">get_string</span><span class="tok-p">();</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;hello, %s</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">s</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Давайте немного улучшим наш блок <code>kashel</code>, который мы создавали в Scratch'e на 0-ой неделе:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;кхе-кхе</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;кхе-кхе</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;кхе-кхе</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Здесь мы пытаемся отобразить на экране текст <code>кхе-кхе</code> три раза.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Итак, добавим в код цикл, т.к. у нас идет повтор одинаковых выражений:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-k">for</span> <span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">3</span><span class="tok-p">;</span> <span class="tok-n">i</span><span class="tok-o">++</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;кхе-кхе</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+    <span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Напишем нашу собственную функцию, чтобы использовать ее когда нам угодно, любое количество раз:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">void</span> <span class="tok-nf">kashel</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">);</span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-k">for</span> <span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">3</span><span class="tok-p">;</span> <span class="tok-n">i</span><span class="tok-o">++</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-n">kashel</span><span class="tok-p">();</span>
+    <span class="tok-p">}</span>
+<span class="tok-p">}</span>
+
+<span class="tok-kt">void</span> <span class="tok-nf">kashel</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;кхе-кхе</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p> Кажется, что мы потратили излишне много усилий для создания данного примера, но чем сложнее будет становится наша программа, тем больше мы будем нуждаться в таких блоках и созданных нами функциях (custom functions).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p> К примеру, если бы мы хотели вызвать <code>kashel</code> несколько раз, а еще и <code>chihanie</code> определенное количество раз, то для нас это не должно составить никакого труда:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cp">#include</span> <span class="tok-cpf">&lt;cs50.h&gt;</span><span class="tok-cp"></span>
+<span class="tok-cp">#include</span> <span class="tok-cpf">&lt;stdio.h&gt;</span><span class="tok-cp"></span>
+
+<span class="tok-kt">void</span> <span class="tok-nf">kashel</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">);</span>
+<span class="tok-kt">void</span> <span class="tok-nf">proiznesi</span><span class="tok-p">(</span><span class="tok-n">string</span> <span class="tok-n">slovo</span><span class="tok-p">,</span> <span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">);</span>
+<span class="tok-kt">void</span> <span class="tok-nf">chihanie</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">);</span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">kashel</span><span class="tok-p">(</span><span class="tok-mi">3</span><span class="tok-p">);</span>
+    <span class="tok-n">chihanie</span><span class="tok-p">(</span><span class="tok-mi">3</span><span class="tok-p">);</span>
+<span class="tok-p">}</span>
+
+<span class="tok-kt">void</span> <span class="tok-nf">kashel</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">proiznesi</span><span class="tok-p">(</span><span class="tok-s">&quot;кхе-кхе&quot;</span><span class="tok-p">,</span> <span class="tok-n">n</span><span class="tok-p">);</span>
+<span class="tok-p">}</span>
+
+<span class="tok-kt">void</span> <span class="tok-nf">proiznesi</span><span class="tok-p">(</span><span class="tok-n">string</span> <span class="tok-n">slovo</span><span class="tok-p">,</span> <span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-k">for</span> <span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">n</span><span class="tok-p">;</span> <span class="tok-n">i</span><span class="tok-o">++</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%s</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">slovo</span><span class="tok-p">);</span>
+    <span class="tok-p">}</span>
+<span class="tok-p">}</span>
+
+<span class="tok-kt">void</span> <span class="tok-nf">chihanie</span><span class="tok-p">(</span><span class="tok-kt">int</span> <span class="tok-n">n</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-n">proiznesi</span><span class="tok-p">(</span><span class="tok-s">&quot;апчхии&quot;</span><span class="tok-p">,</span> <span class="tok-n">n</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Заметьте, что функция <code>main</code> может без труда вызвать <code>kashel</code> и <code>chihanie</code> определенное количество раз, указывая этот параметр в вызове каждой функции. Они же вызывают другую функцию <code>proiznesi</code>, которая содержит в себе реализацию цикла <code>for</code> и отображение текста на экране через <code>printf</code>.</p>
+</li>
+<li>
+<p>Посмотрите на <code>proiznesi</code> - эта функция теперь тоже принимает два аргумента: один <code>string</code> (текст), а другой <code>int</code> (число). Поэтому каждый раз, когда вызывается эта функция, оба аргумента должны быть указаны.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы называем эту концепцию <strong>abstraction</strong> (абстракцией). В ней мы строим различные слои, в каждом из которых одновременно могут работать несколько людей, в итоге выполняя общую работу, где каждый человек реализовывает свою часть  кода.</p>
+</li>
+<li>
+<p>На самом деле, все это время мы пользовались абстракцией вызывая  <code>get_string</code> или <code>printf</code>, т.к. мы знаем, как в действительности эти функции имплементированы (реализованы) в других файлах, которые мы включаем (задействуем). Теперь мы можем их использовать, зная их предназначение.</p>
+</li>
+<li>
+<p> Давайте теперь посмотрим, чем же занимается <code>make</code>. Компиляция включает в себя несколько этапов (о которых я, Лом-Эла, вам не рассказал из-за того, что вы были все уставшими и, возможно, голодными =) ):</p>
+<div class="ulist">
+<ul>
+<li>
+<p>препроцессирование (preprocessing)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Строчки, которые начинаются с <code>#</code>, как например <code>#include</code>, препроцессируются. <code>#include</code> заставляет наш компилятор искать файл в нашем компьютере и буквально включить (include), или добавить, внутрь нашего кода строчки из препроцессируемого файла (т.е. скопировать и вставить все содержимое).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>компиляция</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы пропишем команду <code>clang -S hello.c</code> и увидим, как наша Си программа компилируется в другой язык (код), именуемый ассемблером. Он оснащен простымы инструкциями, которые понимает процессор или CPU (как например сложение чисел, их передвижение в памяти и т.д.). Они прописаны в текстовом формате, чтобы люди могли прочитать и изменить ход работы этих инструкций (немножко хакер).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>ассемблирование</p>
+<div class="ulist">
+<ul>
+<li>
+    <p>Промежуточный ассемблеровский код переводится в машинный код, <code>0</code> и <code>1</code>, которые процессор действительно может понимать.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>соединение</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Этот финальный шаг соединяет машинный код нашей программы и машинный код всех библиотек, которые мы ранее подключили и использовали. Соединяет их, в итоге выдавая нам финальную версию программы со всеми необходимыми кусочками кода. (Препроссированные через <code>#include</code> файлы, представляют из себя заголовочные (header) файлы, которые содержат в себе только прототипы используемых нами функций. Настоящая имплементация, или реализация, в нашем случае уже машинного кода находится в других файлах.)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Итак, мы разобрали  огромное количество новых концепций программирования, но будем надеяться, что со временм вы освоете то, что было приведено здесь и сможете легко их использовать!</p>
+</li>
+<li>
+<p>В конце концов, вы сможете видеть в любой поставленной проблеме определенный шаблон действий, создавать дизайн кода и абстракции, для написания качественных программ.</p>
+</li>
+<li>
+<p>На следующей неделе мы рассмотрим криптографию или разбор закодированной информации. Мы будем продвигаться, разбирая все новые и более интересные проблемы. До следующего раза!</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>

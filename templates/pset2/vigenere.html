@@ -1,0 +1,293 @@
+---
+layout: header
+title: vigenere
+permalink: /weeks/pset2/vigenere
+---
+
+<style>
+        .mjx-chtml {
+    display: inline-block;
+    line-height: 0;
+    text-indent: 0;
+    text-align: left;
+    text-transform: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    word-spacing: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 1px 0;
+}
+        
+        .MJXc-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+        .MathJax_Preview {
+    color: #888;
+}
+        div.stemblock div.content {
+    margin-bottom: 1.25em;
+}
+    </style>
+    
+
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#background">Объяснение</a></li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthrough">Прохождение</a></li>
+<li><a href="#usage">Использование</a></li>
+<li><a href="#testing">Проверка</a>
+<ul class="sectlevel2">
+<li><a href="#code-check50-code"><code>check50</code></a></li>
+</ul>
+</li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#changelog">Изменения</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Vigenère (Виженèр)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Создайте программу, которая будет шифровать сообщения с помощью шифра Vigenère, как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./vigenere ABC</span>
+plaintext:  <span class="underline">HELLO</span>
+ciphertext: HFNLP</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background"><a class="link" href="#background">Объяснение</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Шифр Vigenère дополняет функционал <a href="{{ site.url }}/weeks/pset2/caesar/">шифра Цезарь</a>, шифруя сообщения последовательностью ключей (или, скажем по-другому, ключевым словом). Другими словами, если <code>p</code> представляет из себя какой-то простой текст, а <code>k</code> является ключевым словом (т.е. словом, состоящим из алфавитных букв, где A представляет 0, B представляет 1, C представляет 2, &#8230;&#8203; и Z представляет 25), то в простом тексте <code>c</code> каждой буквой будет <em>c<sub>i</sub></em>. В зашифрованный текст <code>c</code> преобразуется следующим образом:</p>
+</div>
+
+<div class="stemblock">
+<div class="content">
+<span class="MathJax_Preview" style="color: inherit; display: none;"></span><span class="mjx-chtml MJXc-display" style="text-align: center;"><span id="MathJax-Element-1-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;><msub><mi>c</mi><mi>i</mi></msub><mo>=</mo><mo stretchy=&quot;false&quot;>(</mo><msub><mi>p</mi><mi>i</mi></msub><mo>+</mo><msub><mi>k</mi><mi>j</mi></msub><mo stretchy=&quot;false&quot;>)</mo><mo lspace=&quot;thickmathspace&quot; rspace=&quot;thickmathspace&quot;>mod</mo><mn>26</mn></math>" role="presentation" style="font-size: 116%; text-align: center; position: relative;"><span id="MJXc-Node-1" class="mjx-math" aria-hidden="true"><span id="MJXc-Node-2" class="mjx-mrow"><span id="MJXc-Node-3" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-4" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.218em; padding-bottom: 0.272em;">c</span></span></span><span class="mjx-sub" style="font-size: 70.7%; vertical-align: -0.212em; padding-right: 0.071em;"><span id="MJXc-Node-5" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.434em; padding-bottom: 0.272em;">i</span></span></span></span><span id="MJXc-Node-6" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.057em; padding-bottom: 0.326em;">=</span></span><span id="MJXc-Node-7" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.488em; padding-bottom: 0.595em;">(</span></span><span id="MJXc-Node-8" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-9" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.218em; padding-bottom: 0.488em;">p</span></span></span><span class="mjx-sub" style="font-size: 70.7%; vertical-align: -0.212em; padding-right: 0.071em;"><span id="MJXc-Node-10" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.434em; padding-bottom: 0.272em;">i</span></span></span></span><span id="MJXc-Node-11" class="mjx-mo MJXc-space2"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.272em; padding-bottom: 0.434em;">+</span></span><span id="MJXc-Node-12" class="mjx-msubsup MJXc-space2"><span class="mjx-base"><span id="MJXc-Node-13" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.488em; padding-bottom: 0.272em;">k</span></span></span><span class="mjx-sub" style="font-size: 70.7%; vertical-align: -0.212em; padding-right: 0.071em;"><span id="MJXc-Node-14" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.434em; padding-bottom: 0.488em;">j</span></span></span></span><span id="MJXc-Node-15" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.488em; padding-bottom: 0.595em;">)</span></span><span id="MJXc-Node-16" class="mjx-mo" style="padding-left: 0.278em; padding-right: 0.278em;"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.434em; padding-bottom: 0.326em;">mod</span></span><span id="MJXc-Node-17" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.38em; padding-bottom: 0.38em;">26</span></span></span></span></span></span><script type="math/tex; mode=display" id="MathJax-Element-1">c_i = (p_i + k_j) \bmod 26</script>
+</div>
+</div>
+
+<div class="paragraph">
+<p>Заметьте, что в этом шифре используется <em>k<sub>j</sub></em> вместо обычной <em>k</em>. И если <em>k</em> будет короче <em>p</em>, тогда буквы в <em>k</em> нужно будет повторно использовать, пока не зашифруется весь <em>p</em>.</p>
+</div>
+<div class="paragraph">
+<p>Другими словами, если Виженèр (был такой человек) хотел бы кому-нибудь по секрету сказать "HELLO", используя ключевое слово, например, "ABC" - он бы зашифровал букву "H" ключом "0" (т.е. буквой "A"), букву "E" ключом 1 (т.е. буквой "B"), первую "L" ключом "2" (т.е. буквой "C"), и в этот момент он бы израсходовал все буквы ключевого слова, поэтому ему пришлось бы повторно использовать ключевое слово (его часть), начав с самой первой буквы, чтобы зашифровать вторую "L" еще раз, воспользовавшись ключом "0" (т.е. буквой "A"). И наконец к последней букве "О" будет применена "1" (т.е. буква "B"). В итоге вместо HELLO Виженèр скажет HFNLP.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Таблица 1. Шифрование слова HELLO ключевым словом ABC (ABCAB из-за <br> повторного использования) дает результат HFNLP.</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>простой текст</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">H</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">L</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle" rowspan="2"><p class="tableblock"><strong>+ ключ</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>= шифрованный текст</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">H</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">F</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">L</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">P</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Разработайте и реализуйте программу, которая будет шифровать сообщения используя шифр Виженèра.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Начните писать вашу программу в файле <code>vigenere.c</code>, который будет находиться в папке <code>vigenere</code></p>
+</li>
+<li>
+<p>Ваша программа должна принимать только один аргумент командной строки - ключевое слово <em>k</em>, состоящее только из алфавитных букв.</p>
+</li>
+<li>
+<p> Если ваша программа будет запущена без каких-либо дополнительных аргументов командной строки, с количеством превышающим один аргумент или с одним аргументом, который содержит не алфавитный символ, то ваша программа должна будет вывести на экран ошибку (текст ошибки на ваше усмотрение) и при этом <code>main</code> должна сразу вернуть (или вывести на экран) значение <code>1</code> (обычно ею обозначают ошибку).</p>
+</li>
+<li>
+    <p>В противном случае ваша программа должна продолжать просить пользователя ввести простой текст <em>p</em> (выводя на экран <code>plaintext:</code>), который будет зашифрован с помощью ключа <em>k</em> шифром Виженèра и завершится, выдав число <code>0</code> - результат работы функции <code>main</code>. Зашифрованный текст отобразится после <code>ciphertext:</code> и окончится новой линией (<code>\n</code>).</p>
+</li>
+<li>
+<p>Символы в <em>k</em> должны представляться следующим образом: <code>A</code> и <code>a</code> как 0, <code>B</code> и <code>b</code> как 1, &#8230;&#8203; и наконец <code>Z</code> и <code>z</code> как 25.</p>
+</li>
+<li>
+<p>Ваша программа должна применять шифр Виженèра только к буквенным символам переменной <em>p</em>. Все другие символы (числа, знаки, пробелы, знаки препинания и т.п.) выводятся без изменений. Более того, если ваш код будет готов применить <em>j<sup>ый</sup></em> символ переменной <em>k</em> на <em>i<sup>ый</sup></em> символ переменной <em>p</em>, но символ окажется неалфавитным, вы должны будете применить этот <em>j<sup>ый</sup></em> символ переменной <em>k</em> на следующий уже алфавитный символ переменной <em>p</em>. Т.е. вам нельзя продвигаться к следующему символу <em>k</em>, пока он не будет применен к алфавитному символу простого текста <em>p</em>.</p>
+</li>
+<li>
+<p>Ваша программа должна сохранить регистр букв переменной <em>p</em>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="link" href="#walkthrough">Прохождение</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/EYexqXY43ew?rel=0" frameborder="0" allowfullscreen></iframe></div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Использование</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ваша программа должна проделывать тоже самое, что показано в примере ниже. Предположим, подчеркнутый текст - это то, что написал пользователь.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./vigenere 13</span>
+Usage: ./vigenere k</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./vigenere</span>
+Usage: ./vigenere k</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./vigenere bacon and eggs</span>
+Usage: ./vigenere k</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./vigenere bacon</span>
+plaintext: <span class="underline">Meet me at the park at eleven am</span>
+ciphertext: Negh zf av huf pcfx bt gzrwep oz</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказка</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Не знаете с чего начать? Эта программа очень схожа с <a href="../problems/caesar.html"><code>Цезарь</code></a>! Только на этот раз вам нужно определить, какой именно символ <em>k</em> вы будете использовать, находясь в процессе перебирания (итерации) символов <em>p</em>.</p>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+
+<div class="sect2">
+<h3 id="code-check50-code"><a class="link" href="#code-check50-code"><code>check50</code></a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>check50 cs50/2017/x/vigenere</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вас потребуют ввести логин (<b>GitHub username</b>) и пароль (<b>GitHub password</b>) от вашей учетной записи на Github'е, которую вы можете завести, пройдя по данной ссылке <a href="https://github.com/join">https://github.com/join</a>.</p>
+</div>
+<div class="paragraph">
+<p>Зайдите на сайт <a href="https://cs50.me" target="_blank">cs50.me</a>, используя всё ту же учетную запись GitHub'а и нажмите на зеленую кнопку <b>authorize submit50</b> (Это действие производится только один раз).</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">Изменения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>14-02-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Добавлена проверка check50.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>08-02-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+

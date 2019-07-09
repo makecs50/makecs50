@@ -1,0 +1,522 @@
+---
+layout: header
+title: finance
+permalink: /weeks/pset7/finance
+---
+<style>
+        .mjx-chtml {
+    display: inline-block;
+    line-height: 0;
+    text-indent: 0;
+    text-align: left;
+    text-transform: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    word-spacing: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 1px 0;
+}
+        
+        .MJXc-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+        .MathJax_Preview {
+    color: #888;
+}
+        div.stemblock div.content {
+    margin-bottom: 1.25em;
+}
+    </style>
+
+
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#background">Объяснение</a></li>
+<li><a href="#distribution">Развертывание</a></li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthroughs">Прохождения</a></li>
+<li><a href="#testing">Проверка</a></li>
+<li><a href="#staff-s-solution">Гарвардское Решение</a></li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#changelog">ИЗМЕНЕНИЯ</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>C$50 Finance (Финансы)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Имплементируйте сайт, через который пользователи смогут "покупать" и "продавать" акции, как показано ниже.</p>
+</div>
+<div class="imageblock related thumb">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/pset7/1.png" alt=""></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background"><a class="link" href="#background">Объяснение</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Если у вас нету особого понимания того, как происходит покупка и продажа акций (т.е. долей компании), тогда переходите по ссылке <a href="http://www.investopedia.com/university/stocks/" class="bare">http://www.investopedia.com/university/stocks/</a>.</p>
+</div>
+<div class="paragraph">
+<p>Скоро вы приступите к имплементации веб-приложения C$50 Finance, с помощью которого вы сможете управлять портфелями акций. С этим инструментом вы не только сможете следить за реальным курсом акций и стоимостью портфелей, но также и покупать (хорошо, "покупать") и продавать ("продавать") акции, запращивая цены акций у <a href="http://finance.yahoo.com/">Yahoo Finance</a>.</p>
+</div>
+<div class="paragraph">
+<p> Yahoo позволяет вам скачивать котировки акций в формате CSV, с помощью URL-ссылки <a href="http://download.finance.yahoo.com/d/quotes.csv?s=NFLX&amp;f=sl1d1t1c1ohgv&amp;e=.csv" class="bare">http://download.finance.yahoo.com/d/quotes.csv?s=NFLX&amp;f=sl1d1t1c1ohgv&amp;e=.csv</a>. Обратите внимание, как символ канала Netflix (NFLX) включен в саму ссылку (в качестве значения параметра HTTP называемого <code>s</code>); так Yahoo узнает чьи данные возвращать. Также обратите внимание на значение параметра HTTP, имеющее название <code>f</code>; выглядит оно немного загадочным (и официальную документацию, к сожалению, убрали), но значение этого параметра говорит Yahoo, данные которого поля возвращать вам. Если вам все же интересно, что оно означает, тогда вам поможет <a href="https://web.archive.org/web/20040816081607/http://www.gummy-stuff.org/Yahoo-data.htm">этот удобный справочник</a>. Кстати, Yahoo иногда возвращает цены в других валютах, отличных от американских долларов (USD), при этом не давая вам знать название возвращаемой валюты. Но для простоты, мы будем считать, что работаем только с долларами США.</p>
+</div>
+<div class="paragraph">
+<p>Теперь переведем свое внимание на развертываемый код приложения!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="distribution"><a class="link" href="#distribution">Развертывание</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="downloading"><a class="link" href="#downloading">Скачивание</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ wget <a href="https://github.com/cs50/problems/archive/finance.zip" class="bare">https://github.com/cs50/problems/archive/finance.zip</a>
+$ unzip finance.zip
+$ rm finance.zip
+$ mv problems-finance finance
+$ cd finance
+$ ls
+application.py  helpers.py        static
+finance.db      requirements.txt  templates</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="running"><a class="link" href="#running">Запуск</a></h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Установите зависимости данной проблемы (находясь внутри папки <code>finance/</code>):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>pip3 install --user -r requirements.txt</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Запустите встроенный сервер Flask'а (находясь внутри папки <code>finance/</code>):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>flask run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Выберите <strong>CS50 IDE &gt; Web Server</strong>, чтобы увидеть развертываемый код в действии. Правда, пока вы не сможете регистрироваться или заходить на сайт через какой-нибудь аккаунт (логиниться).</p>
+</div>
+</li>
+<li>
+<p>В <b>другом</b> терминальном окне запустите phpLiteAdmin (находясь внутри папки <code>finance/</code>):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>phpliteadmin finance.db</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>И перейдите по URL-ссылке, которую вывела в новом окне программа <code>phpliteadmin</code>. Заметьте, что в <code>finance.db</code> есть таблица под названием <code>users</code> (пользователи). Посмотрите на ее структуру (т.е. схему). Обратите внимание, как, по умолчанию, новые пользователи будут получать наличкой сумму в $10,000. Но у нас (пока!) нет никаких пользователей (т.е. строк, не путать со <b>strings</b>, здесь речь идет о <b>rows</b>).</p>
+</div>
+<div class="paragraph">
+<p>Начиная отсюда, если вы предпочитаете работу в командной строке, вы можете пользоваться <code>sqlite3</code> вместо phpLiteAdmin.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="understanding"><a class="link" href="#understanding">Понимание</a></h3>
+<div class="sect3">
+<h4 id="code-application-py-code"><a class="link" href="#code-application-py-code"><code>application.py</code></a></h4>
+<div class="paragraph">
+<p>Откройте <code>application.py</code>. В верхней части файла находятся import'ы, среди них есть SQL-модуль CS50 и несколько функций helper. О них позже поговорим.</p>
+</div>
+<div class="paragraph">
+<p>После настройки <a href="http://flask.pocoo.org/">Flask'а</a>, обратите внимание на отключение этим файлом кэширования ответов (в случае, если вы находитесь в режиме отладки, а вы, пользуясь CS50 IDE, в нем находитесь по умолчанию), чтобы избежать ситуации, когда вы вносите какие-то изменения в файл, а ваш браузер этого не замечает. Дальше мы видим, как данный файл (application.py) настраивает <a href="http://jinja.pocoo.org/">Jinja</a> с помощью задаваемого "filter" (фильтра) <code>usd</code>. usd - это функция (объявлена в <code>helpers.py</code>), которая позволяет без проблем форматировать значения под американские доллары (USD). Потом он донастраивает Flask, для возможности хранения <a href="http://flask.pocoo.org/docs/0.11/quickstart/#sessions">sessions</a> (сессий) на локальной файловой системе (т.е. жестком диске), вместо того, чтобы хранить их внутри (подписанных цифровой подписью) куки (cookies), что задано в Flask'е по умолчанию. Далее файл настраивает SQL-модуль CS50 на использование <code>finance.db</code>, базы данных SQLite, чье содержимое мы очень скоро разберем!</p>
+</div>
+<div class="paragraph">
+<p>Далее мы видим огромное количество маршрутов, только двое из них полностью имплементированы: <code>login</code> (залогиниться) и <code>logout</code> (выйти из аккаунта). Сперва разберите имплементацию <code>login</code>. Здесь идет использование функции <code>db.execute</code> (из библиотеки CS50), которая позволяет осуществлять запросы к <code>finance.db</code>. Также присутствует функция <code>pwd_context.verify</code>, сравнивающая хэши паролей пользователя. Наконец, обратите внимание, как <code>login</code> "помнит", что пользователь заходил в систему, сохраняя его или ее <code>user_id</code> (INTEGER) в <code>session</code> (сессии). Таким образом, любой маршрут файла может проверять, который пользователь, если такие имеются, залогинился. В то же время, <code>logout</code> просто очищает <code>session</code> (сессию), выводя пользователя из системы.</p>
+</div>
+<div class="paragraph">
+<p>Многие маршруты "декорированы" (украшены) функцией <code>@login_required</code> (также объявлена в <code>helpers.py</code>). Этот декоратор следит за тем, чтобы пользователь, при посещении любого из маршрутов, был перенапрвлен на страницу <code>login</code> (авторизации), если данный пользователь не был ранее авторизован.</p>
+</div>
+<div class="paragraph">
+<p>Почти все маршруты поддерживают методы GET и POST. Хотя многие из них (пока!) просто возвращают "apology" (извинение), так как они еще не имплементированы.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-helpers-py-code"><a class="link" href="#code-helpers-py-code"><code>helpers.py</code></a></h4>
+<div class="paragraph">
+<p>Теперь посмотрите на <code>helpers.py</code>. Вот и имплементация нашей функции <code>apology</code>. В конечном итоге, данная функция отображает шаблон <code>apology.html</code>. Также она объявляет внутри себя еще одну функцию, которая имеет название <code>escape</code> - используется только для того, чтобы изменять некоторые символы внутри текста с извинениями. Объявив функцию <code>escape</code> внутри функции <code>apology</code>, мы замкнули ее, поместив в область видимости последней; ни одна другая функция не сможет вызвать ее (или не будет нуждаться в ней).</p>
+</div>
+<div class="paragraph">
+<p>Далее в файле находится <code>login_required</code> (авторизация_обязательна). Не переживайте, если эта функция кажется вам непонятной, но если вам когда-либо было интересно как одна функция может вернуть другую функцию, то это как раз тот самый случай!</p>
+</div>
+<div class="paragraph">
+<p>После идет <code>lookup</code> (взглянуть/осмотреться/поиск) - функция, которая при получении <code>symbol</code> (например NFLX), возвращает котировку акций для данного символа в форме <code>dict</code> (словаря), с тремя ключами: <code>name</code> (имя), чье значение представляет из себя <code>str</code> (например "Netflix, Inc."); <code>price</code> (цена), чье значение представляет из себя <code>float</code>; и <code>symbol</code> (символ), чье значение представляет из себя <code>str</code>, каноническую (заглавную) версию символа акции, независящая от того, как именно этот символ был капитализирован (сделан заглавным), когда передавался функции <code>lookup</code>.</p>
+</div>
+<div class="paragraph">
+<p>Последним в файле идет <code>usd</code> - короткая функция, которая просто форматирует <code>float</code> под долларовый эквивалент (т.е. число <code>1234.56</code> будет форматировано как <code>$1,234.56</code>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-requirements-txt-code"><a class="link" href="#code-requirements-txt-code"><code>requirements.txt</code></a></h4>
+<div class="paragraph">
+<p>Взгляните на <code>requirements.txt</code> (требования).
+Этот файл просто указывает какие программы (пакеты) нужно установить, чтобы наше приложение могло работать корректно.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-static-code"><a class="link" href="#code-static-code"><code>static/</code></a></h4>
+<div class="paragraph">
+<p>Обратите внимание на папку <code>static/</code>, внутри нее находится <code>styles.css</code>. Здесь живут наши начальные стили CSS. Вы можете изменять их как вам угодно.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="code-templates-code"><a class="link" href="#code-templates-code"><code>templates/</code></a></h4>
+<div class="paragraph">
+<p>Теперь перейдем к <code>templates/</code>. Файл <code>login.html</code> состоит, в основном, из обычной HTML-формы, стилизированной с помощью <a href="http://getbootstrap.com/">Bootstrap'а</a>. В то же время <code>apology.html</code> содержит в себе шаблон для извинений. Вспомните, что функция <code>apology</code> файла <code>helpers.py</code> принимала два аргумента: <code>top</code> (верх) и <code>bottom</code> (низ). Вот они опять! И <a href="https://github.com/jacebrowning/memegen">вот почему</a>. 0:-)</p>
+</div>
+<div class="paragraph">
+<p>Последним идет <code>layout.html</code>. Этот шаблон немного больше остальных, но это в осном из-за того, что он содержит в себе адаптивный "navbar" (navigation bar/панель навигации), также основан на Bootstrap. Он определяет блок <code>main</code>, внутри которого будут находиться шаблоны (включая <code>apology.html</code> и <code>login.html</code>). Также он включает в себя поддержку Flask-технологии <a href="http://flask.pocoo.org/docs/0.11/patterns/flashing/">message flashing</a>, позволяя вам передавать сообщения с одного маршрута на другой, для пользовательского наблюдения.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="code-register-code"><a class="link" href="#code-register-code"><code>register</code></a></h3>
+<div class="paragraph">
+<p>Завершите имплементацию фукнции <code>register</code> таким образом, чтобы она позволяла регистрировать новый аккаунт.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Сделайте обязательным ввод пользователем своего имени. Отобразите <b>apology</b> (извинение), если пользователь ничего не ввел или указал никнейм, который уже существует.</p>
+</li>
+<li>
+<p>Сделайте обязательным для пользователя ввод пароля, а также повторный ввод пароля. Отобразите <b>apology</b> (извинение), если пользователь ничего не ввел или были введены разные пароли.</p>
+</li>
+<li>
+<p><code>INSERT</code> (добавьте) нового пользователя в таблицу <code>users</code> (пользователи), сохраняя в ней хэш пользовательского пароля, а не сам пароль. Вы найдете полезным прочитать про функцию <a href="https://pythonhosted.org/passlib/new_app_quickstart.html"><code>pwd_context.encrypt</code></a>.</p>
+</li>
+<li>
+<p>Вам, скорее всего, придется создать новый шаблон (<code>register.html</code>), который будет очень схож с <code>login.html</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Как только вы должным образом имплементируете функцию <code>register</code>, вы сможете регистрировать новый аккаунт и заходить в систему (так как <code>login</code> и <code>logout</code> являются полностью рабочими)! Также вы будете иметь возможность просматривать строки (rows) с помощью phpLiteAdmin или <code>sqlite3</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-quote-code"><a class="link" href="#code-quote-code"><code>quote</code></a></h3>
+<div class="paragraph">
+<p>Завершите имплементацию функции <code>quote</code> (котировки) таким образом, что она позволит пользователю просматривать текущую цену акции.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Сделайте обязательным ввод пользователем символа акции.</p>
+</li>
+<li>
+<p>Скорее всего, вы захотите создать два новых шаблона (т.е. <code>quote.html</code> и <code>quoted.html</code>).  Когда пользователь перейдет по ссылке <code>/quote</code>, используя метод GET, отобразите один из данных шаблонов, внутри которого должна быть HTML-форма, отправляющая запрос на <code>/quote</code>, с помощью метода POST. В ответ на POST-запрос, функция <code>quote</code> может отобразить, ранее приводимый нами, второй шаблон, встраивая в него одно или более количество значений из функции <code>lookup</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-buy-code"><a class="link" href="#code-buy-code"><code>buy</code></a></h3>
+<div class="paragraph">
+<p>Завершите имплементацию функции <code>buy</code> таким образом, что она даст пользователю возможность покупать акции.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Сделайте обязательным для пользователя предоставление символа акции. Отобразите <b>apology</b> (извинение), если ничего не было введено или предоставленный символ не существует (в соответствии с <code>lookup</code>).</p>
+</li>
+<li>
+<p>Сделайте обязательным для пользователя ввод количества акций. Отобразите <b>apology</b>, если вводимое число будет неположительным integer'ом.</p>
+</li>
+<li>
+<p>Вполне вероятно, что вы захотите воспользоваться функцией <code>lookup</code>, дабы узнать текущую цену акции.</p>
+</li>
+<li>
+<p>Скорее всего, вы надумаете <code>SELECT</code> (выбрать) какое количество наличных есть на данный момент у пользователя в таблице <code>users</code>.</p>
+</li>
+<li>
+<p>Добавьте одну или более таблиц в <code>finance.db</code>, чтобы с помощью них следить за покупками. Храните достаточное количество информации, дабы знать кто что купил, по какой цене и когда купил.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Используйте подходящие типы данных SQLite.</p>
+</li>
+<li>
+<p>Определите <code>UNIQUE</code> (уникальный) индекс для всех полей, которые должны быть уникальными.</p>
+</li>
+<li>
+<p>Определите (<code>non-UNIQUE</code>/не уникальные) индексы на любых полях, с помощью которых вы сможете осуществлять поиск (т.е. с помощью <code>SELECT</code> вместе с <code>WHERE</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Отобразите <b>apology</b>, не давая завершить покупку, если пользователь не может себе позволить такое количество акций по текущей цене.</p>
+</li>
+<li>
+<p>Вам не нужно беспокоиться о состояниях гонки (или использовать транзакции).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Как только вы правильно имплементируете <code>buy</code>, вы сможете увидеть покупки пользователей в вашей новой таблице (таблицах), используя phpLiteAdmin или <code>sqlite3</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-index-code"><a class="link" href="#code-index-code"><code>index</code></a></h3>
+<div class="paragraph">
+<p>Завершите имплементацию <code>index</code> таким образом, что он будет отображать HTML-таблицу, суммируя для текущего авторизовавшегося пользователя то, какими именно акциями владеет данный пользователь, количество имеющихся у него акций, текущую цену каждой акции и общую цену каждого холдинга (т.е. акции умноженные на цену). Также отобразите текущий баланс налички пользователя вместе с общей суммой (т.е. общая цена акций плюс наличка).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Скорее всего, вы посчитаете нужным исполнить несколько <code>SELECT</code>'ов. Взависимости от того, как вы имплементируете вашу таблицу (таблицы), вы, возможно, найдете полезным использовать <a href="https://www.google.com/search?q=SQLite+GROUP+BY">GROUP BY</a>, <a href="https://www.google.com/search?q=SQLite+HAVING">HAVING</a>, <a href="https://www.google.com/search?q=SQLite+SUM">SUM</a> и/или <a href="https://www.google.com/search?q=SQLite+WHERE">WHERE</a>.</p>
+</li>
+<li>
+<p>Вполне вероятно, что вам понадобится вызвать функцию <code>lookup</code> на кажую акцию.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-sell-code"><a class="link" href="#code-sell-code"><code>sell</code></a></h3>
+<div class="paragraph">
+<p>Заершите имплементацию функции <code>sell</code> таким образом, что она будет позволять пользователю продавать акции (которыми владеет он или она).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Пользовательский интерфейс вы разрабатываете полностью сами. Вы можете позволить пользователю продавать одну или более акций или вы можете обязать пользователя продать все акции за раз.</p>
+</li>
+<li>
+<p>Вы должны проверять на ошибки и выводить apologies (извинения) в случае столкновения с ними.</p>
+</li>
+<li>
+<p>Вам не нужно беспокоиться о состоянии гонки (или использовать транзакции).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-history-code"><a class="link" href="#code-history-code"><code>history</code></a></h3>
+<div class="paragraph">
+<p>Завершите имплементацию функции <code>history</code> таким образом, что она будет отображать HTML-таблицу, суммируя все пользовательские транзакции, выводя строку за строкой каждой покупки и каждой продажи.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Позаботьтесь, чтобы каждая строка ясно показывала была ли акция куплена или продана, а также она должна включать символ акции, цену (покупки или продажи), количество проданных или купленных акций и дату вместе с временем проведения транзакции.</p>
+</li>
+<li>
+<p>Вам, возможно, понадобится изменить таблицу, созданную вами для <code>buy</code> (покупок) или дополнить ее еще одной таблицей. Попытайтесь свести к минимуму избыточность.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="personal-touch"><a class="link" href="#personal-touch">Индивидуальная особенность</a></h3>
+<div class="paragraph">
+<p>Добавьте одну (1) дополнительную фишку, отразите ваш индивидуальный подход:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Дайте возможность пользователям изменять их пароли.</p>
+</li>
+<li>
+<p>Дайте позможность пользователям пополнять счет (добавлять наличку) своего аккаунта.</p>
+</li>
+<li>
+<p>Дайте позможность пользователям покупать большее количество акций или продавать акции, которыми они уже владеют с помощью <code>index</code>, избавляясь от ручного ввода символов акций.</p>
+</li>
+<li>
+<p>Дайте какую-нибудь другую возможность пользователю, которая была бы схожа с теми, что приведены выше.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthroughs"><a class="link" href="#walkthroughs">Прохождения (Постараемся добавить в ближ. время)</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/iJGnkZwEDJ8" frameborder="0" allowfullscreen></iframe></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Никакого <code>check50</code> для данного задания, но обязательно постарайтесь как-нибудь "сломать" свой собственный сайт:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>внося в формы алфавитные строки (strings), когда она ожидает предоставления чисел</p>
+</li>
+<li>
+<p>внося в формы ноль или отрицательные числа, когда ожидаются только положительные числа</p>
+</li>
+<li>
+<p>внося в формы значения с плавающей запятой (floats), когда ожидаются только целые числа (integers)</p>
+</li>
+<li>
+<p>пытаясь потратить большее количество денег, превосходящее значением имеющуюся наличку</p>
+</li>
+<li>
+<p>пытаясь продать большее количества акций, чем они есть у пользователя</p>
+</li>
+<li>
+<p>предоставляя неправильный символ акции</p>
+</li>
+<li>
+<p>включая потенциально опасные символы в SQL-запросы, такие как <code>'</code> и <code>;</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="staff-s-solution"><a class="link" href="#staff-s-solution">Гарвардское Решение</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Вы можете задать любой внешний вид вашему приложению, но вот как выглядит наше решение данной проблемы!</p>
+</div>
+<div class="paragraph">
+<p><a href="http://pset7.cs50.net/" class="bare">http://pset7.cs50.net/</a></p>
+</div>
+<div class="paragraph">
+<p>Можете зарегистрировать аккаунт, залогиниться и т.п. <b>Не</b> используйте пароль, которым вы пользуетесь на других сайтах.</p>
+</div>
+<div class="paragraph">
+<p>Это будет <strong>разумным</strong> шагом, если вы посмотрите на наш код HTML и CSS.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Внутри <code>cs50.SQL</code> находится метод <code>execute</code>, чьим первым аргументом должен быть SQL'овский <code>str</code>. Если этот <code>str</code> содержит именованные параметры, к которым должы быть привязаны значения, эти значения могут быть предоставлены как дополнительные именованные параметры для метода <code>execute</code>. В имплементации <code>login</code> вы как раз найдете такой пример. Возвращаемое значение <code>execute</code> соответствует следующему:</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Если <code>str</code> является <code>SELECT</code>'ом, тогда <code>execute</code> возвращает <code>list</code> (список) из нуля или более <code>dict</code> (словарь) объектов, внутри которых находятся ключи и значения, представляющие из себя соответствующие поля и клетки таблицы.</p>
+</li>
+<li>
+<p>Если <code>str</code> является <code>INSERT</code>'ом и таблица, в которую были добавлены данные, содержит первичный последовательный (увеличивающийся) ключ <code>PRIMARY KEY</code>, тогда метод <code>execute</code> вернет значение добавленого первичного ключа.</p>
+</li>
+<li>
+<p>Если <code>str</code> является <code>DELETE</code>'ом или <code>UPDATE</code>'ом, тогда метод <code>execute</code> вернет количество удаленных или обновленных <code>str</code>'ом строк.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Если <code>INSERT</code> или <code>UPDATE</code> нарушили бы какой-нибудь ограничитель (например индекс <code>UNIQUE</code>), тогда метод <code>execute</code> вернул бы <code>None</code>. В случае ошибки, <code>execute</code> выводит <code>RuntimeError</code>.</p>
+</div>
+</li>
+<li>
+<p>Обязательно используйте связанные именованные параметры (т.е. <a href="https://www.python.org/dev/peps/pep-0249/#paramstyle">paramstyle</a> типа <code>named</code>), когда вызываете метод CS50 <code>execute</code>, в соответствии с <code>WHERE name=:name</code>. <strong>Не</strong> используйте <a href="https://docs.python.org/3.1/library/functions.html#format"><code>format</code></a> или <code>+</code> (т.е. конкатенацию), так вы сможете избежать атаки SQL-инъекцией.</p>
+</li>
+<li>
+<p>Если (и только если) хорошо понимаете SQL, вы можете начать пользоваться <a href="http://docs.sqlalchemy.org/en/latest/index.html">SQLAlchemy Core</a> или <a href="http://flask-sqlalchemy.pocoo.org/">Flask-SQLAlchemy</a> (т.е. <a href="http://docs.sqlalchemy.org/en/latest/index.html">SQLAlchemy ORM</a>) вместо <code>cs50.SQL</code>.</p>
+</li>
+<li>
+<p>Вы можете добавить, на свое усмотрение, дополнительные статические файлы в папку <code>static/</code>.</p>
+</li>
+<li>
+<p>Вы можете выбрать <a href="https://www.bootstrapcdn.com/bootswatch/">альтернативную тему</a> для своего сайта, а также саму эстетику сайта в целом, включая <a href="https://memegen.link/api/templates/">apologies</a>.</p>
+</li>
+<li>
+<p>Скорее всего вы захотите сперва обратиться к <a href="http://jinja.pocoo.org/docs/dev/">документации Jinja</a>, при имплементации своих шаблонов.</p>
+</li>
+<li>
+<p> <strong>Разумно</strong> просить других проверить ваш сайт (на наличие ошибок). С помощью опции <strong>Share</strong>, в верхнем правом углу среды разработки CS50 IDE, вы можете поделиться своим <strong>Application</strong> (приложением), делая его <strong>Public</strong> (доступным). Только не дайте доступ к вашему <strong>Editor</strong>'у (редактору), через который можно изменить ваш Python код и базу данных SQLite.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">Изменения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>04-05-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание переведено.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>23-10-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание переведено.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>

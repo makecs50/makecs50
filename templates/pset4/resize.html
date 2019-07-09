@@ -1,0 +1,252 @@
+---
+layout: header
+title: resize
+permalink: /weeks/pset4/resize
+---
+    <style>
+        .mjx-chtml {
+    display: inline-block;
+    line-height: 0;
+    text-indent: 0;
+    text-align: left;
+    text-transform: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    word-spacing: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 1px 0;
+}
+        
+        .MJXc-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+        .MathJax_Preview {
+    color: #888;
+}
+        div.stemblock div.content {
+    margin-bottom: 1.25em;
+}
+    </style>
+
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Таблица Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#background">Объяснение</a></li>
+<li><a href="#distribution">Развертывание</a>
+<ul class="sectlevel2">
+<li><a href="#downloading">Скачивание</a></li>
+</ul>
+</li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthrough">Прохождение</a></li>
+<li><a href="#usage">Использование</a></li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#testing">Проверка</a>
+<ul class="sectlevel2">
+<li><a href="#code-check50-code"><code>check50</code></a></li>
+</ul>
+</li>
+<li><a href="#changelog">Изменения</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Resize (Изменение размера)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Реализуйте программу, которая будет менять размер BMP-изображения, как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./resize 4 small.bmp large.bmp</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background"><a class="link" href="#background">Объяснение</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Приступайте к решению данной проблемы только после того, как будете действительно понимать структуру 24-битного не сжатого BMP-изображения, с которой вы ознакомились в <a href="{{ site.url }}/weeks/pset4/whodunit/">Whodunit</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="distribution"><a class="link" href="#distribution">Развертывание</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="downloading"><a class="link" href="#downloading">Скачивание</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ wget <a href="http://cdn.cs50.net/2017/fall/psets/4/resize.zip" class="bare">http://cdn.cs50.net/2017/fall/psets/4/resize.zip</a>
+$ unzip resize.zip
+$ rm resize.zip
+$ mv problems-resize resize
+$ cd resize
+$ ls
+bmp.h  copy.c  large.bmp  small.bmp  smiley.bmp</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Реализуйте программу под названием <code>resize</code>, которая изменяет (т.е. увеличивает) размер 24-битного не сжатого BMP-изображения в <code>n</code> раз.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Напишите программу в файле <code>resize.c</code>, которая будет находиться в папке <code>resize</code>.</p>
+</li>
+<li>
+<p>Ваша программа должна принимать ровно три аргумента командной строки, где</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>первый аргумент (<code>n</code>) должен быть позитивным целым числом, меньше или равный <code>100</code>,</p>
+</li>
+<li>
+<p>вторым должно быть название файла BMP, размер которого мы хотим изменить</p>
+</li>
+<li>
+<p>и третьим аргументом - название записываемого файла т.е. нового изображения с измененным размером.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>+ если вашу программу запустили ненадлежащим образом (с меньшим или большим числом аргументов), она должна оповестить об этом пользователя, используя <code>fprintf</code> (с <code>stderr</code>). Функция <code>main</code> должна вернуть <code>1</code>.</p>
+</div>
+</li>
+<li>
+<p>Если ваша программа будет пользоваться функцией <code>malloc</code>, вы должны будете позаботиться о том, чтобы не возникло никаких утечек памяти.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="link" href="#walkthrough">Прохождение</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/rz3qo_LXrAw" frameborder="0" allowfullscreen></iframe></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Использование</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>
+Ваша программа должна проделывать тоже самое, что показано в примере ниже. Предположим, подчеркнутый текст - это то, что написал пользователь.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./resize</span>
+Error (ошибка): ./resize n infile outfile
+$ <span class="underline">echo $?</span>
+1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./resize 2 small.bmp larger.bmp</span>
+$ <span class="underline">echo $?</span>
+0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>С такой программой, мы могли бы создать изображение <code>large.bmp</code> из <code>small.bmp</code> путем изменения размера последнего на 4 (т.е. умножив его ширину и высоту на 4), как показано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>./resize 4 small.bmp large.bmp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Вы можете начать решать задачу создав копию файла <code>copy.c</code> и назвав новую копию <code>resize.c</code>. Но сперва подумайте над тем, что означает изменить размер BMP. (Вы можете предположить, что результат умножения <code>n</code> на размер <code>infile</code> (входного файла) не превысит 2<sup>32</sup> - 1). Определите, которые поля в <code>BITMAPFILEHEADER</code> и <code>BITMAPINFOHEADER</code> вам возможно придется модифицировать (изменить). Решите, нужно ли вам добавить или убрать отступы из растровых строк изображения. И позаботьтесь о том, чтобы программа работала корректно при значении <code>n</code> равной <code>1</code>, в таком случае размеры <code>outfile</code>'а будут идентичны размерам <code>infile</code>'а.</p>
+</div>
+<div class="paragraph">
+<p>Если так случится, что вы воспользуетесь функцией <code>malloc</code>, незабудьте применить функцию <code>free</code>, дабы избежать утечки памяти. Проверить программу на наличие утечек вам поможет <code>valgrind</code>!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Если вы хотите посмотреть на заголовки файла <code>large.bmp</code> (в более понятном виде, чем это было с <code>xxd</code>), вы можете выполнить следующее:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>~cs50/pset4/peek large.bmp</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="code-check50-code"><a class="link" href="#code-check50-code"><code>check50</code></a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>check50 cs50/2018/spring/resize/less</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">Изменения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>11-04-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+

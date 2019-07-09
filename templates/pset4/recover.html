@@ -1,0 +1,272 @@
+---
+layout: header
+title: recover
+permalink: /weeks/pset4/recover
+---
+    <style>
+        .mjx-chtml {
+    display: inline-block;
+    line-height: 0;
+    text-indent: 0;
+    text-align: left;
+    text-transform: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    word-spacing: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    border: 0;
+    margin: 0;
+    padding: 1px 0;
+}
+        
+        .MJXc-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0;
+}
+        .MathJax_Preview {
+    color: #888;
+}
+        div.stemblock div.content {
+    margin-bottom: 1.25em;
+}
+    </style>
+
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Таблица Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#background">Объяснение</a></li>
+<li><a href="#distribution">Развертывание</a>
+<ul class="sectlevel2">
+<li><a href="#downloading">Скачивание</a></li>
+</ul>
+</li>
+<li><a href="#specification">Описание</a></li>
+<li><a href="#walkthrough">Прохождение</a></li>
+<li><a href="#usage">Использование</a></li>
+<li><a href="#testing">Проверка</a>
+<ul class="sectlevel2">
+<li><a href="#code-check50-code"><code>check50</code></a></li>
+</ul>
+</li>
+<li><a href="#hints">Проверка</a></li>
+<li><a href="#changelog">Изменения</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Recover (восстановление)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Реализуйте программу, которая будет восстанавливать JPEG'и из образа карты памяти, как указано ниже.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./recover card.raw</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="background"><a class="link" href="#background">Объяснение</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>В ожидании этой проблемы, я провел последние несколько дней фотографируя своих знакомых, изображения которых были сохранены моей цифровой камерой в виде JPEG'ов на карте памяти (ну ладно, скорее всего я провел последние несколько дней просматривая мемы на Facebook'е). К сожалению, я каким-то непонятным образом удалил все фотографии! Но, к счастью, в компьютерном мире, слово "удалил" не подразумевает под собой "удалено", а скорее "забыто". Мой компьютер настаивает на том, что на карте теперь ничего нету, но я уверен что это не правда . Я надеюсь, что вы сможете написать для меня программу, восстанавливающую фотографии!</p>
+</div>
+<div class="paragraph">
+<p>Хоть JPEG'и в своей структуре намного сложнее BMP, у JPEG'ов есть "подписи" (шаблоны байтов), которые отличают их от других файловых форматов. Все JPEG'и начинаются с трех байтов, слева направо:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>0xff 0xd8 0xff</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Четвертый байт может иметь следующие значения: <code>0xe0</code>, <code>0xe1</code>, <code>0xe2</code>, <code>0xe3</code>, <code>0xe4</code>, <code>0xe5</code>, <code>0xe6</code>, <code>0xe7</code>, <code>0xe8</code>, <code>0xe8</code>, <code>0xe9</code>, <code>0xea</code>, <code>0xeb</code>, <code>0xec</code>, <code>0xed</code>, <code>0xee</code>, <code>0xef</code>.
+    Заметьте, первые четыре бита четвертого байта везде равны <code>1110</code>.</p>
+</div>
+<div class="paragraph">
+<p>Вполне вероятно, если вы найдете этот шаблон из 4 байтов на медианосителе (т.е. на моей карте памяти), что они будут обозначать начало JPEG'а. Конечно, на каком-либо другом диске, вы наткнулись бы на данные шаблоны чисто случайным образом, поэтому восстановление данных не может быть точной наукой.</p>
+</div>
+<div class="paragraph">
+<p>К счастью, цифровые камеры имеют привычку последовательно хранить фотографии на карте памяти. Каждая фотография сохраняется сразу за предыдущей. Поэтому начало одного JPEG'а обычно говорит о конце другого JPEG'а. Цифровые камеры часто инициализируют карты задавая им файловую систему FAT, в котором "размер одного блока" равен 512 байтам (Б). Суть в том, что эти камеры записывают данные на карты памяти по 512 Б. Таким образом фотография размером в 1 MB (т.е. 1,048,576 Б) занимает 1048576 ÷ 512 = 2048 "блоков" на карте памяти. Но проблема в том, что такое же количество блоков займет файл с размером в один байт меньше предыдущего (т.е. 1,048,575 Б)! Незаполненное дисковое пространство называют "провисающим пространством" ("slack space"). Судебные следователи часто используют эту особенность для нахождения остатков подозрительных веществ.</p>
+</div>
+<div class="paragraph">
+<p>Суть всех этих деталей в том, что вы, как следователь, скорее всего сможете написать программу, которая будет итерировать копию моей карты памяти, ищя подписи (признаки) JPEG'ов. Каждый раз находя подпись, вы можете открывать новый записываемый файл и начинать заполнять этот файл байтами, которые будут браться из моей карты памяти. При этом закрывать этот файл будете только тогда, когда найдется другая подпись. Более того, для эффективности, вместо того чтобы читать по одному байту за раз, вы можете считывать в буфер по 512 байтов. Благодаря файловой системе FAT, вы можете быть уверены, что подписи JPEG-файлов будут "по блокам выровненными". Т.е. вам нужно будет искать эти подписи только в первых четырех байтах блока.</p>
+</div>
+<div class="paragraph">
+<p>JPEG'и состоят из смежных блоков. В противном случае, ни один JPEG не смог бы быть больше 512 Б. Может быть и такое, что последний байт JPEG'а может не оказаться в самом конце блока. Вспомните "провисание пространства". Но не беспокойтесь об этом. Так как карта-памяти была совершенно новой, когда я начал "щелкать" фотографии, поэтому, вполне вероятно, что эти пространства "обнулены" (то есть заполнены нулями) производителем. Это хорошо, если эти нули окажутся в восстановленных вами JPEG'ах. Эти файлы по-прежнему должны будут быть доступными для просмотра.</p>
+</div>
+<div class="paragraph">
+<p>Так, у меня есть только одна карта памяти, а вас не так уж и мало! Я все заранее продумал и создал для вас образ (файл) карты памяти, в котором хранится весь контент, байт за байтом, и этот файл называется <code>card.raw</code>. Чтобы вам не пришлось перебирать миллионы лишних нулей, я сделал образ только первых нескольких мегабайт карты памяти. В конечном итоге, у вас должно будет восстановиться 50 JPEG-изображений.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="distribution"><a class="link" href="#distribution">Развертывание</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="downloading"><a class="link" href="#downloading">Скачивание</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ mkdir recover
+$ cd recover
+$ wget http://cdn.cs50.net/2016/fall/psets/4/pset4/card.raw
+$ ls
+card.raw</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specification"><a class="link" href="#specification">Описание</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Создайте программу под названием <code>recover</code>, которая будет восстанавливать JPEG'и с образа карты-памяти.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Реализуйте вашу программу в файле <code>recover.c</code>, которая должна будет находиться в папке <code>recover</code>.</p>
+</li>
+<li>
+<p>Ваша программа должна принимать ровно один аргумент командной строки - название образа карты-памяти, с которого будет происходить восстановление JPEG'ов.
++ если вашу программу запустили ненадлежащим образом (с меньшим или большим числом аргументов), она должна оповестить об этом пользователя, используя <code>fprintf</code> (с <code>stderr</code>). При этом функция <code>main</code> должна вернуть <code>1</code>.</p>
+</li>
+<li>
+<p>Если образ невозможно открыть для чтения, ваша программа должна сообщить об этом пользователя, используя <code>fprintf</code> (с <code>stderr</code>).  При этом функция <code>main</code> должна вернуть <code>2</code>.</p>
+</li>
+<li>
+<p>Если ваша программа будет пользоваться функцией <code>malloc</code>, вы должны будете позаботиться о том, чтобы не возникло никаких утечек памяти.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="walkthrough"><a class="link" href="#walkthrough">Прохождение</a></h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<div class="row">
+    <div class="col-md-12"><iframe width="100%" height="550" src="https://www.youtube.com/embed/290HKuNjQq4" frameborder="0" allowfullscreen></iframe></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="usage"><a class="link" href="#usage">Использование</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ваша программа должна проделывать тоже самое, что показано в примере ниже. Предположим, подчеркнутый текст - это то, что написал пользователь.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./recover</span>
+Usage (Использование): ./recover image
+$ <span class="underline">echo $?</span>
+1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ <span class="underline">./recover card.raw</span>
+$ <span class="underline">echo $?</span>
+0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing"><a class="link" href="#testing">Проверка</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="code-check50-code"><a class="link" href="#code-check50-code"><code>check50</code></a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>check50 cs50/2018/spring/recover</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Вполне вероятно, что вы захотите начать решать задание с создания файла под названием <code>recover.c</code> (в той же папке что и <code>card.raw</code>). Вам не понадобится библиотека CS50, но вам лучше объявить функцию <code>main</code> таким образом, что она будет поддерживать аргументы командной строки. (Помните как?)</p>
+</div>
+<div class="paragraph">
+<p>Вы всегда можете открыть <code>card.raw</code> программным способом с помощью <code>fopen</code>, как показано ниже, главное чтобы <code>argv[1]</code> существовал.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-kt">FILE</span> <span class="tok-o">*</span><span class="tok-n">file</span> <span class="tok-o">=</span> <span class="tok-n">fopen</span><span class="tok-p">(</span><span class="tok-n">argv</span><span class="tok-p">[</span><span class="tok-mi">1</span><span class="tok-p">],</span> <span class="tok-s">&quot;r&quot;</span><span class="tok-p">);</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>При выполнении, ваша программа должа восстановить каждое JPEG-изображения, хранящееся на <code>card.raw</code>, далее отдельно сохраняя каждый файл в вашей текущей рабочей директории (папке). Ваша программа должна пронумеровать выходные файлы, задавая каждому следующее имя <code>###.jpg</code>, где <code>###</code> представляют из себя три целых десятичных числа, начиная с <code>000</code> и далее (001, 002...). Не нужно восстанавливать оригинальные имена JPEG-изображений. Чтобы проверить на наличие ошибок в фотографиях, которые ваша программа произвела, просто дважды щелкните по ней и посмотрите! Если изображение есть, значит все прошло успешно!</p>
+</div>
+<div class="paragraph">
+<p>Хотя, вполне вероятно, что первые JPEG'и, которые "выплюнет" ваш (в начале) ошибочный код, окажутся некорректными (Если вы откроете фотографии и ничего не увидите, очень высока вероятность, что они дефектные). Выполните ниже приведенную команду, чтобы удалить все JPEG'и в вашей текущей рабочей директории.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>rm *.jpg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Если вы не хотите, чтобы вас каждый раз просили подтвердить удаление, выполните следующую команду.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>rm -f *.jpg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Будьте осторожнее с переключателем <code>-f</code>, так как он "forces" (заставляет) удалять файлы, без вашего подтверждения.</p>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="changelog"><a class="link" href="#changelog">Изменения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>11-04-2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Задание опубликовано.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+

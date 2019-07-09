@@ -1,0 +1,867 @@
+---
+layout: header
+title: Note6
+permalink: /weeks/notes6
+---
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#last-time">В Прошлый Раз</a></li>
+<li><a href="#the-internet">Интернет</a></li>
+<li><a href="#http">HTTP</a></li>
+<li><a href="#html">HTML</a></li>
+<li><a href="#css">CSS</a></li>
+<li><a href="#post">POST</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Неделя 6</h1>
+<div class="sect1">
+<h2 id="last-time"><a class="link" href="#last-time">В Прошлый Раз</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Мы познакомились с такими структурами данных как:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>связный список - узлы соедененные указателями.</p>
+</li>
+<li>
+<p>стеки и очереди (queues) - списки, поддерживающие свойства первым пришел - первым вышел или последним пришел - первым вышел.</p>
+</li>
+<li>
+<p>Двоичное дерево поиска, состоящее из двух узлов, соединенных одним родительским узлом</p>
+</li>
+<li>
+<p>хеш-таблицы - массивы связных списков, позволяющие быстро найти нужные нам элементы</p>
+</li>
+<li>
+<p>трай-и, позволяют искать элементы путем перебирания символов</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="the-internet"><a class="link" href="#the-internet">Интернет</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Теперь мы покидаем мир Си и погружаемся в мир веба и интернет-технологий.</p>
+</li>
+<li>
+<p>Как же мы подключаемся к интернету (прям загадка...)? У нас есть интернет-провайдер (internet service provider или ISP), например "Вайнах Телеком", чьи проведенные провода в вашем доме образуют сеть и соединяют вас с их сетью еще больших проводов.</p>
+</li>
+<li>
+<p>Интернет является своего рода приложением, запущенным на всех этих физический соединениях, используемое нами повседневно.</p>
+</li>
+<li>
+<p>Обычно подключение к интернету идет через беспроводной роутер (коробка, к которой подключают внешний провод). Выбрав беспроводную сеть, раздаваемую нашим роутером, технология, имеющая название DHCP (англ. Dynamic Host Configuration Protocol — протокол динамической настройки узла), назначает уникальный IP-адрес (Internet Protocol) нашему компьютеру, позволяющий идентифицировать его (наше устройство) в сети. И с помощью данного адреса компьютеры способны взаимодействовать между собой, используя интернет.</p>
+</li>
+<li>
+<p>IPv4 (IP версия 4) - самая распространенная версия IP, имеющая форму <code>#.#.#.#</code>.</p>
+</li>
+<li>
+<p>Точно также, как и у домов в реальном мире есть свои адреса, которые позволяют найти и отличить их от других домов, также и у компьютеров есть свои адреса в мире интернета.</p>
+</li>
+<li>
+<p>Каждый из <code>#</code>-цифр находится в диапазоне от <code>0</code> до <code>255</code> (диапазон значений), что представляет из себя 8 битное значение. Цифра, соответственно, использует 8 бит, и в целом адрес занимает 32 бита, что дает примерно 4 миллиарда возможных адресов.</p>
+</li>
+<li>
+<p>Также существуют зарезервированные IP-адреса, известные как частные адреса с диапазонами <code>10.#.#.#</code>, <code>172.16.#.# - 172.31.#.#</code> и <code>192.168.#.#</code>, которые используются только внутри локальных сетей, не во внешнем мире.</p>
+</li>
+<li>
+<p>По идее, чтобы попасть на какой-нибудь сайт нужно знать IP-адрес интересующего нас сайта. На помощь приходит технология под названием DNS (англ. Domain Name System — система доменных имён), которая подбирает IP-адресу доменное имя и наоборот. Поэтому если мы наберем в браузере <code>www.google.com</code>, название домена в браузере (спасибо DNS) заменится на IP-адрес.</p>
+</li>
+<li>
+<p>И теперь, когда у нас есть IP-адреса, на которые можно что-то посылать и принимать, мы можем создавать и отправлять пакеты с информацией (туда же входит адрес отправителя и адрес получателя).</p>
+</li>
+<li>
+<p>Мы отправляем эти пакеты роутерам, компьютерным серверам, находящихся в дата-центрах. Они, в свою очередь, направляют информацию в место назначения, т.е. к определенному IP-адресу. Таким образом, передавая наши пакеты от роутера к роутеру, они достигнут указанной нами точки назначения.</p>
+</li>
+<li>
+<p>Мы можем открыть среду разработки CS50 IDE и запустить следующую команду:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ nslookup www.google.com
+Server:         140.247.233.195
+Address:        140.247.233.195#53
+
+Non-authoritative answer:
+Name:   www.google.com
+Address: 172.217.4.36</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Первая строка показывает нам DNS-сервер, которого мы попросили достать для нас информацию о доменном имени. В ответ мы получили следующее: <code>Non-authoritative answer</code> (неавторизованный ответ), все это из-за того, что наш DNS-сервер не владеет данным доменным именем (в противном же случае, обладая таким доменом, я бы с вами уже не работал &copy Лом-Эла).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы можем представить данные пакеты в виде обычных конвертов, с какой-то информацией внутри них и с адресами на самом конверте, указывающими "Куда" и "Откуда" должны быть напралены конверты.</p>
+</li>
+<li>
+<p>Запустим еще одну команду (сейчас у CS50 IDE есть кое-какие неполадки, поэтому команда <code>traceroute</code> временно недоступна):</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes6/1.jpg" alt="Traceroute" width="800">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Здесь показаны роутеры, через которые проходят наши пакеты, направленные одному из сервером <code>www.google.com</code>.</p>
+</li>
+<li>
+<p>Первые два роутера, у которых есть в названии буквы <code>sc</code> и <code>.harvard.edu</code>, принадлежат Гарварду.</p>
+</li>
+<li>
+<p>Роутер <code>bdrgw2</code> или "border gateway" (пограничный шлюз) соединяет нас с другим роутером, под названием <code>nox1</code> или "northern crossroads" (северный перекресток) - место соединения огромного количества интернет-провайдеров (много проводов и различных технологий).</p>
+</li>
+<li>
+<p>Далее идут анонимные (неизвестные) роутеры, с неприкрепленными доменными именами. И наконец, мы дошли до последнего роутера - сервер Гугла (один из них).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Теперь давайте попробуем зайти на сайт, находящийся на огромном расстоянии от нас:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes6/2.jpg" alt="traceroute 2" width="800">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Загрузка Японской версии сайта CNN занимает немало времени.</p>
+</li>
+<li>
+<p>Если посмотреть на роутеры 8 и 9, то можно увидеть, что их соединение имеет самый большой интервал, поэтому, между ними, возможно, будет находится (буквально) океан.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы смотрели видео <a href="https://www.youtube.com/edit?o=U&video_id=FN-PchlNgpw">подводные кабели</a>.</p>
+</li>
+<li>
+<p>Поэтому, если кто-то, предположим Google, получит от нас пакет информации, они, скорее всего, захотят дать вам ответ. Но, если они будут отправлять данные, которые потребуют места больше, чем способен вместить в себя один пакет, на помощь придет технология под названием TCP (Transmission Control Protocol или Протокол Управления Передачей), которая делит информацию на части и позволяет отдельно отправлять пакеты. И эти пакеты помечаются примерно так <code>1 из 4</code> или <code>2 из 4</code> - таким образом мы выстраиваем их по порядку и способны проследить дошли ли все пакеты.</p>
+</li>
+<li>
+<p>Существует достаточное количество служб в сети Интернет, кроме обычного веб-серфинга, поэтому, чтобы компьютеру понять, какой программе предназначались пакеты, каждый из них также помечается дополнительным числом или портом.</p>
+</li>
+<li>
+<p>К примеру, стандартные порты и протоколы включают:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>21 FTP, протокол передачи файлов, несколько лет назад был предоставлен уникальный идентификатор (номер порта) - 21</p>
+</li>
+<li>
+<p>22 SSH (англ. Secure Shell — «безопасная оболочка»), для выполнения команд на другом компьютере</p>
+</li>
+<li>
+<p>25 SMTP, для отправки email'ов (электронных писем)</p>
+</li>
+<li>
+<p>53 DNS</p>
+</li>
+<li>
+<p>80 HTTP, для посещения веб-сайтов</p>
+</li>
+<li>
+<p>443 HTTPS, для посещения защищенных веб-сайтов</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Firewall'ы блокируют входящие пакеты, поэтому через них можно ограничивать доступ к определенным сайтам. Также можно блокировать выходящие пакеты, тем самым не допуская утечки важной информации. И все это реализуется с помощью локального маршрутизатора, который будет просто просматривать все пакеты и не пропускать те, которые будут в себе содержать определенные адреса. Также Firewall способен блокировать весь трафик (передвижение пакетов) на определенном порту.</p>
+</li>
+<li>
+<p>Есть сервисы, так называемые VPN'ы (англ. Virtual Private Network — виртуальная частная сеть), которыми вы можете воспользоваться, чтобы подключиться к сети вашей компании или университета. Создается зашифрованный туннель, чтобы перемещать весь ваш трафик через виртуальную частную сеть (VPN) в просторы интернета. Но у этого метода есть своя цена, теперь нам понадобится гораздо больше времени, чтобы открыть какой-нибудь сайт или скачать нужную нам информацию.</p>
+</li>
+<li>
+<p>Также существуют коммутаторы (свитчи) - это простое устройство с богатым количеством портов для подключения устройств через кабель.</p>
+</li>
+<li>
+<p>Мы смотрели еще одно видео, показывающее <a href="https://www.youtube.com/watch?v=TozT8fW9nRc">как устроен интернет</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="http"><a class="link" href="#http">HTTP</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+
+<li>
+<p>HTTP (англ. HyperText Transfer Protocol — «протокол передачи гипертекста») - один из самых распространненых способов форматирования сообщений для установления связи между компьютерами (коммуникации).</p>
+</li>
+<li>
+    <p>К примеру, мы могли бы, в реальном мире, представиться сказав "Ассаламу Алейкум, меня зовут Али", вытягивая при этом нашу руку, а другой человек, в свою очередь, скажет свое имя и <strong><del>достанет зачетку</del></strong> в ответ пожмет нашу руку.</p>
+</li>
+<li>
+<p>У HTTP, также как и у рукопожатия, есть свои правила и стандарты того, как нужно начинать и заканчивать "рукопожатие", а точнее связь.</p>
+</li>
+<li>
+<p>Самый простой запрос в HTTP - это метод под названием <code>GET</code>, где мы отправляеем сообщение, которое выглядит так:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>GET / HTTP/1.1
+Host: www.harvard.edu
+...</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Символ <code>/</code> означает, что нам нужен корень веб-сервера или страница по умолчанию. <code>HTTP/1.1</code> указывает на версию используемого HTTP и <code>Host: www.harvard.edu</code> указывает на веб-сайт, который мы запрашиваем от сервера.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Надеемся, что сервер даст следующий ответ:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>HTTP/1.1 200 OK
+Content-Type: text/html
+...</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>И после этих первых строк, ниже будет идти сама страница веб-сайта или информация, которую мы запросили.</p>
+</li>
+<li>
+<p>Все сайты пишутся на языке HTML. Именно его используют, для отображения какого-либо контента (текст, котики, фотожабы и т.п.).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Часто встречающиеся коды состояния HTTP:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>200 OK</code></p>
+</li>
+<li>
+<p><code>301 Moved Permanently</code> (перемещена навсегда)</p>
+</li>
+<li>
+<p><code>302 Found</code> (найдена)</p>
+</li>
+<li>
+<p><code>304 Not Modified</code> (не изменялась)</p>
+</li>
+<li>
+<p><code>401 Unauthorized</code> (не авторизован)</p>
+</li>
+<li>
+<p><code>403 Forbidden</code> (запрещена)</p>
+</li>
+<li>
+<p><code>404 Not Found</code> (не найдена)</p>
+</li>
+<li>
+<p><code>500 Internal Server Error</code> (внутренняя ошибка сервера)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Можно, находясь в командном окне, притвориться бразуром. Запустим команду:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ telnet www.harvard.edu 80
+Trying 104.16.151.6...
+Connected to www.harvard.edu.cdn.cloudflare.net
+Escape character is '^]'.</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы воспользовались 80 портом, так как он предназначен для веб-трафика (HTTP). Похоже, что Гарвард пользуется услугами сервиса CloudFlare, которая является сетью доставки (и дистрибуции) контента (англ. Content Delivery Network или Content Distribution Network, CDN), позволяющая намного быстрее предоставлять веб-сайт тому, кто его запросил (ввел в браузер название сайта и нажал на кнопку "Enter").</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Далее пишем:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>GET / HTTP/1.1
+Host: www.harvard.edu</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>И если мы отправим этот запрос, а затем прокрутим вверх (колесиком мышки или стрелками) или перенаправим выходные данные в файл, мы увидим HTTP-ответ:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes6/3.jpg" alt="HTTP" width="800">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Здесь у нас <code>HTTP/1.1 200 OK</code> и множество других заголовков, указывающие когда закончится срок данной страницы или какой тип контента мы получили.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы можем воспользоваться альтернативной командой под названием <code>curl</code>, которая будет выводить только заголовки:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ curl -I http://www.harvard.edu/</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Запустим команду:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>$ curl -I http://reference.cs50.net/
+HTTP/1.1 301 Moved Permanently
+Cache-control: no-cache="set-cookie"
+Content-Length: 178
+Content-Type: text/html
+Date: Mon, 03 Oct 2016 17:17:39 GMT
+Location: https://reference.cs50.net/
+Server: nginx/1.8.1
+Set-Cookie: AWSELB=7D03E3C11C9564D4EBA91026CCAAA8EEDCD5DC34657AEDEBBAB0856E24F9ACB5BE65C5B4443B7EF06C9BBEAC5F36BF556A51333C0377A6BC471E810D021D4033A06AC36B27;PATH=/
+Connection: keep-alive</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Здесь есть заголовок <code>Location:</code> (позиция или место), перенаправляющий нас на новую ссылку (URL).</p>
+</li>
+<li>
+<p>Если мы перейдем на данный сайт через наш браузер, нас автоматически перенаправят на другой адрес, начинающийся уже с <code>https://</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Благодаря HTTPS между нами и сервером будет зашифрованный трафик, поэтому никто из тех, кто подключен к нашей сети, не сможет украсть наши данные.</p>
+</li>
+<li>
+<p>Если мы посетим сайт Google и попробуем найти котов ("cats"), то получим огромную ссылку (URL). Но можно ее немного изменить, на что-то более понятное: <code><a href="http://www.google.com/search?q=cats" class="bare">http://www.google.com/search?q=cats</a></code>. Перейдя по этой ссылке, получим точно такой же результат.</p>
+</li>
+<li>
+<p>Похоже, что наш браузер прикрепляет то, что мы написали в поисковой строке к ссылке (URL) и отправляет всю эту ссылку серверу Google.</p>
+</li>
+<li>
+<p>Если мы нажмем правой кнопкой по веб-сайту в Chrome, а затем выберем <code>Просмотреть код</code>, то увидим форматированный HTML с вложенной структурой и, возможно, шаблонами различных слов:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes6/4.jpg" alt="second" width="800"></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="html"><a class="link" href="#html">HTML</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Пример простейшей веб-страницы:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>hello, world<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        hello, world
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>В первой строке мы объявляем, что эта страница написана на языке HTML, а точнее на HTML 5 версии.</p>
+</li>
+<li>
+<p>И далее видно, что тут присутствует вложенность и симметрия тегов, которые начинаются так <code>&lt;html&gt;</code> и заканчиваются вот так <code>&lt;/html&gt;</code>.</p>
+</li>
+<li>
+<p>Начальный тег, к примеру <code>&lt;title&gt;</code>, указывает на начало определенного элемента, как например название страницы (title of the page), а конечный тег сигнализирует его конец.</p>
+</li>
+<li>
+<p>Здесь у нас много отступов и пробелов, которыми другие сайты навряд ли пользуются, так как их отсутвие или наличие никак не влияет на страницу, главное чтобы сохранялся порядок и вложенность.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы можем представить эту веб-страницу, используя древовидную структуру:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes6/5.jpg" alt="HTML elements" width="800"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>document</code> (документ) - это вся страница и она содержит в себе <code>html</code> элемент, у которого есть дети <code>head</code> (голова) и <code>body</code> (тело).</p>
+</li>
+<li>
+<p>Мы можем представить, что элементы дерева этого веб-сайта, где различные части страницы обновляются без перезагрузки всей страницы, меняются в реальном времени (т.е. на ходу, пока вы пользуетесь сайтом).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Можно открыть CS50 IDE и сохранить файл под названием <code>hello.html</code> в нашу рабочую среду вместе со всем этим контентом. Потом мы можем зайти на нашу страницу через браузер и просмотреть ее.</p>
+</li>
+<li>
+<p>Также можно добавлять изображения:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>image<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">img</span> <span class="tok-na">alt</span><span class="tok-o">=</span><span class="tok-s">&quot;Grumpy Cat&quot;</span> <span class="tok-na">src</span><span class="tok-o">=</span><span class="tok-s">&quot;cat.jpg&quot;</span><span class="tok-p">/&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Нам нужно загрузить <code>cat.jpg</code> в нашу рабочую среду, и так как никакого другого контента не бывает внутри тега <code>img</code>, мы можем просто закрыть начальный тег этим <code>/&gt;</code>.</p>
+</li>
+<li>
+<p>И <code>alt="Grumpy Cat"</code> говорит браузеру, что картинка может быть описана с помощью текста, в целях доступности на различных устройствах (которые не способны загружать изображения).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>И мы можем создавать ссылки:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>link<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        Search for <span class="tok-p">&lt;</span><span class="tok-nt">a</span> <span class="tok-na">href</span><span class="tok-o">=</span><span class="tok-s">&quot;https://www.google.com/search?q=cats&quot;</span><span class="tok-p">&gt;</span>cats<span class="tok-p">&lt;/</span><span class="tok-nt">a</span><span class="tok-p">&gt;</span>.
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Тег <code>a</code> (сокращенно от Anchor) с атрибутом <code>href</code> или hyper-reference (гиперссылка). Внутрь помещается URL, куда будет направлять ссылка и текст, который мы хотим отображать в качестве ссылки. Заметьте, мы можем напрямую помещать один элемент внутрь другого.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы можем комбинировать эти идеи и превратить изображение в ссылку:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>link<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        Search for <span class="tok-p">&lt;</span><span class="tok-nt">a</span> <span class="tok-na">href</span><span class="tok-o">=</span><span class="tok-s">&quot;https://www.google.com/search?q=cats&quot;</span><span class="tok-p">&gt;&lt;</span><span class="tok-nt">img</span> <span class="tok-na">alt</span><span class="tok-o">=</span><span class="tok-s">&quot;Grumpy Cat&quot;</span> <span class="tok-na">src</span><span class="tok-o">=</span><span class="tok-s">&quot;cat.jpg&quot;</span><span class="tok-p">/&gt;&lt;/</span><span class="tok-nt">a</span><span class="tok-p">&gt;</span>.
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Поведение тегов может быть изменено такими атрибутами как <code>href</code> или <code>src</code>. И мы можем воспользоваться любым онлайн источником документации HTML, где будут описаны названия тегов и их атрибуты.</p>
+</li>
+<li>
+<p>Также существуют параграфы:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">meta</span> <span class="tok-na">name</span><span class="tok-o">=</span><span class="tok-s">&quot;viewport&quot;</span> <span class="tok-na">content</span><span class="tok-o">=</span><span class="tok-s">&quot;width=device-width, initial-scale=1&quot;</span><span class="tok-p">/&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>paragraphs<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">p</span><span class="tok-p">&gt;</span>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in tincidunt augue. Duis imperdiet, justo ac iaculis rhoncus, erat elit dignissim mi, eu interdum velit sapien nec risus. Praesent ullamcorper nibh at volutpat aliquam. Nam sed aliquam risus. Nulla rutrum nunc augue, in varius lacus commodo in. Ut tincidunt nisi a convallis consequat. Fusce sed pulvinar nulla.
+        <span class="tok-p">&lt;/</span><span class="tok-nt">p</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">p</span><span class="tok-p">&gt;</span>
+            Ut tempus rutrum arcu eget condimentum. Morbi elit ipsum, gravida faucibus sodales quis, varius at mi. Suspendisse id viverra lectus. Etiam dignissim interdum felis quis faucibus. Integer et vestibulum eros, non malesuada felis. Pellentesque porttitor eleifend laoreet. Duis sit amet pellentesque nisi. Aenean ligula mauris, volutpat sed luctus in, consectetur id turpis. Phasellus mattis dui ac metus blandit volutpat. Donec lorem arcu, sollicitudin in risus a, imperdiet condimentum augue. Ut at facilisis mauris. Curabitur sagittis augue in dictum gravida. Integer sed sem sed justo tempus ultrices eu non magna. Phasellus semper eros erat, a posuere nisi auctor et. Praesent dignissim orci aliquam laoreet scelerisque.
+        <span class="tok-p">&lt;/</span><span class="tok-nt">p</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">p</span><span class="tok-p">&gt;</span>
+            Mauris eget erat arcu. Maecenas ac ante vel ipsum bibendum varius. Nunc tristique nulla eget tincidunt molestie. Morbi sed mauris eu lectus vehicula iaculis ac id lacus. Etiam sit amet magna massa. In pulvinar sapien ac mi ultrices, quis consequat nisl hendrerit. Aliquam pharetra nec sem non vehicula. In et risus leo. Ut tristique ornare nisl et lacinia.
+        <span class="tok-p">&lt;/</span><span class="tok-nt">p</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>У нас несколько параграфов с латинским текстом, каждый из которых выделен отдельными <code>&lt;p&gt;</code> тегами.</p>
+</li>
+<li>
+<p>И в теге <code>head</code> у нас етсь странная линия, которая начинается с <code>meta</code>, говорящая нашему браузеру масштабировать веб-страницу под размер устройства (если мы просматриваем страницу на телефоне, перед нами не появится маленький текст, который мы могли бы получить в противном случае).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Также мы можем использовать заголовки:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>headings<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">h1</span><span class="tok-p">&gt;</span>One<span class="tok-p">&lt;/</span><span class="tok-nt">h1</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">h2</span><span class="tok-p">&gt;</span>Two<span class="tok-p">&lt;/</span><span class="tok-nt">h2</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">h3</span><span class="tok-p">&gt;</span>Three<span class="tok-p">&lt;/</span><span class="tok-nt">h3</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">h4</span><span class="tok-p">&gt;</span>Four<span class="tok-p">&lt;/</span><span class="tok-nt">h4</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">h5</span><span class="tok-p">&gt;</span>Five<span class="tok-p">&lt;/</span><span class="tok-nt">h5</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">h6</span><span class="tok-p">&gt;</span>Six<span class="tok-p">&lt;/</span><span class="tok-nt">h6</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes6/6.jpg" alt="HTML headings" width="200">
+</div>
+</div>
+</li>
+<li>
+<p>Со списками (тегами списка), у нас добавляется еще больше вложенности:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>list<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">ul</span><span class="tok-p">&gt;</span>
+            <span class="tok-p">&lt;</span><span class="tok-nt">li</span><span class="tok-p">&gt;</span>foo<span class="tok-p">&lt;/</span><span class="tok-nt">li</span><span class="tok-p">&gt;</span>
+            <span class="tok-p">&lt;</span><span class="tok-nt">li</span><span class="tok-p">&gt;</span>bar<span class="tok-p">&lt;/</span><span class="tok-nt">li</span><span class="tok-p">&gt;</span>
+            <span class="tok-p">&lt;</span><span class="tok-nt">li</span><span class="tok-p">&gt;</span>baz<span class="tok-p">&lt;/</span><span class="tok-nt">li</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;/</span><span class="tok-nt">ul</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Есть элемент <code>ul</code> (unordered list/несортированный список), внутри которого находятся элементы <code>li</code> (list item/элементы списка).</p>
+</li>
+<li>
+<p>Также можно использовать <code>ol</code>, если нам нужен ordered list (упорядоченный/отсортированный список).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Все эти примеры можно найти, перейдя по ссылке <a href="http://cdn.cs50.net/2016/fall/lectures/6/src6/">http://cdn.cs50.net/2016/fall/lectures/6/src6/</a>!</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="css"><a class="link" href="#css">CSS</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Мы можем добавлять стили с помощью другого языка, CSS (англ. Cascading Style Sheets — каскадные таблицы стилей). В то время как HTML используется для разметки веб-страницы или обозначения ее иерархии или контента, CSS применяется для изменения внешнего вида веб-страницы.</p>
+</li>
+<li>
+<p>Вот пример, где CSS добавляется в HTML:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>css-0<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">style</span><span class="tok-o">=</span><span class="tok-s">&quot;text-align: center;&quot;</span><span class="tok-p">&gt;</span>
+            <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">style</span><span class="tok-o">=</span><span class="tok-s">&quot;font-size: 36px; font-weight: bold;&quot;</span><span class="tok-p">&gt;</span>
+                John Harvard
+            <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+            <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">style</span><span class="tok-o">=</span><span class="tok-s">&quot;font-size: 24px;&quot;</span><span class="tok-p">&gt;</span>
+                Welcome to my home page!
+            <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+            <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">style</span><span class="tok-o">=</span><span class="tok-s">&quot;font-size: 12px;&quot;</span><span class="tok-p">&gt;</span>
+                Copyright <span class="tok-ni">&amp;#169;</span> John Harvard
+            <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Заметьте, у элементов теперь есть атрибут <code>style</code>, внутри которых прописано что-то вроде <code>font-size: 12px;</code> вместе с другими линиями.</p>
+</li>
+<li>
+<p><code>div</code> - это что-то вроде деления (division), прямоугольная область страницы.</p>
+</li>
+<li>
+<p>Самый внешний <code>div</code>, с <code>text-align: center;</code> в качестве стиля, выравнит по центру текст всех своих <code>div</code> потомков.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Но мы можем и отделить наш CSS:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">style</span><span class="tok-p">&gt;</span>
+
+            <span class="tok-nt">body</span>
+            <span class="tok-p">{</span>
+                <span class="tok-k">text-align</span><span class="tok-p">:</span> <span class="tok-kc">center</span><span class="tok-p">;</span>
+            <span class="tok-p">}</span>
+
+            <span class="tok-p">#</span><span class="tok-nn">top</span>
+            <span class="tok-p">{</span>
+                <span class="tok-k">font-size</span><span class="tok-p">:</span> <span class="tok-mi">36</span><span class="tok-kt">px</span><span class="tok-p">;</span>
+                <span class="tok-k">font-weight</span><span class="tok-p">:</span> <span class="tok-kc">bold</span><span class="tok-p">;</span>
+            <span class="tok-p">}</span>
+
+            <span class="tok-p">#</span><span class="tok-nn">middle</span>
+            <span class="tok-p">{</span>
+                <span class="tok-k">font-size</span><span class="tok-p">:</span> <span class="tok-mi">24</span><span class="tok-kt">px</span><span class="tok-p">;</span>
+            <span class="tok-p">}</span>
+
+            <span class="tok-p">#</span><span class="tok-nn">bottom</span>
+            <span class="tok-p">{</span>
+                <span class="tok-k">font-size</span><span class="tok-p">:</span> <span class="tok-mi">12</span><span class="tok-kt">px</span><span class="tok-p">;</span>
+            <span class="tok-p">}</span>
+
+        <span class="tok-p">&lt;/</span><span class="tok-nt">style</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>css-1<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;top&quot;</span><span class="tok-p">&gt;</span>
+            John Harvard
+        <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;middle&quot;</span><span class="tok-p">&gt;</span>
+            Welcome to my home page!
+        <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;bottom&quot;</span><span class="tok-p">&gt;</span>
+            Copyright <span class="tok-ni">&amp;#169;</span> John Harvard
+        <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Теперь мы дали каждому <code>div</code>'у в нашем <code>body</code> атрибут <code>id</code>, который позволяет определить их в общей структуре документа. В нашем теге <code>head</code> мы задаем стили CSS для каждого из них (элементов с атрибутом "id"), используя тег <code>style</code>.</p>
+</li>
+<li>
+<p><code>#top</code>, <code>#middle</code> и <code>#bottom</code> входят в синтакс, который мы используем для выбора каждого из тех <code>div</code>'ов, что с атрибутом "id". И внутри нашего тега <code>style</code> мы используем фигурные скобки, чтобы объявлять свойства, которые мы хотим применить к каждому элементу.</p>
+</li>
+<li>
+<p>Теперь наш контент отделен от нашей эстетики.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы можем полностью отделить CSS, поместив его в файл:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">link</span> <span class="tok-na">href</span><span class="tok-o">=</span><span class="tok-s">&quot;css2.css&quot;</span> <span class="tok-na">rel</span><span class="tok-o">=</span><span class="tok-s">&quot;stylesheet&quot;</span><span class="tok-p">/&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>css-2<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;top&quot;</span><span class="tok-p">&gt;</span>
+            John Harvard
+        <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;middle&quot;</span><span class="tok-p">&gt;</span>
+            Welcome to my home page!
+        <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">div</span> <span class="tok-na">id</span><span class="tok-o">=</span><span class="tok-s">&quot;bottom&quot;</span><span class="tok-p">&gt;</span>
+            Copyright <span class="tok-ni">&amp;#169;</span> John Harvard
+        <span class="tok-p">&lt;/</span><span class="tok-nt">div</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Здесь, в теге <code>head</code>, мы добавили тег <code>link</code>, которые схож с <code>include</code> языка программирования Си. Теперь соответствующий файл <code>css2.css</code> будет применен к нашей странице:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="css"><span class="tok-nt">body</span>
+<span class="tok-p">{</span>
+    <span class="tok-k">text-align</span><span class="tok-p">:</span> <span class="tok-kc">center</span><span class="tok-p">;</span>
+<span class="tok-p">}</span>
+
+<span class="tok-p">#</span><span class="tok-nn">top</span>
+<span class="tok-p">{</span>
+    <span class="tok-k">font-size</span><span class="tok-p">:</span> <span class="tok-mi">36</span><span class="tok-kt">px</span><span class="tok-p">;</span>
+    <span class="tok-k">font-weight</span><span class="tok-p">:</span> <span class="tok-kc">bold</span><span class="tok-p">;</span>
+<span class="tok-p">}</span>
+
+<span class="tok-p">#</span><span class="tok-nn">middle</span>
+<span class="tok-p">{</span>
+    <span class="tok-k">font-size</span><span class="tok-p">:</span> <span class="tok-mi">24</span><span class="tok-kt">px</span><span class="tok-p">;</span>
+<span class="tok-p">}</span>
+
+<span class="tok-p">#</span><span class="tok-nn">bottom</span>
+<span class="tok-p">{</span>
+    <span class="tok-k">font-size</span><span class="tok-p">:</span> <span class="tok-mi">12</span><span class="tok-kt">px</span><span class="tok-p">;</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>И заметьте строку HTML, где есть символ <code>&#169;</code> - символ авторского права. Мы можем поискать в интернете что-то вроде "HTML entities" (спецсимволы HTML), чтобы понять как добавлять такого рода символы в нашу веб-страницу.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Хоть эти три версии и показывают одну и ту же веб-страницу, когда мы открываем ее в браузере, дизайн последнего намного лучше остальных. К примеру, тот же <code>css2.css</code> может использоваться сразу несколькими HTML страницами и нам всего лишь нужно было бы менять стиль только в одном определенном месте нашего документа.</p>
+</li>
+<li>
+<p>На самом деле существует множество библиотек CSS, которые хранят в себе огромное количество, написанных другими, стилей. Мы можем применить их на наши собственные веб-страницы, без необходимости того, чтобы начинать все с чистого листа.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="post"><a class="link" href="#post">POST</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Мы познакомились с методом HTTP под названием <code>GET</code> и, оказывается, есть еще один метод <code>POST</code>, который позволяет браузеру отправлять данные серверу, внутри самого запроса, а не в URL (т.е. не в ссылке).</p>
+</li>
+<li>
+<p>Запрос <code>POST</code> может выглядеть так:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>POST /login.php HTTP/1.1
+Host: www.facebook.com
+...
+
+email=username@example.com&amp;pass=12345</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Отправляются оба <code>email</code> (электронная почта) и <code>pass</code> (пароль). Эти знания помогут нам при создании наших собственных веб-страниц.</p>
+</li>
+<li>
+<p>Давайте создадим страницу под названием <code>поиск</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>CS50 Поиск<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">h1</span><span class="tok-p">&gt;</span>CS50 Поиск<span class="tok-p">&lt;/</span><span class="tok-nt">h1</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">form</span> <span class="tok-na">action</span><span class="tok-o">=</span><span class="tok-s">&quot;https://www.google.com/search&quot;</span> <span class="tok-na">method</span><span class="tok-o">=</span><span class="tok-s">&quot;get&quot;</span><span class="tok-p">&gt;</span>
+            <span class="tok-p">&lt;</span><span class="tok-nt">input</span> <span class="tok-na">name</span><span class="tok-o">=</span><span class="tok-s">&quot;q&quot;</span> <span class="tok-na">type</span><span class="tok-o">=</span><span class="tok-s">&quot;text&quot;</span><span class="tok-p">/&gt;</span>
+            <span class="tok-p">&lt;</span><span class="tok-nt">br</span><span class="tok-p">/&gt;</span>
+            <span class="tok-p">&lt;</span><span class="tok-nt">input</span> <span class="tok-na">type</span><span class="tok-o">=</span><span class="tok-s">&quot;submit&quot;</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;CS50 Поиск&quot;</span><span class="tok-p">/&gt;</span>
+        <span class="tok-p">&lt;/</span><span class="tok-nt">form</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>У нас есть заголовок <code>h1</code> и еще один элемент <code>form</code> (формы).</p>
+</li>
+<li>
+<p>Мы воспользуемся методом <code>get</code>, так как мы знаем, что Google использует именно этот метод для поиска информации.</p>
+</li>
+<li>
+<p>Мы добавим <code>input</code> (элемент ввода), имеющий название <code>q</code> и кнопку submit (отправить).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Теперь, если мы откроем эту страницу и введем <code>cats</code> (кошки), наш браузер поймет, что ему нужно создать ссылку (URL), которая будет выглядеть так <code><a href="https://www.google.com/search?q=cats" class="bare">https://www.google.com/search?q=cats</a></code>, далее переводя нас туда из нашей формы.</p>
+</li>
+<li>
+<p>Но мы не создавали бэк-энда (back-end), т.е. веб-сервера, который был бы способен считывать принимаемые URL'ы (ссылки) и производить подходящие ответы, отправляя их обратно клиенту. Скоро мы познакомимся с еще одним языком под названием Python (Питон), который поможет нам написать наш собственный веб-сервер.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>

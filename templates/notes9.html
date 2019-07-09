@@ -1,0 +1,1114 @@
+---
+layout: header
+title: Note9
+permalink: /weeks/notes9
+---
+
+{% raw %}
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#last-week">На прошлой неделе</a></li>
+<li><a href="#frosh-ims">Frosh IMs</a></li>
+<li><a href="#sql">SQL</a></li>
+<li><a href="#frosh-ims-2">Frosh IMs</a></li>
+<li><a href="#models">Модели</a></li>
+<li><a href="#sql-injection">SQL-инъекции</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Неделя 9</h1>
+<div class="sect1">
+<h2 id="last-week"><a class="link" href="#last-week">На прошлой неделе</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>На прошлой неделе мы снова вернулись к нашему любимому Scratch, дабы освежить память и вспомнить простейшие концепции программирования. Так мы облегчили себе переход с Си на Python.</p>
+</li>
+<li>
+<p>Познакомились с новым способом написания простенькой программы:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-k">def</span> <span class="tok-nf">main</span><span class="tok-p">():</span>
+    <span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-s2">&quot;hello, world&quot;</span><span class="tok-p">)</span>
+
+<span class="tok-k">if</span> <span class="tok-vm">__name__</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;__main__&quot;</span><span class="tok-p">:</span>
+    <span class="tok-n">main</span><span class="tok-p">()</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>далее переходя к написанию более сложных программ.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Также разобрали шаблон проектирования MVC, используемый для создания архитектуры веб-приложения.</p>
+</li>
+<li>
+<p>Сегодня мы будем углубляться в сторону M нашей MVC конструкции, а именно в Model, для сохранения и получения данных.</p>
+</li>
+<li>
+<p>Мы продолжим использовать Flask - популярный фреймворк Python'а, для построения веб-приложений. С него будут начинаться все наши далее разбираемые примеры. Также веб-приложения могут быть написаны с использованием любого другого фреймворка, не говоря о встроенных функциях самого Python.</p>
+</li>
+<li>
+<p>Простота написания приложения с использованием Flask'a, может вызвать шок у неподготовленного среднестатистического программиста:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-kn">from</span> <span class="tok-nn">flask</span> <span class="tok-kn">import</span> <span class="tok-n">Flask</span><span class="tok-p">,</span> <span class="tok-n">render_template</span>
+
+<span class="tok-n">app</span> <span class="tok-o">=</span> <span class="tok-n">Flask</span><span class="tok-p">(</span><span class="tok-vm">__name__</span><span class="tok-p">)</span>
+
+<span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/&quot;</span><span class="tok-p">)</span>
+<span class="tok-k">def</span> <span class="tok-nf">index</span><span class="tok-p">():</span>
+    <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;index.html&quot;</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Вы все еще тут? Мы решили сразу не загружать вас и начать с программы, которая просто возвращает шаблон <code>index.html</code>, при попытке пользователя посетить <code>/</code> - главную страницу сервера.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="frosh-ims"><a class="link" href="#frosh-ims">Frosh IMs</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Давайте взглянем на папку <a href="http://cdn.cs50.net/2016/fall/lectures/9/src9/froshims0/"><code>froshims0</code></a>, содержащую в себе директорию <code>templates</code> с различными файлами, имеющие расширение <code>.html</code>, а также файл <code>application.py</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-kn">from</span> <span class="tok-nn">flask</span> <span class="tok-kn">import</span> <span class="tok-n">Flask</span><span class="tok-p">,</span> <span class="tok-n">render_template</span><span class="tok-p">,</span> <span class="tok-n">request</span>
+
+<span class="tok-n">app</span> <span class="tok-o">=</span> <span class="tok-n">Flask</span><span class="tok-p">(</span><span class="tok-vm">__name__</span><span class="tok-p">)</span>
+
+<span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/&quot;</span><span class="tok-p">)</span>
+<span class="tok-k">def</span> <span class="tok-nf">index</span><span class="tok-p">():</span>
+    <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;index.html&quot;</span><span class="tok-p">)</span>
+
+<span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/register&quot;</span><span class="tok-p">,</span> <span class="tok-n">methods</span><span class="tok-o">=</span><span class="tok-p">[</span><span class="tok-s2">&quot;POST&quot;</span><span class="tok-p">])</span>
+<span class="tok-k">def</span> <span class="tok-nf">register</span><span class="tok-p">():</span>
+    <span class="tok-k">if</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;name&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;&quot;</span> <span class="tok-ow">or</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;dorm&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;&quot;</span><span class="tok-p">:</span>
+        <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;failure.html&quot;</span><span class="tok-p">)</span>
+    <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;success.html&quot;</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы добавили функцию <code>register</code>, которая будет выдавать различные результаты, в зависимости от вводимых пользователем данных.</p>
+</li>
+<li>
+    <p>В данном примере мы будем проверять, имеет ли в себе HTTP-запрос, отправленный методом POST, веб-форму (form) с полями <code>name</code> и <code>dorm</code> (общежитие). В случае, если хотя бы одно поле окажется пустым, пользователю будет возвращаться шаблон <code>failure.html</code> (неудача.хтмл <strong>:D</strong> ), <code>success.html</code> (удача.html) - в противном случае.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+
+<p>Содержимое <code>failure.html</code>:</p>
+
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html">{% extends &quot;layout.html&quot; %}
+
+{% block title %}
+failure
+{% endblock %}
+
+{% block body %}
+You must provide your name and dorm!
+{% endblock %}</code></pre>
+</div>
+</div>
+
+</li>
+<li>
+<p>И что-то похожее в <code>success.html</code>:</p>
+<div class="listingblock">
+<div class="content">
+        
+<pre class="pygments highlight"><code data-lang="html">{% extends &quot;layout.html&quot; %}
+
+{% block title %}
+success
+{% endblock %}
+
+{% block body %}
+You are registered! (Well, not really.)
+{% endblock %}</code></pre>
+
+</div>
+</div>
+</li>
+<li>
+<p>А в <code>index.html</code> находится сама форма:</p>
+<div class="listingblock">
+<div class="content">
+        
+<pre class="pygments highlight"><code data-lang="html">{% extends &quot;layout.html&quot; %}
+
+{% block title %}
+Frosh IMs
+{% endblock %}
+
+{% block body %}
+<span class="tok-p">&lt;</span><span class="tok-nt">h1</span><span class="tok-p">&gt;</span>Register for Frosh IMs<span class="tok-p">&lt;/</span><span class="tok-nt">h1</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;</span><span class="tok-nt">form</span> <span class="tok-na">action</span><span class="tok-o">=</span><span class="tok-s">&quot;{{ url_for(&#39;register&#39;) }}&quot;</span> <span class="tok-na">method</span><span class="tok-o">=</span><span class="tok-s">&quot;post&quot;</span><span class="tok-p">&gt;</span>
+    Name: <span class="tok-p">&lt;</span><span class="tok-nt">input</span> <span class="tok-na">name</span><span class="tok-o">=</span><span class="tok-s">&quot;name&quot;</span> <span class="tok-na">type</span><span class="tok-o">=</span><span class="tok-s">&quot;text&quot;</span><span class="tok-p">/&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">br</span><span class="tok-p">/&gt;</span>
+    Dorm:
+    <span class="tok-p">&lt;</span><span class="tok-nt">select</span> <span class="tok-na">name</span><span class="tok-o">=</span><span class="tok-s">&quot;dorm&quot;</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;&quot;</span><span class="tok-p">&gt;&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Apley Court&quot;</span><span class="tok-p">&gt;</span>Apley Court<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Canaday&quot;</span><span class="tok-p">&gt;</span>Canaday<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Grays&quot;</span><span class="tok-p">&gt;</span>Grays<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Greenough&quot;</span><span class="tok-p">&gt;</span>Greenough<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Hollis&quot;</span><span class="tok-p">&gt;</span>Hollis<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Holworthy&quot;</span><span class="tok-p">&gt;</span>Holworthy<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Hurlbut&quot;</span><span class="tok-p">&gt;</span>Hurlbut<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Lionel&quot;</span><span class="tok-p">&gt;</span>Lionel<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Matthews&quot;</span><span class="tok-p">&gt;</span>Matthews<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Mower&quot;</span><span class="tok-p">&gt;</span>Mower<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Pennypacker&quot;</span><span class="tok-p">&gt;</span>Pennypacker<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Stoughton&quot;</span><span class="tok-p">&gt;</span>Stoughton<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Straus&quot;</span><span class="tok-p">&gt;</span>Straus<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Thayer&quot;</span><span class="tok-p">&gt;</span>Thayer<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Weld&quot;</span><span class="tok-p">&gt;</span>Weld<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">option</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Wigglesworth&quot;</span><span class="tok-p">&gt;</span>Wigglesworth<span class="tok-p">&lt;/</span><span class="tok-nt">option</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">select</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">br</span><span class="tok-p">/&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">input</span> <span class="tok-na">type</span><span class="tok-o">=</span><span class="tok-s">&quot;submit&quot;</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Register&quot;</span><span class="tok-p">/&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">form</span><span class="tok-p">&gt;</span>
+{% endblock %}</code></pre>
+
+</div>
+
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Обратите внимание, что эта форма тоже использует общий шаблон <code>layout.html</code>, задавая свой собственный <code>title</code> <code>block</code> (блок загаловка) и <code>body</code> <code>block</code> (блок тела).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Затем эти блоки подставляются в <code>layout.html</code> и мы получаем финальную страницу:</p>
+<div class="listingblock">
+        
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html"><span class="tok-cp">&lt;!DOCTYPE html&gt;</span>
+
+<span class="tok-p">&lt;</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">meta</span> <span class="tok-na">content</span><span class="tok-o">=</span><span class="tok-s">&quot;initial-scale=1, width=device-width&quot;</span> <span class="tok-na">name</span><span class="tok-o">=</span><span class="tok-s">&quot;viewport&quot;</span><span class="tok-p">/&gt;</span>
+        <span class="tok-p">&lt;</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>{% block title %}{% endblock %}<span class="tok-p">&lt;/</span><span class="tok-nt">title</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;/</span><span class="tok-nt">head</span><span class="tok-p">&gt;</span>
+    <span class="tok-p">&lt;</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+        {% block body %}{% endblock %}
+    <span class="tok-p">&lt;/</span><span class="tok-nt">body</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">html</span><span class="tok-p">&gt;</span></code></pre>
+</div>
+
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Так как все страницы в нашем приложении разделяют одинаковые кусочки HTML-кода, мы можем указывать эти общие кусочки здесь (<code>layout.html</code>) и изменять определенные участки под разные веб-страницы.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Чтобы наконец начать сохранять информацию, давайте посмотрим на файл <code>application.py</code>, находящийся в папке <a href="http://cdn.cs50.net/2016/fall/lectures/9/src9/froshims1/"><code>froshims1</code></a>:</p>
+<div class="listingblock">
+        
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-kn">from</span> <span class="tok-nn">flask</span> <span class="tok-kn">import</span> <span class="tok-n">Flask</span><span class="tok-p">,</span> <span class="tok-n">render_template</span><span class="tok-p">,</span> <span class="tok-n">request</span>
+<span class="tok-kn">import</span> <span class="tok-nn">csv</span>
+
+<span class="tok-n">app</span> <span class="tok-o">=</span> <span class="tok-n">Flask</span><span class="tok-p">(</span><span class="tok-vm">__name__</span><span class="tok-p">)</span>
+
+<span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/&quot;</span><span class="tok-p">)</span>
+<span class="tok-k">def</span> <span class="tok-nf">index</span><span class="tok-p">():</span>
+    <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;index.html&quot;</span><span class="tok-p">)</span>
+
+<span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/register&quot;</span><span class="tok-p">,</span> <span class="tok-n">methods</span><span class="tok-o">=</span><span class="tok-p">[</span><span class="tok-s2">&quot;POST&quot;</span><span class="tok-p">])</span>
+<span class="tok-k">def</span> <span class="tok-nf">register</span><span class="tok-p">():</span>
+    <span class="tok-k">if</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;name&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;&quot;</span> <span class="tok-ow">or</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;dorm&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;&quot;</span><span class="tok-p">:</span>
+        <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;failure.html&quot;</span><span class="tok-p">)</span>
+    <span class="tok-nb">file</span> <span class="tok-o">=</span> <span class="tok-nb">open</span><span class="tok-p">(</span><span class="tok-s2">&quot;registrants.csv&quot;</span><span class="tok-p">,</span> <span class="tok-s2">&quot;a&quot;</span><span class="tok-p">)</span>
+    <span class="tok-n">writer</span> <span class="tok-o">=</span> <span class="tok-n">csv</span><span class="tok-o">.</span><span class="tok-n">writer</span><span class="tok-p">(</span><span class="tok-nb">file</span><span class="tok-p">)</span>
+    <span class="tok-n">writer</span><span class="tok-o">.</span><span class="tok-n">writerow</span><span class="tok-p">((</span><span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;name&quot;</span><span class="tok-p">],</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;dorm&quot;</span><span class="tok-p">]))</span>
+    <span class="tok-nb">file</span><span class="tok-o">.</span><span class="tok-n">close</span><span class="tok-p">()</span>
+    <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;success.html&quot;</span><span class="tok-p">)</span></code></pre>
+</div>
+
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Заметьте, что на последних линиях функции <code>register()</code>, мы записываем информацию, полученную нами из запроса, в файл под названием <code>registrants.csv</code> - разделенный запятыми файловый формат (csv, comma-separated values).</p>
+</li>
+<li>
+<p>Для этого мы открываем (open) файл и указываем в качестве второго аргумента букву <code>a</code>, которая позволяет добавлять или присоединять (append) данные к концу файла. Если бы мы использовали для записи в наш файл аргумент <code>w</code> (writing), то переписали бы предыдущий файл новым.</p>
+</li>
+<li>
+<p>Затем мы используем, встроенный в Python, модуль <code>csv</code> для записи файла, вызывая метод <code>writerow</code> (запись строки) - занимается непосредственно самой записью <code>name</code> и <code>dorm</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы можем открывать файлы <code>csv</code> в программе Excel или Google Sheets, но считывание или изменение этих данных требует затраты огромного количества времени и сил, и, с увеличением данных, этот метод будет становиться все менее эффективным.</p>
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+<div class="sect1">
+<h2 id="sql"><a class="link" href="#sql">SQL</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Чтобы решить проблему управления данными, человечество создало SQL (англ. structured query language — «язык структурированных запросов»).</p>
+</li>
+<li>
+<p>Это язык программирования, позволяющий проводить самые простые операции над данными. Существует много программ, поддерживающих данный язык, например MySQL и PostgreSQL.</p>
+</li>
+<li>
+<p>Обычно эти программы работают как сервер, слушая запросы и ответы, но намного легче работать с программой SQLite, которая позволяет использовать язык запросов SQL.</p>
+</li>
+<li>
+<p>Табличные программы подобные Excel или Google Sheets позволяют хранить данные в строках и столбиках. Мы обычно используем самую верхнюю строку для таких заголовков как "name" (имя) и "dorm" (общага), и каждая строка будет содержать свою запись:</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+
+<img src="{{ site.url }}/assets/images/notes/notes9/1.png" alt="students" width="400"></div>
+{% raw %}
+</div>
+</li>
+<li>
+<p>В данном примере, нам даются структурированные данные с определенными ключами - это методанные, которые описывают каждый столбик и приводимые значения.</p>
+</li>
+<li>
+<p>Мы можем воспринимать их как список строк, каждая из которых будет представлять из себя словарь. У каждой строки есть столбик с клеткой, поэтому мы можем создавать пары типа ключ/значение на каждую клетку, где ключ является заголовком для данного столбика и где значение - это то, что хранится внутри клеток.</p>
+</li>
+<li>
+<p>Но мы можем спроецировать более эффективную и легкую в интеграции с другими программами систему хранения данных.</p>
+</li>
+<li>
+<p>Нам понадобятся обычные операции:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CREATE  &#8230;&#8203;</code></p>
+</li>
+<li>
+<p><code>INSERT  &#8230;&#8203;</code></p>
+</li>
+<li>
+<p><code>SELECT  &#8230;&#8203;</code></p>
+</li>
+<li>
+<p><code>UPDATE  &#8230;&#8203;</code></p>
+</li>
+<li>
+<p><code>DELETE  &#8230;&#8203;</code></p>
+</li>
+<li>
+<p><code>&#8230;&#8203;</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>SQL используется для реляционных баз данных или баз данных, чьи данные имеют между собой связь, при этом находясь в разных таблицах.</p>
+</li>
+<li>
+<p>Находясь внутри среды разработки CS50 IDE, мы запустим программу под названием <code>phpliteadmin</code>, чтобы создать базу данных SQLite. После всего этого, мы сможем управлять ею (базой) с помощью веб-интерфейса (т.е. наша база будет представляться в виде веб-сайта):</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/2.png" alt="2" width="600"></div>
+{% raw %}
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Сам инструмент написан на языке программирования под названием PHP, но мы можем использовать его без того, чтобы вдаваться в подробности его имплементации (да здравствует абстракция!).</p>
+</li>
+<li>
+<p>У нас есть база данных <code>registrants</code> (зарегистрировавшихся пользователей) и кое-какой багаж функционала для работы с ней. Раздел <code>Structure</code> показывает информацию о нашей базе данных, раздел <code>SQL</code> позволяет нам осуществлять SQL-запросы, а также мы можем <code>Export</code> (Экспортировать) или <code>Import</code> (Импортировать) данные.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Но сперва мы создадим новую таблицу (которую мы можем воспринимать как новый лист табличного файла) под названием <code>registrants</code>, с двумя внутренними полями.</p>
+</li>
+<li>
+<p>Мы назовем эти поля <code>name</code> и <code>dorm</code>. Теперь, в целях оптимизации, мы сможем выбирать тип хранимых данных каждого поля:</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/3.png" width="800"></div>
+{% raw %}
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Нам предоставляется выбор из следующих типов данных: <code>INTEGER</code>, <code>REAL</code> (число с запятой), <code>TEXT</code> (string), <code>BLOB</code> (бинарные данные), <code>NUMERIC</code> (числа, которые могут быть либо integer'ами, либо float'ами), <code>BOOLEAN</code>, <code>DATETIME</code> (для хранения даты и времени в определенном формате).</p>
+</li>
+<li>
+<p>Укажем тип данных <code>TEXT</code> для обоих полей. И далее у нас есть еще несколько дополнительных опций для каждого поля.</p>
+</li>
+<li>
+<p><code>Primary Key</code> (первичный ключ) указывает на то, является ли данное поле ключом, по которому уникально определяются все строки данной таблицы. Конечно, есть шанс, что два человека могут иметь одинаковые имена и общежития, но теперь нам не нужно за это беспокоиться.</p>
+</li>
+<li>
+<p><code>Autoincrement</code> (Автоувеличение) позволяет нам получить поле с integer значением, которое способно самостоятельно увеличиваться при каждом добавлении новой строки в нашу таблицу (как например с "номером ID"), поэтому мы здесь тоже не будем ставить галочку.</p>
+</li>
+<li>
+<p><code>Not NULL</code> - это означает, что поле не может быть пустым или null, так как нам нужно, чтобы оба поля были заполнены в каждой строке. Здесь мы поставим галочки для обоих полей.</p>
+</li>
+<li>
+<p>Наконец, мы можем уточнить <code>Default Value</code> (по умолчанию заданное значение), если ранее не было предоставлено никаких значений. Но эту функцию мы также пропустим.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>После того как мы нажмем на кнопку <code>CREATE</code> (создать), перед нами появится это:</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/4.png" width="400"></div>
+{% raw %}
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Здесь приводится текст, представляющий из себя SQL-запрос, используемый для создания таблицы с выбранными нами параметрами. phpLiteAdmin сгенерировал все это за нас, чтобы нам не приходилось помнить весь синтаксис или прибегать к документации.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Теперь, если кликнем на таблицу <code>registrants</code>, мы увидим еще большее количество табов (вкладок):</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/5.png" width="400"></div>
+{% raw %}
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Browse</code> позволяет нам просматривать данные, но там пока ничего нет.</p>
+</li>
+<li>
+<p><code>Structure</code> демонстрирует нам то, как выглядят поля, а также их типы и свойства, одновременно позволяя нам их изменять.</p>
+</li>
+<li>
+<p><code>Insert</code> позволяет нам добавлять данные и, если мы заполним форму, видеть запрос:</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/6.png" width="300"></div>
+{% raw %}
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Тогда мы будем иметь возможность видеть наши свеже добавленные данные. Но мы можем написать свой собственный SQL-запрос, с помощью (как вы уже догадались) <code>SQL</code> вкладки:</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/7.png" width="400"></div>
+{% raw %}
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Так мы можем вручную добалять новые строки в нашу таблицу.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы видели работу инструмента с командой <code>CREATE</code>, позоляющей создавать таблицу и командой <code>INSERT</code>, предназначенной для добавления данных. to add data, but let&#8217;s try other operations ourselves:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>SELECT * FROM registrants</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>В данном случае <code>*</code> означает "все", поэтому запустив этот запрос мы получим:</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/8.png" width="800"></div>
+{% raw %}
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы назовем это результативным набором из 3 строк.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы также можем изменять существующие данные:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>UPDATE registrants SET dorm = 'Grays' WHERE name = 'Zamyla'</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Хоть это и новый синтаксис, мы примерно можем понять что он исполняет.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Удаление данных:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>DELETE FROM registrants WHERE name = 'Rob'</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Чтобы освежить память, взгляните на эти запросы:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CREATE TABLE 'registrants' ('id' INTEGER PRIMARY KEY, 'name' TEXT, 'dorm' TEXT)</code></p>
+</li>
+<li>
+<p><code>INSERT INTO 'registrants' (name, dorm) VALUES('David', 'Matthews')</code></p>
+</li>
+<li>
+<p><code>SELECT * FROM 'registrants'</code></p>
+</li>
+<li>
+<p><code>UPDATE 'registrants' SET name = 'David Malan' where id = 1</code></p>
+</li>
+<li>
+<p><code>DELETE FROM 'registrants' WHERE id = 1</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Ранее наша таблица базы данных хранила только поля <code>name</code> и <code>dorm</code>, но могло случиться так, что у нас в таблице оказались бы два человека с одинаковыми именами и/или одинаковыми общежитиями, поэтому запросы <code>UPDATE</code> и <code>DELETE</code>, возможно, не смогут выбрать правильные строки.</p>
+</li>
+<li>
+<p>Точно так же, как и у людей есть уникальные удостоверения личности, к примеру паспорт, мы можем назначить ID строкам нашей таблицы.</p>
+</li>
+<li>
+<p>Теперь добавим поле <code>id</code>, являющееся <code>INTEGER</code>'ом и не забудем указать, что оно будет <code>Primary Key</code> (первичным ключом), а значит уникальным. Также нам понадобится функция <code>Autoincrement</code>, которая будет присуждать каждой строке число, в зависимости от порядка ее (строка) добавления, начиная с <code>1</code>, <code>2</code>, <code>3</code> и так далее.</p>
+</li>
+<li>
+<p>Если мы запустим <code>INSERT INTO registrants (name, dorm) VALUES('David', 'Matthews')</code>, не указывая поле <code>id</code>, база данных автоматически присудит ей значение</p>
+</li>
+<li>
+<p>Мы можем уточнить, которую строку мы хотели бы удалить. Пример: <code>DELETE FROM registrants WHERE id = 2</code>.</p>
+</li>
+<li>
+<p>И если мы добавим еще одну строку в нашу таблицу, то ей присудится <code>id</code> со значением <code>4</code>. В итоге каждое такое значение будет всегда оставаться уникальным для базы данных (в случае если другие таблицы будут ссылаться на <code>id</code> <code>2</code>).</p>
+</li>
+<li>
+<p>У SQL также есть функции, позволяющие изменять типы данных <code>date</code> (дата), <code>time</code> (время) и <code>datetime</code> (дата и время). Так мы можем выбирать записи, которые будут соответствовать определенным датам.</p>
+</li>
+<li>
+<p>Есть еще некоторые свойства, которые можно назначать столбикам нашей таблицы:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>PRIMARY KEY</code> (первичный ключ), такой столбик 
+будет служить для уникального обозначения строк. И, кроме того, будет использоваться для хранения информации в определенной структуре данных, оптимизируемой для выбора и обновления по данному значению (как например бинарное дерево).</p>
+</li>
+<li>
+<p><code>UNIQUE</code> означает, что поле будет уникальным для каждой строки. Это позволит базе данных оптимизировать запросы на данном поле.</p>
+</li>
+<li>
+<p><code>INDEX</code> означает, что мы хотим, чтобы база данных хранила поле в каком-нибудь индексе, дабы в будущем, при частом использовании поиска, мы могли бы увеличить скорость этого самого поиска.</p>
+</li>
+<li>
+<p><code>NOT NULL</code> говорит о необходимости того, чтобы поле имело какое-нибудь значение, т.е. оно не может быть пустым.</p>
+</li>
+<li>
+<p><code>FOREIGN KEY</code> (внешний ключ) - мы еще вернемся к этому свойству, но если коротко, оно означает обращение к строке чужой таблицы.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Еще SQL позволяет нам <code>JOIN</code> (соединять) таблицы.</p>
+</li>
+<li>
+<p>Если у нас есть таблица под названием <code>users</code> (пользователи), то в ней могут присутствовать такие примитивные данные как: имя (name), адрес (address), телефон (phone) и электронная почта (email):</p>
+<div class="imageblock">
+<div class="content">
+    {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/9.png" width="600"></div>
+{% raw %}
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Типом каждого поля будет <code>TEXT</code>, за исключением поля <code>id</code>, который будет хранить значения типа <code>INTEGER</code> (так как это более логичный подход).</p>
+</li>
+<li>
+<p>Нам, возможно, придется часто проводить поиск в столбике name или address, поэтому нам лучше их проиндексировать, но не делайте их уникальными.</p>
+</li>
+<li>
+<p>Так как мы, возможно, будем использовать email в качестве логина для авторизации пользователя на нашем сайте, лучше всего сделать столбик email'а уникальным, чтобы с email'ом ассоциировалась только одна запись таблицы базы данных.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Но мы видим некоторую громоздкость в том, как хранятся адреса. У нас есть два пользователя, проживающих в Кембридже (Cambridge). Нам не обязательно хранить весь адрес, указывая город и штат. Вместо этого, мы можем просто указывать <code>zipcode</code> (почтовые индексы):</p>
+<div class="imageblock">
+<div class="content">
+    {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/10.png" width="600"></div>
+{% raw %}
+</div>
+</li>
+<li>
+<p>И, чтобы позже можно было просмотреть название города, нам нужно будет в отдельном таблице сохранить, для каждого почтового индекса, полную информацию о городе. И, на этот раз, нам не нужно будет записывать эту информацию о городе более одного раза:</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/11.png" width="400"></div>
+{% raw %}
+</div>
+</li>
+<li>
+<p>Если мы присудим каждой строке таблицы <code>zipcodes</code> какое-нибудь <code>id</code>, тогда для каждого пользователя будет достаточным то, что мы будем просто хранить integer вместо полного почтового индекса:</p>
+<div class="imageblock">
+<div class="content">
+    {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/12.png" width="600"></div>
+{% raw %}
+</div>
+<div class="imageblock">
+<div class="content">
+    {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/13.png" width="400"></div>
+{% raw %}
+</div>
+</li>
+<li>
+<p>Мы, конечно, усложнили нашу систему, но теперь, при получении большего количества строк, нам не придется каждый раз сохранять снова и снова одно и то же название города и штата.
+Мы <strong>нормализовали</strong> нашу базу данных, выведя общие данные за пределы нашей таблицы, вместо этого мы теперь просто ссылаемся на них.</p>
+</li>
+<li>
+<p>Мы преобразуем эти наброски в базу данных, путем создания таблицы <code>users</code> и <code>zipcodes</code>, при этом указывая приведенные нами ранее поля и типы данных:</p>
+<div class="imageblock">
+<div class="content">
+    {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/14.png" width="800"></div>
+{% raw %}
+</div>
+<div class="imageblock">
+<div class="content">
+    {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/15.png" width="600"></div>
+{% raw %}
+</div>
+</li>
+<li>
+<p>Но типом столбика <code>zipcode</code>, в таблице <code>users</code>, не должен быть <code>TEXT</code>. Мы изменим его на <code>INTEGER</code>, т.е. присудим точно такой же тип как и у столбика <code>id</code>, находящегося в таблице <code>zipcodes</code>.</p>
+</li>
+<li>
+<p>Теперь мы можем вручную добавить наши данные:</p>
+<div class="imageblock">
+<div class="content">
+    {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/16.png" width="800"></div>
+{% raw %}
+</div>
+</li>
+<li>
+<p>Если мы хотим получить информацию о пользователях, мы можем воспользоваться <code>SELECT</code> (выбором), дабы выделить интересующих нас пользователей (users). Далее мы увидим, что их <code>zipcode</code> будет равен <code>1</code>, как раз ее мы и выберем (<code>SELECT</code>) в таблице <code>zipcodes</code>, таким образом получая информацию о данной таблице. SQL способен проделать это за нас, используя ключевое слово <code>JOIN</code> (соединять):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>SELECT * FROM users JOIN zipcodes ON users.zipcode = zipcodes.id</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Соединим поля таблиц: поле <code>zipcode</code> таблицы <code>users</code> и поле <code>id</code> таблицы <code>zipcodes</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Получим:</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/17.png" width="800"></div>
+{% raw %}
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>На этот раз мы вывели все данные пользователей, при этом сохраняя их эффективное хранение.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Мы можем <code>CREATE</code> (создать) индекс для таких полей как, например, <code>email</code>. Поэтому, если мы попытаемся повторно <code>INSERT</code> (добавить) запись с одинаковым <code>email</code>'ом, база данных вернет ошибку и не позволит нам добавить эту запись.</p>
+</li>
+<li>
+<p>Мы, конечно, можем добавить в наш Питоновский код функционал, который позволял бы <code>SELECT</code> (проводить выборку) по электронной почте и только затем <code>INSERT</code> (вставлять) новую запись, но, к счастью, база данных все это проделывает за нас.</p>
+</li>
+<li>
+<p>Другие полезные фишки (функции) SQL:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>BEGIN TRANSACTION</code></p>
+</li>
+<li>
+<p><code>COMMIT</code></p>
+</li>
+<li>
+<p><code>ROLLBACK</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Если мы вернемся к нашей IDE (среде разработки), то увидим файл <code>lecture.db</code>, в котором хранятся ранее созданные и используемые нами данные.</p>
+</li>
+<li>
+<p>Чтобы открыть этот файл, мы можем воспользоваться терминальной программой: <code>$ sqlite3 lecture.db</code>.</p>
+</li>
+<li>
+<p>Теперь мы сможем исполнять запросы, записывая их после <code>sqlite&gt;</code>:</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/18.png" width="600"></div>
+{% raw %}
+</div>
+</li>
+<li>
+<p>Существует определенный стандарт присваивания имён <code>FOREIGN KEY</code>s (внешним ключам) или полям, являющимся <code>PRIMARY KEY</code>s (первичными ключами) в какой-нибудь другой таблице. В нашем примере поле <code>zipcode</code> (индекс), принадлежащее таблице <code>users</code> (пользователи), на самом деле представляло собой поле <code>id</code> таблицы <code>zipcodes</code>. Поэтому мы должны установить название поля таблицы <code>users</code> как <code>zipcode_id</code>, чтобы дать знать, что оно действительно является полем id.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="frosh-ims-2"><a class="link" href="#frosh-ims-2">Frosh IMs</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Разберем приложение <a href="http://cdn.cs50.net/2016/fall/lectures/9/src9/froshims2/"><code>froshims2</code></a>, т.е. откроем файл <code>application.py</code> и взглянем на код:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-kn">from</span> <span class="tok-nn">cs50</span> <span class="tok-kn">import</span> <span class="tok-n">SQL</span>
+<span class="tok-kn">from</span> <span class="tok-nn">flask</span> <span class="tok-kn">import</span> <span class="tok-n">Flask</span><span class="tok-p">,</span> <span class="tok-n">render_template</span><span class="tok-p">,</span> <span class="tok-n">redirect</span><span class="tok-p">,</span> <span class="tok-n">request</span><span class="tok-p">,</span> <span class="tok-n">url_for</span>
+
+<span class="tok-n">app</span> <span class="tok-o">=</span> <span class="tok-n">Flask</span><span class="tok-p">(</span><span class="tok-vm">__name__</span><span class="tok-p">)</span>
+
+<span class="tok-n">db</span> <span class="tok-o">=</span> <span class="tok-n">SQL</span><span class="tok-p">(</span><span class="tok-s2">&quot;sqlite:///froshims2.db&quot;</span><span class="tok-p">)</span>
+
+<span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/&quot;</span><span class="tok-p">)</span>
+<span class="tok-k">def</span> <span class="tok-nf">index</span><span class="tok-p">():</span>
+    <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;index.html&quot;</span><span class="tok-p">)</span>
+
+<span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/register&quot;</span><span class="tok-p">,</span> <span class="tok-n">methods</span><span class="tok-o">=</span><span class="tok-p">[</span><span class="tok-s2">&quot;POST&quot;</span><span class="tok-p">])</span>
+<span class="tok-k">def</span> <span class="tok-nf">register</span><span class="tok-p">():</span>
+    <span class="tok-k">if</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;name&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;&quot;</span> <span class="tok-ow">or</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;dorm&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;&quot;</span><span class="tok-p">:</span>
+        <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;failure.html&quot;</span><span class="tok-p">)</span>
+    <span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">execute</span><span class="tok-p">(</span><span class="tok-s2">&quot;INSERT INTO registrants (name, dorm) VALUES(:name, :dorm)&quot;</span><span class="tok-p">,</span> <span class="tok-n">name</span><span class="tok-o">=</span><span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;name&quot;</span><span class="tok-p">],</span> <span class="tok-n">dorm</span><span class="tok-o">=</span><span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;dorm&quot;</span><span class="tok-p">])</span>
+    <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;success.html&quot;</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Начнем с того, что импортируем (import) модуль <code>SQL</code> из нашей библиотеки <code>cs50</code>. С помощью данного модуля мы сможем без проблем выполнять SQL-запросы, находясь в нашем Питоновском коде.</p>
+</li>
+<li>
+<p><code>db = SQL("sqlite:///froshims2.db")</code> - эта линия указывает какую именно базу данных мы хотим задействовать в нашем приложении.</p>
+</li>
+<li>
+<p>В файле <code>register</code> мы оставим прежний код, но теперь, если нам нужно будет сохранить какие-либо данные, эту операцию наше приложение будет осуществлять с помощью команды <code>db.execute("INSERT INTO registrants (name, dorm) VALUES(:name, :dorm)",</code> <code>name=request.form["name"], dorm=request.form["dorm"])</code>. Первым аргументом команды <code>db.execute</code> является SQL-запрос. <code>:name</code> и <code>:dorm</code> - выступают в качестве заполнителей, так как мы намереваемся заменить их значениями переменных. Этим аргументам будут переданы значения (VALUES), полученные из <code>request.form</code>. Далее функция <code>cs50</code> <code>execute</code> составит из этих значений окончательный, готовый к применению, SQL-запрос.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Нам еще раз нужно создать файл с помощью программы <code>phpliteadmin</code>, под названием <code>froshims2.db</code>. В нем мы создадим нужную нам таблицу.</p>
+</li>
+<li>
+<p>Далее можем перейти к нашей форме, которая находится в <code>index.html</code> и если мы ее заполним, а затем нажмем кнопку <code>Submit</code> (Отправить), то увидим новые данные в нашей базе данных.</p>
+</li>
+<li>
+<p>Теперь мы можем программным способом (через код нашей программы) создавать и выбирать данные. Создадим маршрут <code>registrants</code> (зарегистрированные пользователи/регистраторы), перейдя по которому, мы сможем увидеть всех зарегистрированных пользователей:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/registrants&quot;</span><span class="tok-p">)</span>
+<span class="tok-k">def</span> <span class="tok-nf">registrants</span><span class="tok-p">():</span>
+    <span class="tok-n">rows</span> <span class="tok-o">=</span> <span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">execute</span><span class="tok-p">(</span><span class="tok-s2">&quot;SELECT * FROM registrants&quot;</span><span class="tok-p">)</span>
+    <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;registrants.html&quot;</span><span class="tok-p">,</span> <span class="tok-n">registrants</span><span class="tok-o">=</span><span class="tok-n">rows</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ранее, когда мы выполняли команду <code>db.execute</code> <code>INSERT</code>, мы не проверяли возвращаемое значение. Но в данном случае, когда мы используем команду <code>SELECT</code> (ВСТАВКИ), мы хотим сохранить возвщаемое значение, так как это будет нашим итоговым комплектом, т.е. списком словарей (list of dictionaries).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+
+<p>И наш шаблон (template) документа <code>registrants.html</code> будет выглядеть как-то так:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html">{% extends &quot;layout.html&quot; %}
+
+{% block title %}
+    registrants
+{% endblock %}
+
+{% block body %}
+<span class="tok-p">&lt;</span><span class="tok-nt">ul</span><span class="tok-p">&gt;</span>
+    {% for registrant in registrants %}
+        <span class="tok-p">&lt;</span><span class="tok-nt">li</span><span class="tok-p">&gt;</span>{{ registrant.name }} from {{ registrant.dorm }}<span class="tok-p">&lt;/</span><span class="tok-nt">li</span><span class="tok-p">&gt;</span>
+    {% endfor %}
+<span class="tok-p">&lt;/</span><span class="tok-nt">ul</span><span class="tok-p">&gt;</span>
+{% endblock %}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Для каждого <code>registrant</code> (регистранта) в нашем списке <code>registrants</code> (регистрантов :} ), переданного шаблону из модуля <code>application.py</code>, мы получим значения каждого ключа словаря <code>registrant</code>.</p>
+</li>
+<li>
+<p>Здесь у нас есть новый странный синтаксис <code>{{</code> и <code>}}</code>, посредством которого в наш сгенерированный HTML вставляется переменная.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>И мы можем добавить еще один маршрут, который позволит удалить строку:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/unregister&quot;</span><span class="tok-p">,</span> <span class="tok-n">methods</span><span class="tok-o">=</span><span class="tok-p">[</span><span class="tok-s2">&quot;GET&quot;</span><span class="tok-p">,</span> <span class="tok-s2">&quot;POST&quot;</span><span class="tok-p">])</span>
+<span class="tok-k">def</span> <span class="tok-nf">unregister</span><span class="tok-p">():</span>
+    <span class="tok-k">if</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">method</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;GET&quot;</span><span class="tok-p">:</span>
+        <span class="tok-n">rows</span> <span class="tok-o">=</span> <span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">execute</span><span class="tok-p">(</span><span class="tok-s2">&quot;SELECT * FROM registrants&quot;</span><span class="tok-p">)</span>
+        <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;unregister.html&quot;</span><span class="tok-p">,</span> <span class="tok-n">registrants</span><span class="tok-o">=</span><span class="tok-n">rows</span><span class="tok-p">)</span>
+    <span class="tok-k">elif</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">method</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;POST&quot;</span><span class="tok-p">:</span>
+        <span class="tok-k">if</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;id&quot;</span><span class="tok-p">]:</span>
+            <span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">execute</span><span class="tok-p">(</span><span class="tok-s2">&quot;DELETE FROM registrants WHERE id = :id&quot;</span><span class="tok-p">,</span> <span class="tok-nb">id</span><span class="tok-o">=</span><span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;id&quot;</span><span class="tok-p">])</span>
+        <span class="tok-k">return</span> <span class="tok-n">redirect</span><span class="tok-p">(</span><span class="tok-n">url_for</span><span class="tok-p">(</span><span class="tok-s2">&quot;registrants&quot;</span><span class="tok-p">))</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Если мы перейдем на страницу <code>unregister</code> (отмены регистрации), мы, скорее всего, захотим увидеть страницу, где нам будет предоставляться форма с различными параметрами, благодаря которой, мы сможем удалять определенных пользователей. Значит, если мы отправим из данной формы метод <code>POST</code>, нам нужно чтобы исполнился запрос <code>DELETE</code> (УДАЛЕНИЕ), и чтобы пользователь был перенаправлен на маршрут <code>registrants</code> (регистранты).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>И <code>unregister.html</code> будет содержать следующую форму:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="html">{% extends &quot;layout.html&quot; %}
+
+{% block title %}
+    registrants
+{% endblock %}
+
+{% block body %}
+<span class="tok-p">&lt;</span><span class="tok-nt">form</span> <span class="tok-na">action</span><span class="tok-o">=</span><span class="tok-s">&quot;{{ url_for(&#39;unregister&#39;) }}&quot;</span> <span class="tok-na">method</span><span class="tok-o">=</span><span class="tok-s">&quot;post&quot;</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;</span><span class="tok-nt">ul</span><span class="tok-p">&gt;</span>
+    {% for registrant in registrants %}
+        <span class="tok-p">&lt;</span><span class="tok-nt">li</span><span class="tok-p">&gt;&lt;</span><span class="tok-nt">input</span> <span class="tok-na">name</span><span class="tok-o">=</span><span class="tok-s">&quot;id&quot;</span> <span class="tok-na">type</span><span class="tok-o">=</span><span class="tok-s">&quot;radio&quot;</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;{{ registrant.id }}&quot;</span><span class="tok-p">/&gt;</span> {{ registrant.name }} from {{ registrant.dorm }}<span class="tok-p">&lt;/</span><span class="tok-nt">li</span><span class="tok-p">&gt;</span>
+    {% endfor %}
+<span class="tok-p">&lt;/</span><span class="tok-nt">ul</span><span class="tok-p">&gt;</span>
+<span class="tok-p">&lt;</span><span class="tok-nt">input</span> <span class="tok-na">type</span><span class="tok-o">=</span><span class="tok-s">&quot;submit&quot;</span> <span class="tok-na">value</span><span class="tok-o">=</span><span class="tok-s">&quot;Unregister&quot;</span><span class="tok-p">/&gt;</span>
+<span class="tok-p">&lt;/</span><span class="tok-nt">form</span><span class="tok-p">&gt;</span>
+{% endblock %}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+
+<p> Мы создадим input-элементы HTML с типом <code>radio</code>, а это значит, что мы можем выбрать только один элемент формы. И присвоим атрибуту <code>action</code>, принадлежащий тегу <code>form</code>, значение <code>url_for('unregister')</code>, таким образом сообщение будет <code>POST</code> (ОПУБЛИКОВАНО) в надлежащем месте (т.е. передано правильному маршруту).</p>
+
+</li>
+<li>
+<p>И <code>value</code> (значением) каждого <code>input</code>'а будет <code>registrant.id</code>, поэтому, когда мы отправим форму, <code>id</code> будет передан нашему методу (функции) <code>unregister</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Теперь у нас есть форма, которая не только создает интерактивный пользовательский интерфейс, но еще и сервер, который может принимать введенные пользователем значения и на их основе осуществлять определенные операции.</p>
+</li>
+<li>
+<p>У нас есть HTML, язык разметки для написания веб-страниц, который отправляется через HTTP, протокол для установки связи посредством интернета, и сервер написанный на Питоне, языке программирования, с задействованным фреймворком Flask, который помогает нам запустить простой веб-сервер. И мы немного познакомились с SQL, помогавший нам манипулировать данными.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="sect1">
+<h2 id="models"><a class="link" href="#models">Модели</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Мы можем абстрагироваться от уровня использования SQL-запросов к моделям. Это такая фишка, которую мы можем получим благодаря фреймворку Flask.</p>
+</li>
+<li>
+<p>В <a href="http://cdn.cs50.net/2016/fall/lectures/9/src9/froshims3/"><code>froshims3</code></a> мы изменили то, как мы взаимодействуем с базой данных. В <code>application.py</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-kn">from</span> <span class="tok-nn">flask</span> <span class="tok-kn">import</span> <span class="tok-n">Flask</span><span class="tok-p">,</span> <span class="tok-n">render_template</span><span class="tok-p">,</span> <span class="tok-n">redirect</span><span class="tok-p">,</span> <span class="tok-n">request</span><span class="tok-p">,</span> <span class="tok-n">url_for</span>
+<span class="tok-kn">from</span> <span class="tok-nn">flask_sqlalchemy</span> <span class="tok-kn">import</span> <span class="tok-n">SQLAlchemy</span>
+
+<span class="tok-n">app</span> <span class="tok-o">=</span> <span class="tok-n">Flask</span><span class="tok-p">(</span><span class="tok-vm">__name__</span><span class="tok-p">)</span>
+
+<span class="tok-c1"># Flask-SQLAlchemy</span>
+<span class="tok-n">app</span><span class="tok-o">.</span><span class="tok-n">config</span><span class="tok-p">[</span><span class="tok-s2">&quot;SQLALCHEMY_TRACK_MODIFICATIONS&quot;</span><span class="tok-p">]</span> <span class="tok-o">=</span> <span class="tok-bp">False</span>
+<span class="tok-n">app</span><span class="tok-o">.</span><span class="tok-n">config</span><span class="tok-p">[</span><span class="tok-s2">&quot;SQLALCHEMY_DATABASE_URI&quot;</span><span class="tok-p">]</span> <span class="tok-o">=</span> <span class="tok-s2">&quot;sqlite:///froshims3.db&quot;</span>
+<span class="tok-n">app</span><span class="tok-o">.</span><span class="tok-n">config</span><span class="tok-p">[</span><span class="tok-s2">&quot;SQLALCHEMY_ECHO&quot;</span><span class="tok-p">]</span> <span class="tok-o">=</span> <span class="tok-bp">True</span>
+<span class="tok-n">db</span> <span class="tok-o">=</span> <span class="tok-n">SQLAlchemy</span><span class="tok-p">(</span><span class="tok-n">app</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы воспользовались другой библиотекой под названием SQLAlchemy, для которой мы уточняем файл базы данных и можем далее обращаться как <code>db</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Далее мы можем определить объектно-реляционное отображение (object-relational mapping / ORM), которое описывает наши данные в качестве объектов (или представляет данные в качестве объектов):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-k">class</span> <span class="tok-nc">Registrant</span><span class="tok-p">(</span><span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">Model</span><span class="tok-p">):</span>
+
+    <span class="tok-n">__tablename__</span> <span class="tok-o">=</span> <span class="tok-s2">&quot;registrants&quot;</span>
+    <span class="tok-nb">id</span> <span class="tok-o">=</span> <span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">Column</span><span class="tok-p">(</span><span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">Integer</span><span class="tok-p">,</span> <span class="tok-n">primary_key</span><span class="tok-o">=</span><span class="tok-bp">True</span><span class="tok-p">)</span>
+    <span class="tok-n">name</span> <span class="tok-o">=</span> <span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">Column</span><span class="tok-p">(</span><span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">Text</span><span class="tok-p">)</span>
+    <span class="tok-n">dorm</span> <span class="tok-o">=</span> <span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">Column</span><span class="tok-p">(</span><span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">Text</span><span class="tok-p">)</span>
+
+    <span class="tok-k">def</span> <span class="tok-fm">__init__</span><span class="tok-p">(</span><span class="tok-bp">self</span><span class="tok-p">,</span> <span class="tok-n">name</span><span class="tok-p">,</span> <span class="tok-n">dorm</span><span class="tok-p">):</span>
+        <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">name</span> <span class="tok-o">=</span> <span class="tok-n">name</span>
+        <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">dorm</span> <span class="tok-o">=</span> <span class="tok-n">dorm</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы создаем <code>class</code> (класс) под  названием <code>Registrant</code>, который дополняет базовую <code>Model</code> (модель) - ее мы получаем из <code>db</code> (объект базы данных созданный библиотекой SQLAlchemy).</p>
+</li>
+<li>
+<p>Далее мы уточняем свойства данного класса, такие как table (таблица) и columns (столбики). Т.е. мы уточняем свойства наших данных и мы хотели бы сохранить их в Python'e, без написания самих запросов SQL.</p>
+</li>
+<li>
+<p>И каждый объект данного класса будет представлять из себя строку в таблице, со своими собственными свойствами: <code>name</code> (имя) и <code>dorm</code> (общежитие).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Позже, в маршруте <code>register</code>, мы увидим пользу данного подхода:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/register&quot;</span><span class="tok-p">,</span> <span class="tok-n">methods</span><span class="tok-o">=</span><span class="tok-p">[</span><span class="tok-s2">&quot;POST&quot;</span><span class="tok-p">])</span>
+<span class="tok-k">def</span> <span class="tok-nf">register</span><span class="tok-p">():</span>
+    <span class="tok-k">if</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;name&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;&quot;</span> <span class="tok-ow">or</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;dorm&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;&quot;</span><span class="tok-p">:</span>
+        <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;failure.html&quot;</span><span class="tok-p">)</span>
+    <span class="tok-n">registrant</span> <span class="tok-o">=</span> <span class="tok-n">Registrant</span><span class="tok-p">(</span><span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;name&quot;</span><span class="tok-p">],</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;dorm&quot;</span><span class="tok-p">])</span>
+    <span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">session</span><span class="tok-o">.</span><span class="tok-n">add</span><span class="tok-p">(</span><span class="tok-n">registrant</span><span class="tok-p">)</span>
+    <span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">session</span><span class="tok-o">.</span><span class="tok-n">commit</span><span class="tok-p">()</span>
+    <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;success.html&quot;</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Теперь, вместо того чтобы записывать нашу собственную команду <code>INSERT</code>, мы можем создать объект <code>Registrant</code> (зарегистрированный пользователь), путем предоставления в качестве параметров дополнительных значений, с которыми мы хотим инициализировать данный объект и добавить его к нашей базе данных <code>db</code>, используя команду <code>db.session.add</code>. И уже следующая линия <code>db.session.commit()</code> сохраняет нового <code>registrant</code> (регистранта) в базе данных.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Маршруты <code>registrants</code> и <code>unregister</code> тоже могут пользоваться данным новым методом, для взаимодействия с базой данных:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/registrants&quot;</span><span class="tok-p">)</span>
+<span class="tok-k">def</span> <span class="tok-nf">registrants</span><span class="tok-p">():</span>
+    <span class="tok-n">rows</span> <span class="tok-o">=</span> <span class="tok-n">Registrant</span><span class="tok-o">.</span><span class="tok-n">query</span><span class="tok-o">.</span><span class="tok-n">all</span><span class="tok-p">()</span>
+    <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;registrants.html&quot;</span><span class="tok-p">,</span> <span class="tok-n">registrants</span><span class="tok-o">=</span><span class="tok-n">rows</span><span class="tok-p">)</span>
+
+<span class="tok-nd">@app.route</span><span class="tok-p">(</span><span class="tok-s2">&quot;/unregister&quot;</span><span class="tok-p">,</span> <span class="tok-n">methods</span><span class="tok-o">=</span><span class="tok-p">[</span><span class="tok-s2">&quot;GET&quot;</span><span class="tok-p">,</span> <span class="tok-s2">&quot;POST&quot;</span><span class="tok-p">])</span>
+<span class="tok-k">def</span> <span class="tok-nf">unregister</span><span class="tok-p">():</span>
+    <span class="tok-k">if</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">method</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;GET&quot;</span><span class="tok-p">:</span>
+        <span class="tok-n">rows</span> <span class="tok-o">=</span> <span class="tok-n">Registrant</span><span class="tok-o">.</span><span class="tok-n">query</span><span class="tok-o">.</span><span class="tok-n">all</span><span class="tok-p">()</span>
+        <span class="tok-k">return</span> <span class="tok-n">render_template</span><span class="tok-p">(</span><span class="tok-s2">&quot;unregister.html&quot;</span><span class="tok-p">,</span> <span class="tok-n">registrants</span><span class="tok-o">=</span><span class="tok-n">rows</span><span class="tok-p">)</span>
+    <span class="tok-k">elif</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">method</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;POST&quot;</span><span class="tok-p">:</span>
+        <span class="tok-k">if</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;id&quot;</span><span class="tok-p">]:</span>
+            <span class="tok-n">Registrant</span><span class="tok-o">.</span><span class="tok-n">query</span><span class="tok-o">.</span><span class="tok-n">filter</span><span class="tok-p">(</span><span class="tok-n">Registrant</span><span class="tok-o">.</span><span class="tok-n">id</span> <span class="tok-o">==</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;id&quot;</span><span class="tok-p">])</span><span class="tok-o">.</span><span class="tok-n">delete</span><span class="tok-p">()</span>
+            <span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">session</span><span class="tok-o">.</span><span class="tok-n">commit</span><span class="tok-p">()</span>
+        <span class="tok-k">return</span> <span class="tok-n">redirect</span><span class="tok-p">(</span><span class="tok-n">url_for</span><span class="tok-p">(</span><span class="tok-s2">&quot;registrants&quot;</span><span class="tok-p">))</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Как только наше приложение станет сложным и более загруженным, мы найдем полезным возможность библиотеки записывать за нас SQL-запросы, что несомненно поможет нам сэкономить драгоценное время.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sql-injection"><a class="link" href="#sql-injection">SQL-инъекции</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Прописывать свой собственный SQL-запрос тоже может привести к определенным проблемам.</p>
+</li>
+<li>
+<p>SQL-инъекция является одной из таких проблем. К примеру, когда мы авторизовываемся на сайте, мы заполняем поля формы: username (никнейм) и password (пароль), и серверная сторона сайта (back-end) может попробовать достать строку из базы данных с подходящим никнеймом и паролем.</p>
+</li>
+<li>
+<p>Но если на сервере используется SQL, тогда то, что мы прописываем в форме может быть напрямую включено в запрос. К примеру, представьте, что мы передали <code>me@examplemailprovider.com</code> в качестве никнейма и <code>' OR '1' = '1</code> в качестве пароля:</p>
+<div class="imageblock">
+<div class="content">
+        {% endraw %}
+<img src="{{ site.url }}/assets/images/notes/notes9/19.png" width="600">
+{% raw %}
+</div>
+</div>
+</li>
+<li>
+<p>У SQL есть специальное ключевое слово <code>OR</code> и похоже на то, что значение данного пароля изменит поведение SQL-запроса, если его одинарные кавычки будут напрямую добавлены в запрос.</p>
+</li>
+<li>
+<p>Предположим, что код на серверной стороне прописан следующим образом:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">username</span> <span class="tok-o">=</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;username&quot;</span><span class="tok-p">]</span>
+<span class="tok-n">password</span> <span class="tok-o">=</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;password&quot;</span><span class="tok-p">]</span>
+<span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">execute</span><span class="tok-p">(</span><span class="tok-s2">&quot;SELECT * FROM users WHERE username = &#39;{}&#39; AND password = &#39;{}&#39;&quot;</span><span class="tok-o">.</span><span class="tok-n">format</span><span class="tok-p">(</span><span class="tok-n">username</span><span class="tok-p">,</span> <span class="tok-n">password</span><span class="tok-p">))</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Тогда, если <code>password</code> будет таким образом подменен, то наш запрос, на самом деле, будет выглядеть так:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>SELECT * FROM users WHERE username = '<a href="mailto:me@examplemailprovider.com">me@examplemailprovider.com</a>' AND password = '<u>' OR '1' = '1</u>'</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>И этот запрос выберит строку, где <code>username = '<a href="mailto:me@examplemailprovider.com">me@examplemailprovider.com</a>'</code> даже если <code>password</code> не будет совпадать, так как <code>1</code> всегда будет равна <code>1</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Но если мы воспользуемся библиотекой CS50 или в общем какой-либо другой библиотекой, они будут предусматривать такие случаи и избегать их надлежащим образом:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">username</span> <span class="tok-o">=</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;username&quot;</span><span class="tok-p">]</span>
+<span class="tok-n">password</span> <span class="tok-o">=</span> <span class="tok-n">request</span><span class="tok-o">.</span><span class="tok-n">form</span><span class="tok-p">[</span><span class="tok-s2">&quot;password&quot;</span><span class="tok-p">]</span>
+<span class="tok-n">db</span><span class="tok-o">.</span><span class="tok-n">execute</span><span class="tok-p">(</span><span class="tok-s2">&quot;SELECT * FROM users</span>
+<span class="tok-n">WHERE</span> <span class="tok-n">username</span> <span class="tok-o">=</span> <span class="tok-p">:</span><span class="tok-n">username</span> <span class="tok-n">AND</span> <span class="tok-n">password</span> <span class="tok-o">=</span> <span class="tok-p">:</span><span class="tok-n">password</span><span class="tok-s2">&quot;, username=username, password=password)</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>станет:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>username = request.form["username"]
+password = request.form["password"]
+db.execute("SELECT * FROM users
+WHERE username = '<a href="mailto:me@examplemailprovider.com">me@examplemailprovider.com</a>' AND password = '<u>\' OR \'1\' = \'</u>1'")</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>теперь одинарные кавычки были минованы и они более не меняют string или поведение запроса.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>И библиотека CS50 всего лишь передает запрос библиотеке SQLAlchemy, в которой и имлементировано избегание данной инъекции.</p>
+</li>
+<li>
+<p>Мы даже можем добавить точку с запятой в передаваемое нами значение, если мы знаем, что сервер уязвим к такого рода атакам, и запустим запрос по типу этого <code>DROP DATABASE</code>.</p>
+</li>
+<li>
+<p>Далее мы начнем использовать JavaScript, дабы сделать наш сайт более интерактивным!</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+
+
+
+        {% endraw %}

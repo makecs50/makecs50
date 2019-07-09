@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ site.url }}/assets/css/normalize.css">
+    <link rel="stylesheet" href="{{ site.url }}/assets/css/style.css">
+    <link rel="stylesheet" href="{{ site.url }}/assets/css/bootstrap-3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ site.url }}/assets/css/spset.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ site.url }}/assets/images/favicon.ico" />
+    <title>Гарвардский Курс CS50 в Грозном</title>
+    
+    {{ page.header }}
+</head>
+
+<body>
+    <div class="se-pre-con"></div>
+    <div id="wrapper">
+        <div class="overlay"></div>
+        <!-- Sidebar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand"> <a href="/"><b>
+                            CS50</b>
+                        </a> </li>
+                <li> <a href="{{ site.url }}/">Главная</a> </li>
+                <li> <a href="{{ site.url }}/weeks/">Лекции</a> </li>
+                
+                <li> <a href="{{ site.url }}/about">О нас</a> </li>
+<!--   <li><a target="_blank" href="/apply/">Записаться</a></li> -->
+  <h5 id="harvard_extension">Гарвардская школа повышения квалификации</h5>
+<li><a target="_blank" href="https://makecs50.github.io/web">Веб-программирование</a></li>
+<li><a target="_blank" href="https://makecs50.github.io/mobile">Мобильная разработка</a></li>
+                 </ul>
+        </nav>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <button type="button" class="hamburger is-closed" data-toggle="offcanvas"> <span class="hamb-top"></span> <span class="hamb-middle"></span> <span class="hamb-bottom"></span> </button>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9 col-lg-10 col-lg-offset-2">
+                        <!--CONTENT-->
+		
+			
+       {{content}}
+       
+               
+        <!--CONTENT-->
+ 
+  </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+    <script src="https://use.fontawesome.com/a98ab50559.js"></script>
+    <script type="text/javascript" src="{{ site.url }}/assets/js/myScript.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter44263234 = new Ya.Metrika({
+                    id:44263234,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/44263234" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+</body>
+
+</html>

@@ -1,0 +1,872 @@
+---
+layout: header
+title: Note7
+permalink: /weeks/notes7
+---
+
+<div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#introduction-to-machine-learning">Введение в машинное обучение</a></li>
+<li><a href="#image-classification">Распознавание изображений</a></li>
+<li><a href="#nearest-neighbors-with-python">Ближайшие соседи Python</a></li>
+<li><a href="#image-classification-with-python">Распознавание изображений с Python</a></li>
+<li><a href="#more-image-classification">Больше о распознавании изображения</a></li>
+<li><a href="#text-clustering">Текстовый кластеринг</a></li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Неделя 7</h1>
+<div class="sect1">
+<h2 id="introduction-to-machine-learning"><a class="link" href="#introduction-to-machine-learning">Введение в машинное обучение</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Эта лекция свяжет первую часть этого курса, где мы изучали низко-уровневые языки программирования, и вторую часть, где будут изучаться высоко-уровневые языки.</p>
+</li>
+<li>
+<p>Python, например, может быть использован для написания web-сервера, принимающего запросы, обращающегося к базе данных и возвращающего данные пользователю.</p>
+</li>
+<li>
+<p>Сегодня мы будем использовать Python для анализа данных в контексте машинного обучения.
+</p>
+</li>
+<li>
+<p>Как показано на следующей картинке, есть несколько (неточных) представлений о том, чем занимаются в машинном обучении:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/1.png" alt="something1" width="600"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Достаточно правдивым, однако, является то, что в машинном обучении в основном используется язык программирования Python.
+</p>
+</li>
+<li>
+<p>Прочитав эту строчку (последнее изображение), можно понять, что <code>sklearn</code> - есть модуль или библиотека, из которой мы получаем кое-какие функции называемые <code>svm</code>, хотя мы и не знаем, для чего они предназначены.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Машинное обучение часто ассоциируется у людей с искусственным интеллектом (ИИ), и особенно, с роботами из фантастических фильмов.</p>
+</li>
+<li>
+<p>В повседневной же жизни, машинное обучение применяется для написания поисковых систем, распознавания изображений, голоса и обработки естественного языка.</p>
+</li>
+<li>
+<p>Машинное обучение всего лишь описывает алгоритмы для решения этих задач.</p>
+</li>
+<li>
+<p>Вспомним, что алгоритм получает набор входных данных, а затем производит какие-то выходные данные. В случае распознавания изображений, мы хотим предоставить в качестве входных данных набор изображений и получить на выходе текст, описывающий эти изображения.
+</p>
+</li>
+<li>
+<p>В случае обработки естественного языка, мы можем попытаться обработать целый роман и получить его тематику.
+</p>
+</li>
+<li>
+<p>В прошлом, мы проделывали что-то подобное в проблеме Whodunit, когда шумная картинка была отфильтрована, чтобы найти скрытую информацию.</p>
+</li>
+<li>
+<p>Разница здесь в том, что ранее нам было известно о добавленном шуме, а в нынешнем случае никакой информации об изображении нет.</p>
+</li>
+<li>
+<p>Чтобы справиться с этой задачей, мы применим нечто, что называется training data (обучаемые данные) - процесс предоставления обученного набора изображений, помогающих распознавать новые изображения.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="image-classification"><a class="link" href="#image-classification">Распознавание изображений</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Наглядно это можно увидеть на примере следующих данных для обучения, направленных на создание алгоритма, который может распознавать рукописные цифры:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/2.png" alt="something2" width="600"></div>
+</div>
+</li>
+<li>
+<p>Представим линию, на которой отмечены точки с цифрами:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>&lt;--•--•-•----------------•-•-•--&gt;
+   0  0 0                6 6 6</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>И если нам дают дополнительную точку, мы можем угадать, что это <code>6</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>&lt;--•--•-•--------------•-•-•-•--&gt;
+   0  0 0              ? 6 6 6</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p> Этот метод называется: <strong>классификатор ближайших соседей</strong>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Тот же принцип в двух измерениях:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/3.png" alt="something3" width="600"></div>
+</div>
+</li>
+<li>
+<p>Теперь вопрос состоит в том, как мы можем отображать изображения цифр в пространстве, так как оттуда мы можем найти ближайших соседей контрольных точек к нашим точкам данных обучения.</p>
+</li>
+<li>
+<p>Flatland - это рассказ о двумерном существе, Квадрате, который посещает Lineland и пытается убедить точки, живущие в нем в том, что есть два измерения, а затем посещает Spaceland, чтобы обнаружить существование третьего измерения. Мы смотрели <a href="https://vimeo.com/8675372">трейлер</a> фильма по этой истории.</p>
+</li>
+<li>
+<p>Мы живем в 3-х мерном пространстве, но мы можем подобным образом мыслить о точках в более высоких измерениях.
+</p>
+</li>
+<li>
+<p>Возьмем изображение цифры. Мы можем присвоить каждому пикселю, с определенным значением серого, число, каждое из которых имеет свое измерение:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/4.png" alt="something4" width="600"></div>
+</div>
+</li>
+<li>
+<p>Благодаря "алгоритму ближайшего соседа", мы сможем отобразить все наши данные обучения в виде точек, и, предоставив проверочную (как ранее в примере) точку, мы сможем найти ближайшую точку обучения.
+</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="nearest-neighbors-with-python"><a class="link" href="#nearest-neighbors-with-python">Ближайшие соседи Python</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Чтобы попасть в интерпретатор, мы можем просто написать в терминале <code>python</code>.</p>
+</li>
+<li>
+<p>Оказавшись в нем, нам стали доступны новые команды:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>&gt;&gt;&gt; x = 3
+&gt;&gt;&gt; y = 5
+&gt;&gt;&gt; x + y
+8
+&gt;&gt;&gt; x = 'a'
+&gt;&gt;&gt; y = ' b'
+&gt;&gt;&gt; x + y
+'a b'</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>В Python не нужно определять типы переменных. Также отпадает необходимость в уточнении типа кавычек (нет разницы будете вы использовать одинарные или двойные).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Нет нужды в компиляторе, так как интерпретатор в реальном времени считывает код, далее компилирует его и запускает скомпилированный файл.</p>
+</li>
+<li>
+<p>Простой цикл <code>for</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>&gt;&gt;&gt; for i in [3, 5, 7]:
+...   print(i)
+...
+3
+5
+7</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Идет прямое перебирание элементов массива. Мы больше не нуждаемся в фигурных скобках, но вместо них нужно будет использовать отступы, чтобы указывать уровни нашего кода.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>В остальной части лекции мы будем использовать что-то, называемое iPython notebook, которое позволяет нам писать строки кода и видеть результат их выполнения, по одному кусочку кода за раз:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/5.png" alt="something5" width="800"></div>
+</div>
+</li>
+<li>
+<p>Процесс обучения нашего алгоритма, описанный ранее, называется supervised learning (обучение с учителем). В supervised learning мы обозначаем данные обучения (некоторые входные значения) ожидаемыми выходными значениями.</p>
+</li>
+<li>
+<p>Начнем с загрузки модулей или библиотек:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-kn">import</span> <span class="tok-nn">numpy</span> <span class="tok-kn">as</span> <span class="tok-nn">np</span>
+<span class="tok-kn">import</span> <span class="tok-nn">matplotlib.pyplot</span> <span class="tok-kn">as</span> <span class="tok-nn">plt</span>
+<span class="tok-c1"># Настройте matplotlib для встраивания отображения в выходные ячейки данного notebook'а</span>
+<span class="tok-o">%</span><span class="tok-n">matplotlib</span> <span class="tok-n">notebook</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Популярность Python дает нам доступ к огромному числу готовых библиотек.</p>
+</li>
+<li>
+<p>Начнем с создания кое-каких данных обучения:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">In</span> <span class="tok-p">[</span><span class="tok-mi">2</span><span class="tok-p">]:</span>
+<span class="tok-n">X_train</span> <span class="tok-o">=</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">array</span><span class="tok-p">([[</span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-mi">1</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mi">2</span><span class="tok-p">,</span><span class="tok-mf">2.5</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">,</span><span class="tok-mf">1.2</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mf">5.5</span><span class="tok-p">,</span><span class="tok-mf">6.3</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mi">6</span><span class="tok-p">,</span><span class="tok-mi">9</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mi">7</span><span class="tok-p">,</span><span class="tok-mi">6</span><span class="tok-p">]])</span> <span class="tok-c1"># Определите numpy-массив двумерных точек</span>
+<span class="tok-n">Y_train</span> <span class="tok-o">=</span> <span class="tok-p">[</span><span class="tok-s1">&#39;red&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;red&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;red&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;blue&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;blue&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;blue&#39;</span><span class="tok-p">]</span> <span class="tok-c1"># Определите список (т.е. массив) строк</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>X_train</code> - это точки, а <code>Y_train</code> - это ярлык (обозначение) каждой точки.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>X_train</code> - это тоже самое, что и двумерный массив, поэтому мы можем, точно таким же образом, как и в случае с двумерным массивом, получить доступ к элементам, находящимся внутри других элементов:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">In</span> <span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">]:</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">[</span><span class="tok-mi">5</span><span class="tok-p">,</span><span class="tok-mi">0</span><span class="tok-p">])</span> <span class="tok-c1"># Получить 0 координату 5ой точки в массиве</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">[</span><span class="tok-mi">5</span><span class="tok-p">,</span><span class="tok-mi">1</span><span class="tok-p">])</span> <span class="tok-c1"># Получить 1 координату 5ой точки в массиве</span>
+<span class="tok-mf">7.0</span>
+<span class="tok-mf">6.0</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>В Python, как и в Си, индексация начинается с 0.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>
+У синтаксиса Python есть еще одна особенность, называемая slicing (срезать), которая позволяет вытаскивать из массива сразу несколько элементов:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">In</span> <span class="tok-p">[</span><span class="tok-mi">4</span><span class="tok-p">]:</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">[:,</span> <span class="tok-mi">0</span><span class="tok-p">])</span> <span class="tok-c1"># Извлечь 1-ую координату (с индексом 0) всех элементов (:) массива X_train</span>
+<span class="tok-p">[</span> <span class="tok-mf">1.</span>   <span class="tok-mf">2.</span>   <span class="tok-mf">3.</span>   <span class="tok-mf">5.5</span>  <span class="tok-mf">6.</span>   <span class="tok-mf">7.</span> <span class="tok-p">]</span>
+<span class="tok-n">In</span> <span class="tok-p">[</span><span class="tok-mi">5</span><span class="tok-p">]:</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">[:,</span> <span class="tok-mi">1</span><span class="tok-p">])</span> <span class="tok-c1"># Извлечь 2-ую координату (с индексом 1) всех элементов (:) массива X_train</span>
+<span class="tok-p">[</span> <span class="tok-mf">1.</span>   <span class="tok-mf">2.5</span>  <span class="tok-mf">1.2</span>  <span class="tok-mf">6.3</span>  <span class="tok-mf">9.</span>   <span class="tok-mf">6.</span> <span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Теперь мы можем отобразить все эти точки вместе с их цветами в качестве ярлыков:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">figure</span><span class="tok-p">()</span> <span class="tok-c1"># Определите новый образ</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">scatter</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">[:,</span><span class="tok-mi">0</span><span class="tok-p">],</span> <span class="tok-n">X_train</span><span class="tok-p">[:,</span><span class="tok-mi">1</span><span class="tok-p">],</span> <span class="tok-n">s</span> <span class="tok-o">=</span> <span class="tok-mi">170</span><span class="tok-p">,</span> <span class="tok-n">color</span> <span class="tok-o">=</span> <span class="tok-n">Y_train</span><span class="tok-p">[:])</span> <span class="tok-c1"># Отобразите точки, используя синтаксис нарезки Python</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">show</span><span class="tok-p">()</span> <span class="tok-c1"># Покажите рисунок</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/6.png" alt="something6" width="300"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы можем посмотрть в документацию, для уточнения входных параметров функции (метода) <code>plt.scatter</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Давайте создадим и отобразим тестовую точку:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">X_test</span> <span class="tok-o">=</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">array</span><span class="tok-p">([</span><span class="tok-mi">3</span><span class="tok-p">,</span><span class="tok-mi">4</span><span class="tok-p">])</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">figure</span><span class="tok-p">()</span> <span class="tok-c1"># Определите новый образ</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">scatter</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">[:,</span><span class="tok-mi">0</span><span class="tok-p">],</span> <span class="tok-n">X_train</span><span class="tok-p">[:,</span><span class="tok-mi">1</span><span class="tok-p">],</span> <span class="tok-n">s</span> <span class="tok-o">=</span> <span class="tok-mi">170</span><span class="tok-p">,</span> <span class="tok-n">color</span> <span class="tok-o">=</span> <span class="tok-n">Y_train</span><span class="tok-p">[:])</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">scatter</span><span class="tok-p">(</span><span class="tok-n">X_test</span><span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">],</span> <span class="tok-n">X_test</span><span class="tok-p">[</span><span class="tok-mi">1</span><span class="tok-p">],</span> <span class="tok-n">s</span> <span class="tok-o">=</span> <span class="tok-mi">170</span><span class="tok-p">,</span> <span class="tok-n">color</span> <span class="tok-o">=</span> <span class="tok-s1">&#39;green&#39;</span><span class="tok-p">)</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">show</span><span class="tok-p">()</span> <span class="tok-c1"># Покажите рисунок</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/7.png" alt="something7" width="300"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Тестовая точка <code>green</code> (зеленая), так как мы пока не знаем к какому цвету она относится из данных обучения.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Для запуска Nearest Neighbor Classifier нужно для начала определить функцию, с помощью которой будет высчитываться расстояние:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-k">def</span> <span class="tok-nf">dist</span><span class="tok-p">(</span><span class="tok-n">x</span><span class="tok-p">,</span> <span class="tok-n">y</span><span class="tok-p">):</span>
+    <span class="tok-k">return</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">sqrt</span><span class="tok-p">(</span><span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">sum</span><span class="tok-p">((</span><span class="tok-n">x</span> <span class="tok-o">-</span> <span class="tok-n">y</span><span class="tok-p">)</span><span class="tok-o">**</span><span class="tok-mi">2</span><span class="tok-p">))</span> <span class="tok-c1"># np.sqrt и np.sum являются numpy-функциями, предназначенные для работы с numpy-массивами</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы знаем, что наши точки находятся в двух измерениях, поэтому мы вычисляем расстояние, вычитая значения каждой координаты двух точек <code>x</code> и <code>y</code>, возводим их в квадрат, вычисляем их сумму и применяем квадратный корень:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/8.png" alt="something8" width="400"></div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>
+Высчислим расстояние от каждой точки обучения до тестовой точки:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">num</span> <span class="tok-o">=</span> <span class="tok-nb">len</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">)</span> <span class="tok-c1"># Вычислите количество точек в X_train</span>
+<span class="tok-n">distance</span> <span class="tok-o">=</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">zeros</span><span class="tok-p">(</span><span class="tok-n">num</span><span class="tok-p">)</span> <span class="tok-c1"># Инициализируйте numpy-массив нулей</span>
+<span class="tok-k">for</span> <span class="tok-n">i</span> <span class="tok-ow">in</span> <span class="tok-nb">range</span><span class="tok-p">(</span><span class="tok-n">num</span><span class="tok-p">):</span>
+    <span class="tok-n">distance</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span> <span class="tok-o">=</span> <span class="tok-n">dist</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">],</span> <span class="tok-n">X_test</span><span class="tok-p">)</span> <span class="tok-c1"># Вычислите расстояние от X_train[i] до X_test</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">distance</span><span class="tok-p">)</span>
+<span class="tok-p">[</span> <span class="tok-mf">3.60555128</span>  <span class="tok-mf">1.80277564</span>  <span class="tok-mf">2.8</span>         <span class="tok-mf">3.39705755</span>  <span class="tok-mf">5.83095189</span>  <span class="tok-mf">4.47213595</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Мы получим массив с расстояниями (distances).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p> Мы также можем воспользоваться векторизацией "vectorization", чтобы применить формулу вычисления расстояния прямо на массивах:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">distance</span> <span class="tok-o">=</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">sqrt</span><span class="tok-p">(</span><span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">sum</span><span class="tok-p">((</span><span class="tok-n">X_train</span> <span class="tok-o">-</span> <span class="tok-n">X_test</span><span class="tok-p">)</span><span class="tok-o">**</span><span class="tok-mi">2</span><span class="tok-p">,</span> <span class="tok-n">axis</span> <span class="tok-o">=</span> <span class="tok-mi">1</span><span class="tok-p">))</span> <span class="tok-c1"># Векторизация</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">distance</span><span class="tok-p">)</span>
+<span class="tok-p">[</span> <span class="tok-mf">3.60555128</span>  <span class="tok-mf">1.80277564</span>  <span class="tok-mf">2.8</span>         <span class="tok-mf">3.39705755</span>  <span class="tok-mf">5.83095189</span>  <span class="tok-mf">4.47213595</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Теперь мы можем найти точку с минимальной дистанцией и определить подходящий для нее ярлык:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">In</span> <span class="tok-p">[</span><span class="tok-mi">12</span><span class="tok-p">]:</span>
+<span class="tok-n">min_index</span> <span class="tok-o">=</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">argmin</span><span class="tok-p">(</span><span class="tok-n">distance</span><span class="tok-p">)</span> <span class="tok-c1"># Получите индекс с наименьшим расстоянием (distance)</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">Y_train</span><span class="tok-p">[</span><span class="tok-n">min_index</span><span class="tok-p">])</span>
+<span class="tok-n">red</span></code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="image-classification-with-python"><a class="link" href="#image-classification-with-python">Распознавание изображений с Python</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Изученные принципы мы применим для распознавания цифр.</p>
+</li>
+<li>
+<p>Для начала мы импортируем <code>sklearn</code> - модуль Python для машинного обучения. Данный модуль предоставляет несколько стандартных наборов данных, к примеру набор цифр.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">In</span> <span class="tok-p">[</span><span class="tok-mi">13</span><span class="tok-p">]:</span>
+<span class="tok-kn">from</span> <span class="tok-nn">sklearn</span> <span class="tok-kn">import</span> <span class="tok-n">datasets</span>
+<span class="tok-n">digits</span> <span class="tok-o">=</span> <span class="tok-n">datasets</span><span class="tok-o">.</span><span class="tok-n">load_digits</span><span class="tok-p">()</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Набор данных <code>digits</code> содержит в себе 1797 изображений, представляющих из себя рукописные цифры. Каждое изображение имеет числовую метку (ярлык), указывающее какое число изображено на картинке. <code>digits.images</code> - массив изображений, а <code>digits.target</code> - массив меток (ярлыков).</p>
+</li>
+<li>
+<p>Каждый элемент массива <code>digits.images</code> находится на своем собственном 8x8 пиксельном массиве, где каждый пиксель является целым числом (integer) со значением от 0 до 16. Давайте посмотрим как выглядит первое избражение (под индексом 0):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">In</span> <span class="tok-p">[</span><span class="tok-mi">14</span><span class="tok-p">]:</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">digits</span><span class="tok-o">.</span><span class="tok-n">images</span><span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">])</span>
+<span class="tok-p">[[</span>  <span class="tok-mf">0.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">5.</span>  <span class="tok-mf">13.</span>   <span class="tok-mf">9.</span>   <span class="tok-mf">1.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">0.</span><span class="tok-p">]</span>
+ <span class="tok-p">[</span>  <span class="tok-mf">0.</span>   <span class="tok-mf">0.</span>  <span class="tok-mf">13.</span>  <span class="tok-mf">15.</span>  <span class="tok-mf">10.</span>  <span class="tok-mf">15.</span>   <span class="tok-mf">5.</span>   <span class="tok-mf">0.</span><span class="tok-p">]</span>
+ <span class="tok-p">[</span>  <span class="tok-mf">0.</span>   <span class="tok-mf">3.</span>  <span class="tok-mf">15.</span>   <span class="tok-mf">2.</span>   <span class="tok-mf">0.</span>  <span class="tok-mf">11.</span>   <span class="tok-mf">8.</span>   <span class="tok-mf">0.</span><span class="tok-p">]</span>
+ <span class="tok-p">[</span>  <span class="tok-mf">0.</span>   <span class="tok-mf">4.</span>  <span class="tok-mf">12.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">8.</span>   <span class="tok-mf">8.</span>   <span class="tok-mf">0.</span><span class="tok-p">]</span>
+ <span class="tok-p">[</span>  <span class="tok-mf">0.</span>   <span class="tok-mf">5.</span>   <span class="tok-mf">8.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">9.</span>   <span class="tok-mf">8.</span>   <span class="tok-mf">0.</span><span class="tok-p">]</span>
+ <span class="tok-p">[</span>  <span class="tok-mf">0.</span>   <span class="tok-mf">4.</span>  <span class="tok-mf">11.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">1.</span>  <span class="tok-mf">12.</span>   <span class="tok-mf">7.</span>   <span class="tok-mf">0.</span><span class="tok-p">]</span>
+ <span class="tok-p">[</span>  <span class="tok-mf">0.</span>   <span class="tok-mf">2.</span>  <span class="tok-mf">14.</span>   <span class="tok-mf">5.</span>  <span class="tok-mf">10.</span>  <span class="tok-mf">12.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">0.</span><span class="tok-p">]</span>
+ <span class="tok-p">[</span>  <span class="tok-mf">0.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">6.</span>  <span class="tok-mf">13.</span>  <span class="tok-mf">10.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">0.</span>   <span class="tok-mf">0.</span><span class="tok-p">]]</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Сможете разглядеть изображение нуля? Упростим себе задачу, присвоим каждому числу интенсивность черного. Так мы сможем лучше отрисовать наш массив:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">figure</span><span class="tok-p">()</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">imshow</span><span class="tok-p">(</span><span class="tok-n">digits</span><span class="tok-o">.</span><span class="tok-n">images</span><span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">],</span> <span class="tok-n">cmap</span> <span class="tok-o">=</span> <span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">cm</span><span class="tok-o">.</span><span class="tok-n">gray_r</span><span class="tok-p">,</span> <span class="tok-n">interpolation</span> <span class="tok-o">=</span> <span class="tok-s1">&#39;nearest&#39;</span><span class="tok-p">)</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">show</span><span class="tok-p">()</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/9.png" alt="something9" width="200"></div>
+</div>
+</li>
+<li>
+<p>Каждый элемент массива digits.target представляет из себя числовую метку или цифру, которой соответствует определенное изображение:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">In</span> <span class="tok-p">[</span><span class="tok-mi">16</span><span class="tok-p">]:</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">digits</span><span class="tok-o">.</span><span class="tok-n">target</span><span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">])</span>
+<span class="tok-mi">0</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Создадим данные обучения из первых 10 цифр:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">X_train</span> <span class="tok-o">=</span> <span class="tok-n">digits</span><span class="tok-o">.</span><span class="tok-n">data</span><span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">:</span><span class="tok-mi">10</span><span class="tok-p">]</span>
+<span class="tok-n">Y_train</span> <span class="tok-o">=</span> <span class="tok-n">digits</span><span class="tok-o">.</span><span class="tok-n">target</span><span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">:</span><span class="tok-mi">10</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Выберем тестовую точку:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">X_test</span> <span class="tok-o">=</span> <span class="tok-n">digits</span><span class="tok-o">.</span><span class="tok-n">data</span><span class="tok-p">[</span><span class="tok-mi">345</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Применим тот же алгоритм, который мы использовали ранее, чтобы найти ближайшего соседа этой тестовой точки, среди всех точек данных обучения (training data):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">num</span> <span class="tok-o">=</span> <span class="tok-nb">len</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">)</span> <span class="tok-c1"># Вычислите количество точек в X_train</span>
+<span class="tok-n">distance</span> <span class="tok-o">=</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">zeros</span><span class="tok-p">(</span><span class="tok-n">num</span><span class="tok-p">)</span> <span class="tok-c1"># Инициализируйте массив нулей</span>
+<span class="tok-k">for</span> <span class="tok-n">i</span> <span class="tok-ow">in</span> <span class="tok-nb">range</span><span class="tok-p">(</span><span class="tok-n">num</span><span class="tok-p">):</span>
+    <span class="tok-n">distance</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span> <span class="tok-o">=</span> <span class="tok-n">dist</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">],</span> <span class="tok-n">X_test</span><span class="tok-p">)</span> <span class="tok-c1"># Вычислите расстояние от X_train[i] до X_test</span>
+<span class="tok-n">min_index</span> <span class="tok-o">=</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">argmin</span><span class="tok-p">(</span><span class="tok-n">distance</span><span class="tok-p">)</span> <span class="tok-c1"># Получите индекс с наименьшим расстоянием (distance)</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">Y_train</span><span class="tok-p">[</span><span class="tok-n">min_index</span><span class="tok-p">])</span>
+<span class="tok-mi">3</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Меткой этого изображения действительно является <code>3</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">digits</span><span class="tok-o">.</span><span class="tok-n">target</span><span class="tok-p">[</span><span class="tok-n">min_index</span><span class="tok-p">])</span>
+<span class="tok-mi">3</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Можно немного дописать код, чтобы получить возможность проверки большего числа точек:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">num</span> <span class="tok-o">=</span> <span class="tok-nb">len</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">)</span> <span class="tok-c1"># Вычислите количество точек в X_train (данных обучения)</span>
+<span class="tok-n">no_errors</span> <span class="tok-o">=</span> <span class="tok-mi">0</span> <span class="tok-c1"># Следите за количеством ошибок</span>
+<span class="tok-n">distance</span> <span class="tok-o">=</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">zeros</span><span class="tok-p">(</span><span class="tok-n">num</span><span class="tok-p">)</span> <span class="tok-c1"># Создайте, заполненный нулями, массив с размером X_trains</span>
+<span class="tok-k">for</span> <span class="tok-n">j</span> <span class="tok-ow">in</span> <span class="tok-nb">range</span><span class="tok-p">(</span><span class="tok-mi">1697</span><span class="tok-p">,</span> <span class="tok-mi">1797</span><span class="tok-p">):</span>
+    <span class="tok-n">X_test</span> <span class="tok-o">=</span> <span class="tok-n">digits</span><span class="tok-o">.</span><span class="tok-n">data</span><span class="tok-p">[</span><span class="tok-n">j</span><span class="tok-p">]</span> <span class="tok-c1"># Проверьте значения в диапазоне [1697, 1797)</span>
+    <span class="tok-k">for</span> <span class="tok-n">i</span> <span class="tok-ow">in</span> <span class="tok-nb">range</span><span class="tok-p">(</span><span class="tok-n">num</span><span class="tok-p">):</span>
+        <span class="tok-n">distance</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span> <span class="tok-o">=</span> <span class="tok-n">dist</span><span class="tok-p">(</span><span class="tok-n">X_train</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">],</span> <span class="tok-n">X_test</span><span class="tok-p">)</span> <span class="tok-c1"># Вычислите расстояние от X_train[i] до X_test</span>
+    <span class="tok-n">min_index</span> <span class="tok-o">=</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">argmin</span><span class="tok-p">(</span><span class="tok-n">distance</span><span class="tok-p">)</span> <span class="tok-c1"># Получите индекс с наименьшим расстоянием (distance)</span>
+    <span class="tok-k">if</span> <span class="tok-n">Y_train</span><span class="tok-p">[</span><span class="tok-n">min_index</span><span class="tok-p">]</span> <span class="tok-o">!=</span> <span class="tok-n">digits</span><span class="tok-o">.</span><span class="tok-n">target</span><span class="tok-p">[</span><span class="tok-n">j</span><span class="tok-p">]:</span> <span class="tok-c1"># Увеличение счетчика ошибок на одну единицу, если метка не совпадает с меткой ближайшего соседа</span>
+        <span class="tok-n">no_errors</span> <span class="tok-o">+=</span> <span class="tok-mi">1</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">no_errors</span><span class="tok-p">)</span>
+<span class="tok-mi">37</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>37 ошибок из 100 попыток распознавания изображения! Неплохо для такого простого алгоритма. Но мы можем добиться лучшего результата, если увеличим набор учебных данных.</p>
+</li>
+<li>
+<p>Если мы немного изменим последние шаги и сделаем так, что вместо 10 будет использоваться 1000 изображений цифр в качестве обучающихся данных, мы получим только 3 ошибки перебрав 100 тестовых изображения.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="more-image-classification"><a class="link" href="#more-image-classification">Больше о распознавании изображения</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Мы можем применить тот же алгоритм на наборе данных из тысяч изображений, каждое из которых имеет определенную объектную метку: самолет, птица, кошка, собака и т.д. Но, оказывается, при использовании алгоритма определения ближайшего соседа, мы получаем только 30% корректность определения объекта.</p>
+</li>
+<li>
+<p>К примеру, цифра 0 всегда будет отображаться в 2D (двух измерениях), в черном и белом. Изображения объектов представлены определенными цветами, но они так же могут иметь разные ракурсы или углы обзора.</p>
+</li>
+<li>
+<p>К проблемам, возникающим при распознавании изображения, относятся:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/10.png" alt="something10" width="600"></div>
+</div>
+</li>
+<li>
+    <p>Алгоритмы распознавания изображения могут быть улучшены путем группировки пикселей изображения в отдельно рассматриваемые <strong>черты</strong>. Такой процесс имеет название <strong>deep learning</strong> (глубинное или глубокое обучение):</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/11.png" alt="something11" width="300"></div>
+</div>
+</li>
+<li>
+<p>На реализацию этих алгоритмов требуется огромное количество производительных ресурсов. И библиотеки, наподобие <a href="https://www.tensorflow.org/">TensorFlow</a>, помогают строить программы, использующие машинное обучение для решения определенных проблем.</p>
+</li>
+<li>
+<p><a href="http://deepdreamgenerator.com">Deep Dream Generator</a> позволяет находить шаблоны (черты) входных изображениях, а также позволяет соединять их (таким образом мы можем получить фотографию смешанную с рисовательным стилем).</p>
+</li>
+<li>
+<p>С глубинным обучением мы можем достигнуть 95% точности распознования изображения. Но, в некоторых случаях, этого может быть недостаточно (самоуправляемые машины).</p>
+</li>
+<li>
+<p>Не так давно автомобиль под маркой Tesla не смог распознать белый грузовик с прицепом на ярко освещенном фоне неба, что привело к ужасной аварии.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="text-clustering"><a class="link" href="#text-clustering">Текстовый кластеринг</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Мы также можем создать алгоритм, который принимает синопсисы (сжатое изложение или описание) фильмов и группирует их.</p>
+</li>
+<li>
+<p>Драмы будут сгруппированы в одну группу, а анимационные фильмы Диснея в другую.</p>
+</li>
+<li>
+<p>Теперь у наших данных нету ярлыков, поэтому мы воспользуемся unsupervised learning (обучением без "учителя").</p>
+</li>
+<li>
+<p>Данный набор непомеченных точек будет сгруппирован в <code>k</code> группы, следующим образом:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/12.png" alt="something12" width="400"></div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Данный алгоритм имеет название <code>k-means</code> (метод k-средних). Особо углублятся в детали того, как устроен этот алгоритм мы не будем.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Но, на нашем разбираемом уровне, чтобы применить данный алгоритм к описанию кино, нам нужно превратить текст в кое-какую точку в пространстве.</p>
+</li>
+<li>
+<p>Наш подход - "мешок со словами", где у нас есть кое-какие строки и мы помечаем частоту появления каждого слова:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/13.png" alt="something13" width="600"></div>
+</div>
+</li>
+<li>
+<p>Мы можем улучшить данный алгоритм высчитывая частичную частоту использования слова в каждой строке, таким образом сокращая разницу между длинными и короткими строками:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/14.png" alt="something14" width="600"></div>
+</div>
+</li>
+<li>
+<p>Далее мы можем отобразить каждую строку в пространстве с <em>n</em>-измерениями и запустить наш алгоритм <code>k-means</code> для их группировки.</p>
+</li>
+<li>
+<p>Продемонстрируем данную работу, создав кое-какие точки, рисуя их теми же линиями кода, что мы писали ранее:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-kn">import</span> <span class="tok-nn">numpy</span> <span class="tok-kn">as</span> <span class="tok-nn">np</span>
+<span class="tok-kn">import</span> <span class="tok-nn">matplotlib.pyplot</span> <span class="tok-kn">as</span> <span class="tok-nn">plt</span>
+<span class="tok-c1"># Настройте matplotlib для встраивания отображения в выходные ячейки данного notebook'а</span>
+<span class="tok-o">%</span><span class="tok-n">matplotlib</span> <span class="tok-n">notebook</span>
+<span class="tok-n">In</span> <span class="tok-p">[</span><span class="tok-mi">26</span><span class="tok-p">]:</span>
+<span class="tok-n">X</span> <span class="tok-o">=</span> <span class="tok-n">np</span><span class="tok-o">.</span><span class="tok-n">array</span><span class="tok-p">([[</span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-mi">1</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mi">2</span><span class="tok-p">,</span><span class="tok-mf">2.5</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">,</span><span class="tok-mf">1.2</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mf">5.5</span><span class="tok-p">,</span><span class="tok-mf">6.3</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mi">6</span><span class="tok-p">,</span><span class="tok-mi">9</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mi">7</span><span class="tok-p">,</span><span class="tok-mi">6</span><span class="tok-p">],</span> <span class="tok-p">[</span><span class="tok-mi">8</span><span class="tok-p">,</span><span class="tok-mi">8</span><span class="tok-p">]])</span> <span class="tok-c1"># Определите numpy-массив двумерных точек</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">figure</span><span class="tok-p">()</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">scatter</span><span class="tok-p">(</span><span class="tok-n">X</span><span class="tok-p">[:,</span><span class="tok-mi">0</span><span class="tok-p">],</span> <span class="tok-n">X</span><span class="tok-p">[:,</span><span class="tok-mi">1</span><span class="tok-p">],</span> <span class="tok-n">s</span> <span class="tok-o">=</span> <span class="tok-mi">170</span><span class="tok-p">,</span> <span class="tok-n">color</span> <span class="tok-o">=</span> <span class="tok-s1">&#39;black&#39;</span><span class="tok-p">)</span> <span class="tok-c1"># Точки отображения с нарезным синтаксисом X[:,0] и X[:,1]</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">show</span><span class="tok-p">()</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/15.png" alt="something15" width="300"></div>
+</div>
+</li>
+<li>
+<p>Мы можем импортировать алгоритм <code>k-means</code> из модуля <code>sklearn</code>, запустить его и отобразить группы вместе с их центрами:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-kn">from</span> <span class="tok-nn">sklearn.cluster</span> <span class="tok-kn">import</span> <span class="tok-n">KMeans</span>
+<span class="tok-n">k</span> <span class="tok-o">=</span> <span class="tok-mi">2</span> <span class="tok-c1"># Определените количество кластеров, на которые мы хотим разделить наши данные</span>
+<span class="tok-n">kmeans</span> <span class="tok-o">=</span> <span class="tok-n">KMeans</span><span class="tok-p">(</span><span class="tok-n">n_clusters</span> <span class="tok-o">=</span> <span class="tok-n">k</span><span class="tok-p">)</span> <span class="tok-c1"># Запустите алгоритм kmeans</span>
+<span class="tok-n">kmeans</span><span class="tok-o">.</span><span class="tok-n">fit</span><span class="tok-p">(</span><span class="tok-n">X</span><span class="tok-p">);</span>
+<span class="tok-n">centroids</span> <span class="tok-o">=</span> <span class="tok-n">kmeans</span><span class="tok-o">.</span><span class="tok-n">cluster_centers_</span> <span class="tok-c1"># Получените центральные координаты каждого кластера</span>
+<span class="tok-n">labels</span> <span class="tok-o">=</span> <span class="tok-n">kmeans</span><span class="tok-o">.</span><span class="tok-n">labels_</span> <span class="tok-c1"># Присвойте метки каждому кусочку информации</span>
+<span class="tok-n">colors</span> <span class="tok-o">=</span> <span class="tok-p">[</span><span class="tok-s1">&#39;r.&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;g.&#39;</span><span class="tok-p">]</span> <span class="tok-c1"># Определите два цвета для нашего отображения</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">figure</span><span class="tok-p">()</span>
+<span class="tok-k">for</span> <span class="tok-n">i</span> <span class="tok-ow">in</span> <span class="tok-nb">range</span><span class="tok-p">(</span><span class="tok-nb">len</span><span class="tok-p">(</span><span class="tok-n">X</span><span class="tok-p">)):</span>
+    <span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">plot</span><span class="tok-p">(</span><span class="tok-n">X</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">,</span><span class="tok-mi">0</span><span class="tok-p">],</span> <span class="tok-n">X</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">,</span><span class="tok-mi">1</span><span class="tok-p">],</span> <span class="tok-n">colors</span><span class="tok-p">[</span><span class="tok-n">labels</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]],</span> <span class="tok-n">markersize</span> <span class="tok-o">=</span> <span class="tok-mi">30</span><span class="tok-p">)</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">scatter</span><span class="tok-p">(</span><span class="tok-n">centroids</span><span class="tok-p">[:,</span><span class="tok-mi">0</span><span class="tok-p">],</span><span class="tok-n">centroids</span><span class="tok-p">[:,</span><span class="tok-mi">1</span><span class="tok-p">],</span> <span class="tok-n">marker</span> <span class="tok-o">=</span> <span class="tok-s2">&quot;x&quot;</span><span class="tok-p">,</span> <span class="tok-n">s</span> <span class="tok-o">=</span> <span class="tok-mi">300</span><span class="tok-p">,</span> <span class="tok-n">linewidths</span> <span class="tok-o">=</span> <span class="tok-mi">5</span><span class="tok-p">)</span> <span class="tok-c1"># Центроиды отображения</span>
+<span class="tok-n">plt</span><span class="tok-o">.</span><span class="tok-n">show</span><span class="tok-p">()</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/16.png" alt="something15" width="300"></div>
+</div>
+</li>
+<li>
+<p>Можем даже уточнить 3 или 7 групп:</p>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/17.png" alt="something17" width="300"></div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="{{ site.url }}/assets/images/notes/notes7/18.png" alt="something18" width="300"></div>
+</div>
+</li>
+<li>
+<p>Теперь можем попробовать сгруппировать тект:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">corpus</span> <span class="tok-o">=</span> <span class="tok-p">[</span><span class="tok-s1">&#39;I love CS50. Staff is awesome, awesome, awesome!&#39;</span><span class="tok-p">,</span>
+          <span class="tok-s1">&#39;I have a dog and a cat.&#39;</span><span class="tok-p">,</span>
+          <span class="tok-s1">&#39;Best of CS50? Staff. And cakes. Ok, CS50 staff.&#39;</span><span class="tok-p">,</span>
+          <span class="tok-s1">&#39;My dog keeps chasing my cat. Dogs!&#39;</span><span class="tok-p">]</span> <span class="tok-c1"># Так мы представляем список строк (strings) в Python</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Мы импортируем еще один компонент из библиотеки <code>sklearn</code> и воспользуемся им, чтобы создать словарь и подсчитывать отдельные слова в каждом предложении:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-c1"># Создайте матрицу "мешок со словами"</span>
+<span class="tok-kn">from</span> <span class="tok-nn">sklearn.feature_extraction.text</span> <span class="tok-kn">import</span> <span class="tok-n">CountVectorizer</span>
+<span class="tok-n">count_vect</span> <span class="tok-o">=</span> <span class="tok-n">CountVectorizer</span><span class="tok-p">(</span><span class="tok-n">stop_words</span> <span class="tok-o">=</span> <span class="tok-s1">&#39;english&#39;</span><span class="tok-p">)</span>
+<span class="tok-n">Z</span> <span class="tok-o">=</span> <span class="tok-n">count_vect</span><span class="tok-o">.</span><span class="tok-n">fit_transform</span><span class="tok-p">(</span><span class="tok-n">corpus</span><span class="tok-p">)</span>
+<span class="tok-c1"># Функция fit_transform() принимает в качестве входных данных список строк (strings) и выполняет два действия:</span>
+<span class="tok-c1"># в первую очередь она "встраивает модель&quot;, т.е. создает словарь, а во-вторых она преобразует информацию в матрицу.</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Мы можем взглянуть на словарь:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">vocab</span> <span class="tok-o">=</span> <span class="tok-n">count_vect</span><span class="tok-o">.</span><span class="tok-n">get_feature_names</span><span class="tok-p">()</span>
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">vocab</span><span class="tok-p">)</span>
+<span class="tok-p">[</span><span class="tok-s1">&#39;awesome&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;best&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;cakes&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;cat&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;chasing&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;cs50&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;dog&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;dogs&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;keeps&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;love&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;ok&#39;</span><span class="tok-p">,</span> <span class="tok-s1">&#39;staff&#39;</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p> И мы можем взглянуть на матрицу Z - "мешок со словами":</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">Z</span><span class="tok-o">.</span><span class="tok-n">todense</span><span class="tok-p">()</span> <span class="tok-c1"># Сгенерировать загруженную матрицу из Z, которая хранится в виде разбросанного матричного типа данных</span>
+<span class="tok-n">Out</span><span class="tok-p">[</span><span class="tok-mi">35</span><span class="tok-p">]:</span>
+<span class="tok-n">matrix</span><span class="tok-p">([[</span><span class="tok-mi">3</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">],</span>
+        <span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">],</span>
+        <span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">2</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">2</span><span class="tok-p">],</span>
+        <span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">1</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-mi">0</span><span class="tok-p">]],</span> <span class="tok-n">dtype</span><span class="tok-o">=</span><span class="tok-n">int64</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Нормализованные значения в матрице дают неполную информацию о словах (так как самые общие слова дают мало информации о тематике текста), поэтому формула <code>tfidf</code> (Term Frequency times Inverse Document Frequency) даст лучшие результаты:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-c1"># Создайте матрицу tf–idf</span>
+<span class="tok-kn">from</span> <span class="tok-nn">sklearn.feature_extraction.text</span> <span class="tok-kn">import</span> <span class="tok-n">TfidfVectorizer</span>
+<span class="tok-n">vectorizer</span> <span class="tok-o">=</span> <span class="tok-n">TfidfVectorizer</span><span class="tok-p">(</span><span class="tok-n">stop_words</span> <span class="tok-o">=</span> <span class="tok-s1">&#39;english&#39;</span><span class="tok-p">)</span>
+<span class="tok-n">X</span> <span class="tok-o">=</span> <span class="tok-n">vectorizer</span><span class="tok-o">.</span><span class="tok-n">fit_transform</span><span class="tok-p">(</span><span class="tok-n">corpus</span><span class="tok-p">)</span>
+<span class="tok-n">X</span><span class="tok-o">.</span><span class="tok-n">todense</span><span class="tok-p">()</span>
+<span class="tok-n">Out</span><span class="tok-p">[</span><span class="tok-mi">37</span><span class="tok-p">]:</span>
+<span class="tok-n">matrix</span><span class="tok-p">([[</span> <span class="tok-mf">0.89469821</span><span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>
+          <span class="tok-mf">0.23513012</span><span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.29823274</span><span class="tok-p">,</span>
+          <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.23513012</span><span class="tok-p">],</span>
+        <span class="tok-p">[</span> <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.70710678</span><span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>
+          <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.70710678</span><span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>
+          <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">],</span>
+        <span class="tok-p">[</span> <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.35415727</span><span class="tok-p">,</span>  <span class="tok-mf">0.35415727</span><span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>
+          <span class="tok-mf">0.55844332</span><span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>
+          <span class="tok-mf">0.35415727</span><span class="tok-p">,</span>  <span class="tok-mf">0.55844332</span><span class="tok-p">],</span>
+        <span class="tok-p">[</span> <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.38274272</span><span class="tok-p">,</span>  <span class="tok-mf">0.48546061</span><span class="tok-p">,</span>
+          <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.38274272</span><span class="tok-p">,</span>  <span class="tok-mf">0.48546061</span><span class="tok-p">,</span>  <span class="tok-mf">0.48546061</span><span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">,</span>
+          <span class="tok-mf">0.</span>        <span class="tok-p">,</span>  <span class="tok-mf">0.</span>        <span class="tok-p">]])</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Теперь можно запустить наш алгоритм <code>k-means</code> и мы увидим самые часто используемые слова каждого кластера:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-n">k</span> <span class="tok-o">=</span> <span class="tok-mi">2</span> <span class="tok-c1"># Определите количество кластеров, в которые мы поместим поделенные данные</span>
+<span class="tok-c1"># Определите правильное понятие расстояния, для обработки документов</span>
+<span class="tok-kn">from</span> <span class="tok-nn">sklearn.metrics.pairwise</span> <span class="tok-kn">import</span> <span class="tok-n">cosine_similarity</span>
+<span class="tok-n">dist</span> <span class="tok-o">=</span> <span class="tok-mi">1</span> <span class="tok-o">-</span> <span class="tok-n">cosine_similarity</span><span class="tok-p">(</span><span class="tok-n">X</span><span class="tok-p">)</span>
+<span class="tok-c1"># Запустите алгоритм KMeans</span>
+<span class="tok-n">model</span> <span class="tok-o">=</span> <span class="tok-n">KMeans</span><span class="tok-p">(</span><span class="tok-n">n_clusters</span> <span class="tok-o">=</span> <span class="tok-n">k</span><span class="tok-p">)</span>
+<span class="tok-n">model</span><span class="tok-o">.</span><span class="tok-n">fit</span><span class="tok-p">(</span><span class="tok-n">X</span><span class="tok-p">);</span>
+
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-s2">&quot;Top terms per cluster:</span><span class="tok-se">\n</span><span class="tok-s2">&quot;</span><span class="tok-p">)</span>
+<span class="tok-n">order_centroids</span> <span class="tok-o">=</span> <span class="tok-n">model</span><span class="tok-o">.</span><span class="tok-n">cluster_centers_</span><span class="tok-o">.</span><span class="tok-n">argsort</span><span class="tok-p">()[:,</span> <span class="tok-p">::</span><span class="tok-o">-</span><span class="tok-mi">1</span><span class="tok-p">]</span>
+<span class="tok-n">terms</span> <span class="tok-o">=</span> <span class="tok-n">vectorizer</span><span class="tok-o">.</span><span class="tok-n">get_feature_names</span><span class="tok-p">()</span>
+<span class="tok-k">for</span> <span class="tok-n">i</span> <span class="tok-ow">in</span> <span class="tok-nb">range</span><span class="tok-p">(</span><span class="tok-n">k</span><span class="tok-p">):</span>
+    <span class="tok-k">print</span> <span class="tok-p">(</span><span class="tok-s2">&quot;Cluster </span><span class="tok-si">%i</span><span class="tok-s2">:&quot;</span> <span class="tok-o">%</span> <span class="tok-n">i</span><span class="tok-p">,</span> <span class="tok-n">end</span><span class="tok-o">=</span><span class="tok-s1">&#39;&#39;</span><span class="tok-p">)</span>
+    <span class="tok-k">for</span> <span class="tok-n">ind</span> <span class="tok-ow">in</span> <span class="tok-n">order_centroids</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">,</span> <span class="tok-p">:</span><span class="tok-mi">3</span><span class="tok-p">]:</span>
+        <span class="tok-k">print</span> <span class="tok-p">(</span><span class="tok-s1">&#39; </span><span class="tok-si">%s</span><span class="tok-s1">,&#39;</span> <span class="tok-o">%</span> <span class="tok-n">terms</span><span class="tok-p">[</span><span class="tok-n">ind</span><span class="tok-p">],</span> <span class="tok-n">end</span><span class="tok-o">=</span><span class="tok-s1">&#39;&#39;</span><span class="tok-p">)</span>
+    <span class="tok-k">print</span> <span class="tok-p">(</span><span class="tok-s2">&quot;&quot;</span><span class="tok-p">)</span>
+<span class="tok-n">Top</span> <span class="tok-n">terms</span> <span class="tok-n">per</span> <span class="tok-n">cluster</span><span class="tok-p">:</span>
+
+<span class="tok-n">Cluster</span> <span class="tok-mi">0</span><span class="tok-p">:</span> <span class="tok-n">awesome</span><span class="tok-p">,</span> <span class="tok-n">staff</span><span class="tok-p">,</span> <span class="tok-n">cs50</span><span class="tok-p">,</span>
+<span class="tok-n">Cluster</span> <span class="tok-mi">1</span><span class="tok-p">:</span> <span class="tok-n">dog</span><span class="tok-p">,</span> <span class="tok-n">cat</span><span class="tok-p">,</span> <span class="tok-n">keeps</span><span class="tok-p">,</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Мы можем импортировать несколько описаний фильмов с сайта IMDB (западный аналог "Кинопоиска") в Python и выполнить тот же самый процесс:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-c1"># Импортируйте набор данных в frame данных Panda (Панды)</span>
+<span class="tok-kn">import</span> <span class="tok-nn">pandas</span> <span class="tok-kn">as</span> <span class="tok-nn">pd</span>
+<span class="tok-kn">from</span> <span class="tok-nn">io</span> <span class="tok-kn">import</span> <span class="tok-n">StringIO</span>
+<span class="tok-kn">import</span> <span class="tok-nn">requests</span>
+
+<span class="tok-n">act</span> <span class="tok-o">=</span> <span class="tok-n">requests</span><span class="tok-o">.</span><span class="tok-n">get</span><span class="tok-p">(</span><span class="tok-s1">&#39;https://docs.google.com/spreadsheets/d/1udJ4nd9EKlX_awB90JCbKaStuYh6aVjh1X6j8iBUXIU/export?format=csv&#39;</span><span class="tok-p">)</span>
+<span class="tok-n">dataact</span> <span class="tok-o">=</span> <span class="tok-n">act</span><span class="tok-o">.</span><span class="tok-n">content</span><span class="tok-o">.</span><span class="tok-n">decode</span><span class="tok-p">(</span><span class="tok-s1">&#39;utf-8&#39;</span><span class="tok-p">)</span> <span class="tok-c1"># Для конвертирования в строку (string) для StringIO</span>
+<span class="tok-n">frame</span> <span class="tok-o">=</span> <span class="tok-n">pd</span><span class="tok-o">.</span><span class="tok-n">read_csv</span><span class="tok-p">(</span><span class="tok-n">StringIO</span><span class="tok-p">(</span><span class="tok-n">dataact</span><span class="tok-p">))</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Данные, находящиеся внутри <code>frame</code>, представляют из себя множество текстов (входных текстов):</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-n">frame</span><span class="tok-p">)</span>
+                     <span class="tok-n">Title</span>                                           <span class="tok-n">Synopsis</span>
+<span class="tok-mi">0</span>       <span class="tok-n">Mad</span> <span class="tok-n">Max</span><span class="tok-p">:</span> <span class="tok-n">Fury</span> <span class="tok-n">Road</span>  <span class="tok-n">Max</span> <span class="tok-n">Rockatansky</span> <span class="tok-p">(</span><span class="tok-n">Tom</span> <span class="tok-n">Hardy</span><span class="tok-p">)</span> <span class="tok-n">explains</span> <span class="tok-ow">in</span> <span class="tok-n">a</span> <span class="tok-n">voic</span><span class="tok-o">...</span>
+<span class="tok-mi">1</span>               <span class="tok-n">The</span> <span class="tok-n">Matrix</span>  <span class="tok-n">The</span> <span class="tok-n">screen</span> <span class="tok-ow">is</span> <span class="tok-n">filled</span> <span class="tok-k">with</span> <span class="tok-n">green</span><span class="tok-p">,</span> <span class="tok-n">cascading</span> <span class="tok-n">cod</span><span class="tok-o">...</span>
+<span class="tok-mi">2</span>        <span class="tok-n">The</span> <span class="tok-n">King</span><span class="tok-s1">&#39;s Speech  The film opens with Prince Albert, Duke of Yor...</span>
+<span class="tok-mi">3</span>   <span class="tok-n">No</span> <span class="tok-n">Country</span> <span class="tok-k">for</span> <span class="tok-n">Old</span> <span class="tok-n">Men</span>  <span class="tok-n">The</span> <span class="tok-n">film</span> <span class="tok-n">opens</span> <span class="tok-k">with</span> <span class="tok-n">a</span> <span class="tok-n">shot</span> <span class="tok-n">of</span> <span class="tok-n">desolate</span><span class="tok-p">,</span> <span class="tok-n">wide</span><span class="tok-o">-</span><span class="tok-n">o</span><span class="tok-o">...</span>
+<span class="tok-mi">4</span>         <span class="tok-n">A</span> <span class="tok-n">Beautiful</span> <span class="tok-n">Mind</span>  <span class="tok-n">John</span> <span class="tok-n">Nash</span> <span class="tok-p">(</span><span class="tok-n">Russell</span> <span class="tok-n">Crowe</span><span class="tok-p">)</span> <span class="tok-n">arrives</span> <span class="tok-n">at</span> <span class="tok-n">Princeton</span><span class="tok-o">...</span>
+<span class="tok-mi">5</span>                <span class="tok-n">Inception</span>  <span class="tok-n">A</span> <span class="tok-n">young</span> <span class="tok-n">man</span><span class="tok-p">,</span> <span class="tok-n">exhausted</span> <span class="tok-ow">and</span> <span class="tok-n">delirious</span><span class="tok-p">,</span> <span class="tok-n">washes</span> <span class="tok-n">u</span><span class="tok-o">...</span>
+<span class="tok-mi">6</span>                   <span class="tok-n">Frozen</span>  <span class="tok-n">The</span> <span class="tok-n">Walt</span> <span class="tok-n">Disney</span> <span class="tok-n">Pictures</span> <span class="tok-n">logo</span> <span class="tok-ow">and</span> <span class="tok-n">the</span> <span class="tok-n">movie</span> <span class="tok-n">ti</span><span class="tok-o">...</span>
+<span class="tok-mi">7</span>            <span class="tok-n">The</span> <span class="tok-n">Lion</span> <span class="tok-n">King</span>  <span class="tok-n">The</span> <span class="tok-n">Lion</span> <span class="tok-n">King</span> <span class="tok-n">takes</span> <span class="tok-n">place</span> <span class="tok-ow">in</span> <span class="tok-n">the</span> <span class="tok-n">Pride</span> <span class="tok-n">Lands</span> <span class="tok-n">o</span><span class="tok-o">...</span>
+<span class="tok-mi">8</span>                  <span class="tok-n">Aladdin</span>  <span class="tok-n">The</span> <span class="tok-n">film</span> <span class="tok-n">starts</span> <span class="tok-k">with</span> <span class="tok-n">a</span> <span class="tok-n">street</span> <span class="tok-n">peddler</span><span class="tok-p">,</span> <span class="tok-n">guiding</span><span class="tok-o">...</span>
+<span class="tok-mi">9</span>               <span class="tok-n">Cinderella</span>  <span class="tok-n">The</span> <span class="tok-n">film</span> <span class="tok-n">opens</span> <span class="tok-ow">in</span> <span class="tok-n">a</span> <span class="tok-n">tiny</span> <span class="tok-n">kingdom</span><span class="tok-p">,</span> <span class="tok-ow">and</span> <span class="tok-n">shows</span> <span class="tok-n">us</span><span class="tok-o">...</span>
+<span class="tok-mi">10</span>            <span class="tok-n">Finding</span> <span class="tok-n">Nemo</span>  <span class="tok-n">Two</span> <span class="tok-n">clownfish</span><span class="tok-p">,</span> <span class="tok-n">Marlin</span> <span class="tok-p">(</span><span class="tok-n">Albert</span> <span class="tok-n">Brooks</span><span class="tok-p">)</span> <span class="tok-ow">and</span> <span class="tok-n">his</span> <span class="tok-o">...</span>
+<span class="tok-mi">11</span>               <span class="tok-n">Toy</span> <span class="tok-n">Story</span>  <span class="tok-n">A</span> <span class="tok-n">boy</span> <span class="tok-n">called</span> <span class="tok-n">Andy</span> <span class="tok-n">Davis</span> <span class="tok-p">(</span><span class="tok-n">voice</span><span class="tok-p">:</span> <span class="tok-n">John</span> <span class="tok-n">Morris</span><span class="tok-p">)</span> <span class="tok-n">u</span><span class="tok-o">...</span>
+<span class="tok-mi">12</span>              <span class="tok-n">Robin</span> <span class="tok-n">Hood</span>  <span class="tok-n">Told</span> <span class="tok-k">with</span> <span class="tok-n">animals</span> <span class="tok-k">for</span> <span class="tok-n">it</span><span class="tok-s1">&#39;s cast, the story tel...</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Выстроим строки для каждого описания (синопсиса) фильма, матрицу <code>tfidf</code> (как мы это делали ранее), и, наконец, отобразим метки и самые часто используемые слова каждого кластера:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span class="tok-c1"># Пройдитесь через каждый синопсис и добавьте его содержимое к списку &#39;corpus&#39;, в котором хранятся строки (strings)</span>
+<span class="tok-n">corpus</span> <span class="tok-o">=</span> <span class="tok-p">[]</span>
+<span class="tok-k">for</span> <span class="tok-n">i</span> <span class="tok-ow">in</span> <span class="tok-nb">range</span><span class="tok-p">(</span><span class="tok-mi">0</span><span class="tok-p">,</span> <span class="tok-n">frame</span><span class="tok-p">[</span><span class="tok-s2">&quot;Synopsis&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">size</span><span class="tok-p">):</span>
+    <span class="tok-n">corpus</span><span class="tok-o">.</span><span class="tok-n">append</span><span class="tok-p">(</span><span class="tok-n">frame</span><span class="tok-p">[</span><span class="tok-s2">&quot;Synopsis&quot;</span><span class="tok-p">][</span><span class="tok-n">i</span><span class="tok-p">])</span>
+<span class="tok-c1"># Создайте матрицу tf–idf</span>
+<span class="tok-kn">from</span> <span class="tok-nn">sklearn.feature_extraction.text</span> <span class="tok-kn">import</span> <span class="tok-n">TfidfVectorizer</span>
+<span class="tok-n">vectorizer</span> <span class="tok-o">=</span> <span class="tok-n">TfidfVectorizer</span><span class="tok-p">(</span><span class="tok-n">stop_words</span> <span class="tok-o">=</span> <span class="tok-s1">&#39;english&#39;</span><span class="tok-p">,</span> <span class="tok-n">min_df</span> <span class="tok-o">=</span> <span class="tok-mf">0.2</span><span class="tok-p">)</span>
+<span class="tok-c1"># min_df = 0.2 - означает, что слово должно встречаться как минимум в 20% документов</span>
+<span class="tok-n">X</span> <span class="tok-o">=</span> <span class="tok-n">vectorizer</span><span class="tok-o">.</span><span class="tok-n">fit_transform</span><span class="tok-p">(</span><span class="tok-n">corpus</span><span class="tok-p">)</span>
+
+<span class="tok-n">k</span> <span class="tok-o">=</span> <span class="tok-mi">2</span> <span class="tok-c1"># Определите количество кластеров, в которые мы поместим поделенные данные</span>
+<span class="tok-c1"># Определите правильное понятие расстояния, для обработки документов</span>
+<span class="tok-kn">from</span> <span class="tok-nn">sklearn.metrics.pairwise</span> <span class="tok-kn">import</span> <span class="tok-n">cosine_similarity</span>
+<span class="tok-n">dist</span> <span class="tok-o">=</span> <span class="tok-mi">1</span> <span class="tok-o">-</span> <span class="tok-n">cosine_similarity</span><span class="tok-p">(</span><span class="tok-n">X</span><span class="tok-p">)</span>
+<span class="tok-c1"># Запустите алгоритм kmeans</span>
+<span class="tok-n">model</span> <span class="tok-o">=</span> <span class="tok-n">KMeans</span><span class="tok-p">(</span><span class="tok-n">n_clusters</span> <span class="tok-o">=</span> <span class="tok-n">k</span><span class="tok-p">)</span>
+<span class="tok-n">model</span><span class="tok-o">.</span><span class="tok-n">fit</span><span class="tok-p">(</span><span class="tok-n">X</span><span class="tok-p">);</span>
+
+<span class="tok-n">no_words</span> <span class="tok-o">=</span> <span class="tok-mi">4</span> <span class="tok-c1"># Количество слов, выводимых в соответствии с кластером</span>
+<span class="tok-n">order_centroids</span> <span class="tok-o">=</span> <span class="tok-n">model</span><span class="tok-o">.</span><span class="tok-n">cluster_centers_</span><span class="tok-o">.</span><span class="tok-n">argsort</span><span class="tok-p">()[:,</span> <span class="tok-p">::</span><span class="tok-o">-</span><span class="tok-mi">1</span><span class="tok-p">]</span> <span class="tok-c1"># Отсортируйте центры кластеров по близости к центроиду</span>
+<span class="tok-n">terms</span> <span class="tok-o">=</span> <span class="tok-n">vectorizer</span><span class="tok-o">.</span><span class="tok-n">get_feature_names</span><span class="tok-p">()</span>
+<span class="tok-n">labels</span> <span class="tok-o">=</span> <span class="tok-n">model</span><span class="tok-o">.</span><span class="tok-n">labels_</span> <span class="tok-c1"># Получение меток, присвоенных к каждому из данных</span>
+
+<span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-s2">&quot;Top terms per cluster:</span><span class="tok-se">\n</span><span class="tok-s2">&quot;</span><span class="tok-p">)</span>
+<span class="tok-k">for</span> <span class="tok-n">i</span> <span class="tok-ow">in</span> <span class="tok-nb">range</span><span class="tok-p">(</span><span class="tok-n">k</span><span class="tok-p">):</span>
+
+    <span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-s2">&quot;Cluster </span><span class="tok-si">%d</span><span class="tok-s2"> movies:&quot;</span> <span class="tok-o">%</span> <span class="tok-n">i</span><span class="tok-p">,</span> <span class="tok-n">end</span><span class="tok-o">=</span><span class="tok-s1">&#39;&#39;</span><span class="tok-p">)</span>
+    <span class="tok-k">for</span> <span class="tok-n">title</span> <span class="tok-ow">in</span> <span class="tok-n">frame</span><span class="tok-p">[</span><span class="tok-s2">&quot;Title&quot;</span><span class="tok-p">][</span><span class="tok-n">labels</span> <span class="tok-o">==</span> <span class="tok-n">i</span><span class="tok-p">]:</span>
+        <span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-s1">&#39; </span><span class="tok-si">%s</span><span class="tok-s1">,&#39;</span> <span class="tok-o">%</span> <span class="tok-n">title</span><span class="tok-p">,</span> <span class="tok-n">end</span><span class="tok-o">=</span><span class="tok-s1">&#39;&#39;</span><span class="tok-p">)</span>
+    <span class="tok-k">print</span><span class="tok-p">()</span> <span class="tok-c1"># Добавление пробела</span>
+
+    <span class="tok-k">print</span><span class="tok-p">(</span><span class="tok-s2">&quot;Cluster </span><span class="tok-si">%d</span><span class="tok-s2"> words:&quot;</span> <span class="tok-o">%</span> <span class="tok-n">i</span><span class="tok-p">,</span> <span class="tok-n">end</span><span class="tok-o">=</span><span class="tok-s1">&#39;&#39;</span><span class="tok-p">)</span>
+    <span class="tok-k">for</span> <span class="tok-n">ind</span> <span class="tok-ow">in</span> <span class="tok-n">order_centroids</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">,</span> <span class="tok-p">:</span><span class="tok-n">no_words</span><span class="tok-p">]:</span>
+        <span class="tok-k">print</span> <span class="tok-p">(</span><span class="tok-s1">&#39; </span><span class="tok-si">%s</span><span class="tok-s1">&#39;</span> <span class="tok-o">%</span> <span class="tok-n">terms</span><span class="tok-p">[</span><span class="tok-n">ind</span><span class="tok-p">],</span> <span class="tok-n">end</span><span class="tok-o">=</span><span class="tok-s1">&#39;,&#39;</span><span class="tok-p">),</span>
+    <span class="tok-k">print</span><span class="tok-p">()</span>
+    <span class="tok-k">print</span><span class="tok-p">()</span>
+<span class="tok-n">Top</span> <span class="tok-n">terms</span> <span class="tok-n">per</span> <span class="tok-n">cluster</span><span class="tok-p">:</span>
+
+<span class="tok-n">Cluster</span> <span class="tok-mi">0</span> <span class="tok-n">movies</span><span class="tok-p">:</span> <span class="tok-n">Mad</span> <span class="tok-n">Max</span><span class="tok-p">:</span> <span class="tok-n">Fury</span> <span class="tok-n">Road</span><span class="tok-p">,</span> <span class="tok-n">The</span> <span class="tok-n">Matrix</span><span class="tok-p">,</span> <span class="tok-n">No</span> <span class="tok-n">Country</span> <span class="tok-k">for</span> <span class="tok-n">Old</span> <span class="tok-n">Men</span><span class="tok-p">,</span> <span class="tok-n">A</span> <span class="tok-n">Beautiful</span> <span class="tok-n">Mind</span><span class="tok-p">,</span> <span class="tok-n">Inception</span><span class="tok-p">,</span> <span class="tok-n">Frozen</span><span class="tok-p">,</span> <span class="tok-n">Finding</span> <span class="tok-n">Nemo</span><span class="tok-p">,</span> <span class="tok-n">Toy</span> <span class="tok-n">Story</span><span class="tok-p">,</span>
+<span class="tok-n">Cluster</span> <span class="tok-mi">0</span> <span class="tok-n">words</span><span class="tok-p">:</span> <span class="tok-n">room</span><span class="tok-p">,</span> <span class="tok-n">tank</span><span class="tok-p">,</span> <span class="tok-n">says</span><span class="tok-p">,</span> <span class="tok-n">joe</span><span class="tok-p">,</span>
+
+<span class="tok-n">Cluster</span> <span class="tok-mi">1</span> <span class="tok-n">movies</span><span class="tok-p">:</span> <span class="tok-n">The</span> <span class="tok-n">King</span><span class="tok-s1">&#39;s Speech, The Lion King, Aladdin, Cinderella, Robin Hood,</span>
+<span class="tok-n">Cluster</span> <span class="tok-mi">1</span> <span class="tok-n">words</span><span class="tok-p">:</span> <span class="tok-n">king</span><span class="tok-p">,</span> <span class="tok-n">prince</span><span class="tok-p">,</span> <span class="tok-n">john</span><span class="tok-p">,</span> <span class="tok-n">palace</span><span class="tok-p">,</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Стоит заметить, что The King’s Speech (Король говорит!) не должен был оказаться среди анимационных фильмов (мультфильмов), но учитывая, что нам даются только текстовые описания, алгоритм определил этот фильм, основываясь на главных ключевых словах, в кластер анимационных фильмов.</p>
+</li>
+<li>
+<p>Совсем недавно, глубокий алгоритм обучения, разработанный командой из Google, победил чемпиона мира в Go, и он сделал это, придумав новые ходы - не те, что были доступны в тренировочных данных.</p>
+</li>
+<li>
+<p>Сегодня мы рассмотрели малую долю возможных применений для машинного обучения.</p>
+</li>
+<li>
+<p>Также, мы рассмотрели как Python и его библиотеки можно использовать для решения сложных задач.</p>
+</li>
+<li>
+<p>До следующего раза!</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+        </div>

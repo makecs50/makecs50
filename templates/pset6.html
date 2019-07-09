@@ -1,0 +1,215 @@
+---
+layout: header
+title: pset6
+permalink: /weeks/pset6
+---
+
+    <div class="toc2 toc-left">
+            <div id="header">
+                <div class="toc2" id="toc">
+                    <div id="toctitle">Список Контента</div>
+                    <ul class="sectlevel1">
+<li><a href="#tl-dr">Коротко</a></li>
+<li><a href="#help">Помощь</a></li>
+<li><a href="#getting-started">С чего начать</a></li>
+<li><a href="#problems">Проблемы</a></li>
+<li><a href="#hints">Подсказки</a></li>
+<li><a href="#how-to-submit">Как отправить решение</a>
+<ul class="sectlevel2">
+<li><a href="#step-2-of-2">Завершение</a></li>
+</ul>
+</li>
+</ul>
+                </div>
+            </div>
+            <div id="content">
+                <h1>Набор Проблем 6: Sentimental (Сентиментальный)</h1>
+<div class="sect1">
+<h2 id="tl-dr"><a class="link" href="#tl-dr">Коротко</a></h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Просмотрите лекцию <a target="_blank" href="https://www.youtube.com/watch?v=I7-t8PO6DH8">8 недели</a>.</p>
+</li>
+<li>
+<p>Портируйте (перепишите) некоторые программы с Си на Python.</p>
+</li>
+<li>
+<p>Проанализируйте кое-какие настроения.</p>
+</li>
+<li>
+<p>Отправьте форму.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="help"><a class="link" href="#help">Помощь</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Если вам нужна помощь с Набором Проблем 6:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Просмотрите видеозаписи с объяснениями Замайлы, которые есть скоро будут опубликованы.</p>
+</li>
+<li>
+<p>Задавайте вопросы (при этом оповещайте студентов о создании новой темы в разделе "Обсуждение", при помощи whatsapp группы "Курсы cs50").</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-started"><a class="link" href="#getting-started">С чего начать</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>update50
+mkdir ~/workspace/pset6/
+cd ~/workspace/pset6/</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="problems"><a class="link" href="#problems">Проблемы</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Весь ваш код должен соответствовать <a href="http://defpython.ru/pep8">Общепринятому Стилю Написания Кода на Python</a>, по-другому известный как PEP 8.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Имплементируйте программы, используя Python:</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Напишите код <a href="{{ site.url }}/weeks/pset1/mario/">Mario</a> в файле <code>mario.py</code>, который будет находиться в папке <code>pset6/</code>.</p>
+</li>
+<li>
+<p>Напишите код <a href="{{ site.url }}/weeks/pset1/greedy/">Greedy</a> в файле <code>greedy.py</code>, который будет находиться в папке <code>pset6/</code>.</p>
+</li>
+
+</ul>
+</div>
+</div>
+</div>
+</li>
+
+<li>
+<p>Имплементируйте любую (одну) программу, используя Python:</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Напишите код <a href="{{ site.url }}/weeks/pset2/caesar/">Caesar</a> в файле <code>caesar.py</code>, который будет находиться в папке <code>pset6/</code>.</p>
+</li>
+
+<li>
+<p>Напишите код <a href="{{ site.url }}/weeks/pset2/vigenere/">Vigenère</a> в файле <code>vigenere.py</code>, который будет находиться в Vigenère <code>pset6/</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Имплементируйте <a href="{{ site.url }}/weeks/pset6/sentiments/">Sentiments (Настроения)</a> в папке <code>pset6/sentiments/</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Никакого <code>check50</code>!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hints"><a class="link" href="#hints">Подсказки</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Обязательно используйте Python 3, а не Python 2.</p>
+</li>
+<li>
+<p>Если программа находится в, к примеру, <code>foo.py</code>, вы можете запустить ее с помощью команды <code>python foo.py</code>.</p>
+</li>
+<li>
+<p>Для реализации программ Mario, Greedy, Caesar и Vigenère, с вашей стороны будет <strong>разумнее</strong> брать в качестве примера свою собственную имплементацию данных проблем на языке Си и имплементацию других разработчиков, опять же на Си. <strong>Не разумно</strong> будет смотреть на чужой код этих имплементаций, если они написаны на Python. Также <strong>не разумно</strong> смотреть на чужую имплементацию программы Sentiments.</p>
+</li>
+<li>
+<p>Рассматривайте этот набор проблем как возможность не только портировать (перенести) свои предыдущие работы с Си на Python, но и возможность улучшить ваш прежний дизайн кода, используя приобретенные вами навыками!</p>
+</li>
+<li>
+<p>Вам возможно захочется разделить рабочую среду CS50 IDE на две части, чтобы легче было портировать код с Си на Python. Выберите в меню <strong>View &gt; Layout &gt; Horizontal Split</strong> для отображения двух окон редактирования кода.</p>
+</li>
+<!--
+<li>
+<p>Цель данного набора проблем заключается в том, чтобы научить вас навыку самостоятельного изучения новых языков программирования. Помните, что такая практика не только <strong>разумна</strong>, но и помогает нам достичь определенных результатов:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Включение нескольких строчек чужого кода, добытого вами в просторах интернета, при условии, что данный код не является полным решением поставленных перед вами проблем и что вы не забудете указать источник (с какого сайта или автора) этих нескольких строчек кода.</p>
+</li>
+<li>
+<p>Turning to the web or elsewhere for instruction beyond the course&#8217;s own, for references, and for solutions to technical difficulties, but not for outright solutions to problem set&#8217;s problems or your own final project.</p>
+</li>
+</ul>
+</div>
+</li>
+-->
+<li>
+<p>Вам дозволяется пользоваться "Питоновской" библиотекой CS50, которая включает функции <code>get_float</code>, <code>get_int</code> и <code>get_string</code>. Просто не забудьте добавить в верхней части вашего кода</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code>import cs50</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Или вы можете воспользоваться функцией <a href="https://docs.python.org/3/library/functions.html#input"><code>input</code></a> и самостоятельно реализовать проверку вводимых пользователем данных.</p>
+</div>
+</li>
+<li>
+<p>Вы возможно найдете для себя полезным использовать функции <a href="https://docs.python.org/3/library/functions.html#chr"><code>chr</code></a> и <a href="https://docs.python.org/3/library/functions.html#ord"><code>ord</code></a>.</p>
+</li>
+
+</ul>
+</div>
+</div>
+</div>
+
+
+<div class="sect1">
+                                    <h2 id="how-to-submit"><a class="link" href="#how-to-submit">Как отправить решение</a></h2>
+                                    <div class="sectionbody">
+                                        <div class="sect2">
+                                            <div class="olist arabic">
+                                                <ol class="arabic">
+                                                    <li> <p>Скачайте и заархивируйте все файлы в .zip или .rar файл (для этого вам понадобится архиватор, например winrar).</p>
+                                                    </li>
+                                                    <li> <p>Отправьте архив, используя следующую форму <a href="https://goo.gl/7SUGOe">https://goo.gl/7SUGOe</a>.</p>
+                                                    </li>
+                                                   
+                                                </ol>
+                                            </div>
+                                        </div>
+                                        <div class="sect2">
+                                            <h3 id="step-2-of-2"><a class="link" href="#step-2-of-2">Завершение</a></h3>
+                                            <div class="paragraph">
+                                                <p>Время больших перемен!</p>
+                                            </div>
+                                            <div class="paragraph">
+                                                <p>Это был Набор Проблем 6.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            </div>
+        </div>

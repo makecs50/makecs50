@@ -56,7 +56,7 @@ permalink: /
           </li> -->
           <!--                 <li> <a target="_blank" href="http://discuss.makecs50.ru">Обсуждение</a> </li> -->
           <li><a href="{{ site.url }}/about">О нас</a></li>
-          <!-- <li><a target="_blank" href="/apply/">Записаться</a></li> -->
+          
 
           <h5 id="harvard_extension">
             Гарвардская школа повышения квалификации
@@ -71,6 +71,7 @@ permalink: /
               >Мобильная разработка</a
             >
           </li>
+          <li><a target="_blank" href="/apply/">Записаться</a></li>
         </ul>
         <!--
             <div class="nav sidebar-nav1" >
@@ -139,7 +140,7 @@ permalink: /
                         class="post cover harvard"
                       >
                         <h1>Женская группа</h1>
-                        <p>По воскресеньям | Фариза Каимова</p>
+                        <p>По вторникам | Милана Исмаилова | В "Инноразуме"</p>
                       </div>
 
                       <!--

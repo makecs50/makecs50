@@ -135,14 +135,6 @@ permalink: /
 			<p>TBA</p>
            </div>
 -->
-                      <div
-                        style="background: #e91e63"
-                        class="post cover harvard"
-                      >
-                        <h1>Женская группа</h1>
-                        <p>По вторникам | Милана Исмаилова | В "ХАЙПАРКЕ"</p>
-                      </div>
-
                       <!--
 			<div style="background: #6a9fb5" class="post cover harvard">
                <h1><a target="_blank" style="color: #fff" href="https://makecs50.github.io/web/">Лекция 9<br>Github, Travis</a></h1>
